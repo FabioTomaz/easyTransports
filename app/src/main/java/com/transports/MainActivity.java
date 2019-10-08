@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.transports.Utils.Constants;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -19,11 +20,17 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         navigationView = (BottomNavigationView) findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(this);
+        int menuID = getIntent().getIntExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);
+        navigateToMenu(menuID);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        return navigateToMenu(item.getItemId());
+    }
+
+    public boolean navigateToMenu(int menuID){
+        switch (menuID) {
             case R.id.bottom_menu_tickets: {
                 openFragment(new TicketsFragment());
                 break;

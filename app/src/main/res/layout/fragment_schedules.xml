@@ -5,10 +5,77 @@
     android:layout_height="match_parent"
     tools:context=".SchedulesFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:divider="?android:dividerHorizontal"
+        android:orientation="vertical" >
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="?android:dividerHorizontal"
+        android:orientation="horizontal" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="Transport Company:" />
+
+    <Spinner
+        android:id="@+id/transport_companies_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+    </LinearLayout>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="?android:dividerHorizontal"
+        android:orientation="horizontal" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="Departure date:" />
+
+    <DatePicker
+        android:id="@+id/departure_date_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:datePickerMode="spinner"
+        android:layout_gravity="right"/>
+<!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Test" />
+        android:layout_gravity="left"
+        android:text="Transport Company:" />
 
+    <DatePicker
+        android:id="@+id/arrival_date_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+-->
+    </LinearLayout>
+    <Button
+        android:id="@+id/schedules_submit_button"
+        style="?android:textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_send"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+    </LinearLayout>
 </FrameLayout>

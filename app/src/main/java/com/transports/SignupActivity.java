@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.Utils.Constants;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -90,7 +91,10 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                    //sign in user
+                                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                                    intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
+                                    startActivity(intent);
                                     finish();
                                 }
                             }

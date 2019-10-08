@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 
 /**
@@ -69,7 +72,20 @@ public class SchedulesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_schedules, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        //get the spinner from the xml.
+        Spinner dropdown = getView().findViewById(R.id.transport_companies_spinner);
+        //create a list of items for the spinner.
+        String[] items = new String[]{"Comboios Portugal", "Carris", "Move Aveiro"};
+        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        //There are multiple variations of this, but this is the basic variant.
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        //set the spinners adapter to the previously created one.
+        dropdown.setAdapter(adapter);
+    }
+
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

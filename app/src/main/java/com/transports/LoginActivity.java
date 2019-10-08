@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.Utils.Constants;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
+            startActivity(intent);
             finish();
         }
 
@@ -102,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     //login success
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
                                     startActivity(intent);
                                     finish();
                                 }
