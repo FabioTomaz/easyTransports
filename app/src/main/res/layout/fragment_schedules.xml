@@ -6,7 +6,6 @@
     tools:context=".SchedulesFragment">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -18,19 +17,20 @@
         android:layout_height="wrap_content"
         android:divider="?android:dividerHorizontal"
         android:orientation="horizontal" >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="Transport Company:" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:textSize="18dp"
+            android:text="@string/transport_dropdown_title" />
 
-    <Spinner
-        android:id="@+id/transport_companies_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+        <Spinner
+            android:id="@+id/transport_companies_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
     </LinearLayout>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,18 +38,22 @@
         android:layout_height="wrap_content"
         android:divider="?android:dividerHorizontal"
         android:orientation="horizontal" >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:text="Departure date:" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|left"
+            android:textSize="18dp"
+            android:text="@string/departure_title" />
 
-    <DatePicker
-        android:id="@+id/departure_date_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:datePickerMode="spinner"
-        android:layout_gravity="right"/>
+        <DatePicker
+            android:id="@+id/departure_date_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:datePickerMode="spinner"
+            android:spinnersShown="true"
+            android:calendarViewShown="false"
+            android:layout_gravity="right"
+            android:theme="@style/date_picker_theme"/>
 <!--
     <TextView
         android:layout_width="match_parent"
@@ -62,20 +66,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
+        android:datePickerMode="spinner"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
         android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:theme="@style/date_picker_theme"
+        />
 -->
     </LinearLayout>
-    <Button
-        android:id="@+id/schedules_submit_button"
-        style="?android:textAppearanceSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/btn_send"
-        android:layout_gravity="center"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/schedules_submit_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/search_schedules_btn"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </LinearLayout>
 </FrameLayout>

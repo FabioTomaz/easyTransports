@@ -6,31 +6,38 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
 
-import static com.transports.utils.Constants.TRANSPORT_COMPANY;
+import com.transports.data.Schedule;
+import com.transports.data.SchedulesAdapter;
+import com.transports.utils.Constants;
+
+import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SchedulesFragment.OnFragmentInteractionListener} interface
+ * {@link SchedulesViewerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SchedulesFragment extends Fragment {
+public class SchedulesViewerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private String transportCompany;
+    private String departureDate;
+    private SchedulesAdapter listAdapter;
+    private ArrayList<Schedule> schedulesList = new ArrayList<>();
+    private RecyclerView recycler;
 
-    public SchedulesFragment() {
+    public SchedulesViewerFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,41 +48,39 @@ public class SchedulesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedules, container, false);
+        return inflater.inflate(R.layout.fragment_schedules_viewer, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //get the spinner from the xml.
-        final Spinner dropdown = getView().findViewById(R.id.transport_companies_spinner);
-        //create a list of items for the spinner.
-        String[] items = new String[]{"Comboios Portugal", "Carris", "Move Aveiro"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        //There are multiple variations of this, but this is the basic variant.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
+        Bundle bundle = this.getArguments();
 
-        //
-        final Button searchSchedulesBtn = (Button) getView().findViewById(R.id.schedules_submit_button);
+        if(bundle != null){
+            transportCompany = bundle.getString(Constants.TRANSPORT_COMPANY);
+            departureDate = bundle.getString(Constants.DEPARTURE_DATE);
 
-        searchSchedulesBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(TRANSPORT_COMPANY, dropdown.getSelectedItem().toString()); // Put anything what you want
+            //call service give info and receive
 
-                SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
-                schedulesViewFragment.setArguments(bundle);
 
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, schedulesViewFragment)
-                        .commit();
-            }
-        });
+            //place this on the rest api call response
+            recycler = getView().findViewById(R.id.schedules_list);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            recycler.setLayoutManager(layoutManager);
+            listAdapter = new SchedulesAdapter(schedulesList, getContext());
+            recycler.setAdapter(listAdapter);
+
+            //Load the date from the network or other resources
+            //into the array list asynchronously
+
+            schedulesList.add(new Schedule("CP ", "Aveiro"));
+            schedulesList.add(new Schedule("CP", "Estarreja"));
+            schedulesList.add(new Schedule("CP", "Aveiro"));
+
+            listAdapter.notifyDataSetChanged();
+        }
     }
 
-
+    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
