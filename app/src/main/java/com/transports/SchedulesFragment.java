@@ -3,16 +3,15 @@ package com.transports;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 
@@ -69,6 +68,7 @@ public class SchedulesFragment extends Fragment {
 
                 getFragmentManager()
                         .beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.container, schedulesViewFragment)
                         .commit();
             }

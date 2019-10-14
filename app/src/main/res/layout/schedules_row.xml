@@ -4,18 +4,44 @@
     android:id="@+id/schedule_main_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp">
-    <TextView
-        android:id="@+id/transport_name"
+    android:orientation="horizontal"
+    android:padding="1dp">
+    <LinearLayout
+        android:id="@+id/schedule_first_col"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:padding="5dp"/>
-    <TextView
-        android:id="@+id/destination"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/transport_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/origin_stop_title"
+            android:textSize="18sp"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:padding="5dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/schedule_second_col"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:padding="5dp"/>
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="5dp"/>
+        <Button
+            android:id="@+id/buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"/>
+    </LinearLayout>
 </LinearLayout>

@@ -4,16 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SchedulesFragment">
-
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:divider="?android:dividerHorizontal"
         android:orientation="vertical" >
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="?android:dividerHorizontal"
         android:orientation="horizontal" >
@@ -32,9 +34,46 @@
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown"/>
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:textSize="18dp"
+                android:text="@string/origin_stop_title" />
+
+            <AutoCompleteTextView
+                android:id="@+id/departure_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:background="@android:drawable/btn_dropdown"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="?android:dividerHorizontal"
+            android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:textSize="18dp"
+                android:text="@string/destination_stop_title" />
+
+            <AutoCompleteTextView
+                android:id="@+id/arrival_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|right"
+                android:background="@android:drawable/btn_dropdown" />
+        </LinearLayout>
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="?android:dividerHorizontal"
         android:orientation="horizontal" >
@@ -88,4 +127,5 @@
             android:textColor="@android:color/white"
             android:textStyle="bold" />
     </LinearLayout>
+</RelativeLayout>
 </FrameLayout>

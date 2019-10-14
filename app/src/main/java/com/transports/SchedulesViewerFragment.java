@@ -3,15 +3,15 @@ package com.transports;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.transports.data.Schedule;
 import com.transports.data.SchedulesAdapter;
@@ -78,6 +78,30 @@ public class SchedulesViewerFragment extends Fragment {
 
             listAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+
+                    Fragment fragInstance = new SchedulesFragment();
+
+                    getFragmentManager().beginTransaction()
+                            .add(R.id.container, fragInstance)
+                            .commit();
+
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

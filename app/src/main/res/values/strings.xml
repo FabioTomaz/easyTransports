@@ -42,6 +42,8 @@
 
     <!-- Schedules form-->
     <string name="transport_dropdown_title">Transport Company:</string>
+    <string name="origin_stop_title">Origin:</string>
+    <string name="destination_stop_title">Destination:</string>
     <string name="departure_title">Departure Date:</string>
     <string name="search_schedules_btn">Search</string>
     <!-- Tickets -->
