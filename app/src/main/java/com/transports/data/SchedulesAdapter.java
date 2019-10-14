@@ -48,7 +48,9 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.Sche
 
         // Set the data to the views here
         holder.setTransportName(schedule.getCompanyName());
-        holder.setDestination(schedule.getDestination());
+        holder.setDestination(schedule.getOrigin(), schedule.getDestination());
+        holder.setDepartureHour(schedule.getDepartureHour());
+        holder.setPrice(schedule.getPrice());
 
         // You can set click listners to indvidual items in the viewholder here
         // make sure you pass down the listner or make the Data members of the viewHolder public
@@ -60,20 +62,32 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.Sche
 
         private TextView transportName;
         private TextView destination;
+        private TextView departureHour;
+        private TextView price;
 
         public SchedulesHolder(View itemView) {
             super(itemView);
 
             transportName = itemView.findViewById(R.id.transport_name);
-            destination = itemView.findViewById(R.id.destination);
+            destination = itemView.findViewById(R.id.trip);
+            departureHour = itemView.findViewById(R.id.hour_departure);
+            price = itemView.findViewById(R.id.price);
         }
 
         public void setTransportName(String name) {
             transportName.setText(name);
         }
 
-        public void setDestination(String destination) {
-            this.destination.setText(destination);
+        public void setDepartureHour(String departureHour) {
+            this.departureHour.setText(departureHour);
+        }
+
+        public void setPrice(double price) {
+            this.price.setText(price + "€");
+        }
+
+        public void setDestination(String origin, String destination) {
+            this.destination.setText(origin+" - "+destination);
         }
     }
 }

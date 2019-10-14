@@ -4,96 +4,134 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SchedulesFragment">
-<RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:divider="?android:dividerHorizontal"
-        android:orientation="vertical" >
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:divider="?android:dividerHorizontal"
-        android:orientation="horizontal" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:textSize="18dp"
-            android:text="@string/transport_dropdown_title" />
 
-        <Spinner
-            android:id="@+id/transport_companies_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
-    </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="?android:dividerHorizontal"
-            android:orientation="horizontal" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|left"
-                android:textSize="18dp"
-                android:text="@string/origin_stop_title" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/departure_stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:background="@android:drawable/btn_dropdown"/>
-        </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center"
+            android:layout_marginEnd="0dp"
             android:divider="?android:dividerHorizontal"
-            android:orientation="horizontal" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|left"
-                android:textSize="18dp"
-                android:text="@string/destination_stop_title" />
+            android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/arrival_stop"
-                android:layout_width="wrap_content"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|right"
-                android:background="@android:drawable/btn_dropdown" />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:divider="?android:dividerHorizontal"
-        android:orientation="horizontal" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:textSize="18dp"
-            android:text="@string/departure_title" />
+                android:divider="?android:dividerHorizontal"
+                android:orientation="horizontal">
 
-        <DatePicker
-            android:id="@+id/departure_date_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:datePickerMode="spinner"
-            android:spinnersShown="true"
-            android:calendarViewShown="false"
-            android:layout_gravity="right"
-            android:theme="@style/date_picker_theme"/>
-<!--
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|left"
+                    android:text="@string/transport_dropdown_title"
+                    android:textSize="18dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    />
+
+                <Spinner
+                    android:id="@+id/transport_companies_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_marginRight="5dp"
+                    android:spinnerMode="dropdown" />
+                <!--<com.androidbuts.multispinnerfilter.MultiSpinner
+                    android:id="@+id/transport_companies_spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp" />-->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|left"
+                    android:text="@string/origin_stop_title"
+                    android:textSize="18dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/departure_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:background="@android:drawable/btn_dropdown" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|left"
+                    android:text="@string/destination_stop_title"
+                    android:textSize="18dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    />
+
+                <AutoCompleteTextView
+                    android:id="@+id/arrival_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="5dp"
+                    android:background="@android:drawable/btn_dropdown" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="?android:dividerHorizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|left"
+                    android:text="@string/departure_title"
+                    android:textSize="18dp" />
+
+                <DatePicker
+                    android:id="@+id/departure_date_picker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"
+                    android:spinnersShown="true"
+                    android:layout_marginRight="5dp"
+                    android:theme="@style/date_picker_theme" />
+                <!--
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -113,19 +151,19 @@
         android:theme="@style/date_picker_theme"
         />
 -->
-    </LinearLayout>
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/schedules_submit_button"
-            style="?android:textAppearanceSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:background="@color/colorPrimaryDark"
-            android:text="@string/search_schedules_btn"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
-</RelativeLayout>
+            <Button
+                android:id="@+id/schedules_submit_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/search_schedules_btn"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>

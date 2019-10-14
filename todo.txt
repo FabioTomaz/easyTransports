@@ -1,0 +1,4 @@
+Ver estas librarias de UI:
+https://github.com/wasabeef/awesome-android-ui
+
+voltar atras na lista de schedules fragment

@@ -5,16 +5,27 @@ public class Schedule {
     private String companyName;
     private String departureDate;
     private String departureHour;
-    private String departureLocation;
+    private String origin;
     private String destination;
     private String arrivingHour;
+    private double price;
 
-    public Schedule(String companyName, String departureDate, String departureHour, String departureLocation,
+    public Schedule(String companyName, String departureDate, String departureHour, String origin,
+                    String arrivingLocation, double price) {
+        this.companyName = companyName;
+        this.departureDate = departureDate;
+        this.departureHour = departureHour;
+        this.origin = origin;
+        this.destination = arrivingLocation;
+        this.price = price;
+    }
+
+    public Schedule(String companyName, String departureDate, String departureHour, String origin,
                     String arrivingLocation, String arrivingHour) {
         this.companyName = companyName;
         this.departureDate = departureDate;
         this.departureHour = departureHour;
-        this.departureLocation = departureLocation;
+        this.origin = origin;
         this.destination = arrivingLocation;
         this.arrivingHour = arrivingHour;
     }
@@ -49,12 +60,12 @@ public class Schedule {
         this.departureHour = departureHour;
     }
 
-    public String getDepartureLocation() {
-        return departureLocation;
+    public String getOrigin() {
+        return origin;
     }
 
-    public void setDepartureLocation(String departureLocation) {
-        this.departureLocation = departureLocation;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public String getDestination() {
@@ -71,5 +82,13 @@ public class Schedule {
 
     public void setArrivingHour(String arrivingHour) {
         this.arrivingHour = arrivingHour;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }

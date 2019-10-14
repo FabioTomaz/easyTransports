@@ -20,7 +20,7 @@
             android:textSize="18sp"
             android:padding="5dp"/>
         <TextView
-            android:id="@+id/destination"
+            android:id="@+id/trip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
@@ -28,6 +28,25 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/schedule_second_col"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
+        <TextView
+            android:id="@+id/hour_departure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/hour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="5dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/schedule_third_col"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

@@ -19,6 +19,8 @@ import com.transports.utils.Constants;
 
 import java.util.ArrayList;
 
+import static com.transports.data.AppDataInfo.availableTransports;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,9 +74,14 @@ public class SchedulesViewerFragment extends Fragment {
             //Load the date from the network or other resources
             //into the array list asynchronously
 
-            schedulesList.add(new Schedule("CP ", "Aveiro"));
-            schedulesList.add(new Schedule("CP", "Estarreja"));
-            schedulesList.add(new Schedule("CP", "Aveiro"));
+            //place all transports in the adapter
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "12:50", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("Carris ", "12/12/2019", "12:50", "Aveiro", "Porto", 2.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:10", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:20", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "14:50", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("Move Aveiro ", "12/12/2019", "15:50", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:50", "Aveiro", "Porto", 1.45));
 
             listAdapter.notifyDataSetChanged();
         }

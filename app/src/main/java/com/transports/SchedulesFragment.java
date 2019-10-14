@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import static com.transports.data.AppDataInfo.availableTransports;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 
 
@@ -46,14 +47,23 @@ public class SchedulesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //get the spinner from the xml.
-        final Spinner dropdown = getView().findViewById(R.id.transport_companies_spinner);
+        final Spinner Transportsdropdown = getView().findViewById(R.id.transport_companies_spinner);
         //create a list of items for the spinner.
-        String[] items = new String[]{"Comboios Portugal", "Carris", "Move Aveiro"};
+
+        if (availableTransports.isEmpty()){
+            //api call
+
+            //(replace with api call)
+            availableTransports.add("Comboios Portugal");
+            availableTransports.add("Carris");
+            availableTransports.add("MoveAveiro");
+        }
+
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, availableTransports);
         //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
+        Transportsdropdown.setAdapter(adapter);
 
         //
         final Button searchSchedulesBtn = (Button) getView().findViewById(R.id.schedules_submit_button);
@@ -61,7 +71,7 @@ public class SchedulesFragment extends Fragment {
         searchSchedulesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString(TRANSPORT_COMPANY, dropdown.getSelectedItem().toString()); // Put anything what you want
+                bundle.putString(TRANSPORT_COMPANY, Transportsdropdown.getSelectedItem().toString()); // Put anything what you want
 
                 SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
                 schedulesViewFragment.setArguments(bundle);
