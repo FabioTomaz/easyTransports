@@ -2,3 +2,5 @@ Ver estas librarias de UI:
 https://github.com/wasabeef/awesome-android-ui
 
 voltar atras na lista de schedules fragment
+
+criar um diagrama com chamadas a api's

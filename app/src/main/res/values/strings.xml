@@ -46,6 +46,7 @@
     <string name="destination_stop_title">Destination:</string>
     <string name="departure_title">Departure Date:</string>
     <string name="search_schedules_btn">Search</string>
+    <string name="buy_ticket_btn">Buy</string>
     <!-- Tickets -->
     <string name="no_tickets">You have no tickets to use. Go to the "Schedules" screen to purchase tickets.</string>
 </resources>

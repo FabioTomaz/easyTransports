@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,8 +19,6 @@ import com.transports.data.SchedulesAdapter;
 import com.transports.utils.Constants;
 
 import java.util.ArrayList;
-
-import static com.transports.data.AppDataInfo.availableTransports;
 
 
 /**
@@ -33,6 +32,8 @@ public class SchedulesViewerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private String transportCompany;
     private String departureDate;
+    private String origin;
+    private String destination;
     private SchedulesAdapter listAdapter;
     private ArrayList<Schedule> schedulesList = new ArrayList<>();
     private RecyclerView recycler;
@@ -60,12 +61,19 @@ public class SchedulesViewerFragment extends Fragment {
         if(bundle != null){
             transportCompany = bundle.getString(Constants.TRANSPORT_COMPANY);
             departureDate = bundle.getString(Constants.DEPARTURE_DATE);
+            origin = bundle.getString(Constants.ORIGIN);
+            destination = bundle.getString(Constants.DESTINATION);
+
+
+            getActivity().setTitle(origin+" - "+destination);
 
             //call service give info and receive
 
 
             //place this on the rest api call response
             recycler = getView().findViewById(R.id.schedules_list);
+            recycler.addItemDecoration(new DividerItemDecoration(getContext(),
+                    DividerItemDecoration.VERTICAL));//add separator
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
             recycler.setLayoutManager(layoutManager);
             listAdapter = new SchedulesAdapter(schedulesList, getContext());
@@ -75,13 +83,12 @@ public class SchedulesViewerFragment extends Fragment {
             //into the array list asynchronously
 
             //place all transports in the adapter
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "12:50", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("Carris ", "12/12/2019", "12:50", "Aveiro", "Porto", 2.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:10", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:20", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "14:50", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("Move Aveiro ", "12/12/2019", "15:50", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:50", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:10", "13:42", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:20", "13:52", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("CP ", "12/12/2019", "14:50", "15:10", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new Schedule("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
 
             listAdapter.notifyDataSetChanged();
         }

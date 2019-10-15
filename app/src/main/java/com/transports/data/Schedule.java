@@ -10,24 +10,15 @@ public class Schedule {
     private String arrivingHour;
     private double price;
 
-    public Schedule(String companyName, String departureDate, String departureHour, String origin,
-                    String arrivingLocation, double price) {
-        this.companyName = companyName;
-        this.departureDate = departureDate;
-        this.departureHour = departureHour;
-        this.origin = origin;
-        this.destination = arrivingLocation;
-        this.price = price;
-    }
-
-    public Schedule(String companyName, String departureDate, String departureHour, String origin,
-                    String arrivingLocation, String arrivingHour) {
+    public Schedule(String companyName, String departureDate, String departureHour, String arrivingHour,
+                    String origin, String arrivingLocation, double price) {
         this.companyName = companyName;
         this.departureDate = departureDate;
         this.departureHour = departureHour;
         this.origin = origin;
         this.destination = arrivingLocation;
         this.arrivingHour = arrivingHour;
+        this.price = price;
     }
 
     //temporary...

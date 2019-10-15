@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -14,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import static com.transports.data.AppDataInfo.availableTransports;
+import static com.transports.utils.Constants.DESTINATION;
+import static com.transports.utils.Constants.ORIGIN;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 
 
@@ -47,7 +50,9 @@ public class SchedulesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //get the spinner from the xml.
-        final Spinner Transportsdropdown = getView().findViewById(R.id.transport_companies_spinner);
+        final Spinner transportsDropdown = getView().findViewById(R.id.transport_companies_spinner);
+        final AutoCompleteTextView originDropdown = getView().findViewById(R.id.departure_stop);
+        final AutoCompleteTextView destinationDropdown = getView().findViewById(R.id.arrival_stop);
         //create a list of items for the spinner.
 
         if (availableTransports.isEmpty()){
@@ -63,7 +68,7 @@ public class SchedulesFragment extends Fragment {
         //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, availableTransports);
         //set the spinners adapter to the previously created one.
-        Transportsdropdown.setAdapter(adapter);
+        transportsDropdown.setAdapter(adapter);
 
         //
         final Button searchSchedulesBtn = (Button) getView().findViewById(R.id.schedules_submit_button);
@@ -71,7 +76,9 @@ public class SchedulesFragment extends Fragment {
         searchSchedulesBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString(TRANSPORT_COMPANY, Transportsdropdown.getSelectedItem().toString()); // Put anything what you want
+                bundle.putString(TRANSPORT_COMPANY, transportsDropdown.getSelectedItem().toString());
+                bundle.putString(ORIGIN, originDropdown.getText().toString());
+                bundle.putString(DESTINATION, destinationDropdown.getText().toString());
 
                 SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
                 schedulesViewFragment.setArguments(bundle);
