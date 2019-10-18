@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.transports.data.Schedule;
+import com.transports.data.TripChild;
 import com.transports.data.SchedulesAdapter;
 import com.transports.utils.Constants;
 
@@ -35,7 +37,7 @@ public class SchedulesViewerFragment extends Fragment {
     private String origin;
     private String destination;
     private SchedulesAdapter listAdapter;
-    private ArrayList<Schedule> schedulesList = new ArrayList<>();
+    private ArrayList<TripChild> schedulesList = new ArrayList<>();
     private RecyclerView recycler;
 
     public SchedulesViewerFragment() {
@@ -83,12 +85,12 @@ public class SchedulesViewerFragment extends Fragment {
             //into the array list asynchronously
 
             //place all transports in the adapter
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:10", "13:42", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "13:20", "13:52", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("CP ", "12/12/2019", "14:50", "15:10", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new Schedule("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
+            schedulesList.add(new TripChild("CP ", "12/12/2019", "13:10", "13:42", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new TripChild("CP ", "12/12/2019", "13:20", "13:52", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new TripChild("CP ", "12/12/2019", "14:50", "15:10", "Aveiro", "Porto", 1.45));
+            schedulesList.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
 
             listAdapter.notifyDataSetChanged();
         }
@@ -105,11 +107,24 @@ public class SchedulesViewerFragment extends Fragment {
 
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
 
-                    Fragment fragInstance = new SchedulesFragment();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    // Get fragment one if exist.
+                    Fragment schedulesFragment = new SchedulesFragment();
+
+                    fragmentTransaction.replace(R.id.container, schedulesFragment);
+
+                    // Do not add fragment three in back stack.
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    /*Fragment fragInstance = new SchedulesFragment();
 
                     getFragmentManager().beginTransaction()
                             .add(R.id.container, fragInstance)
-                            .commit();
+                            .commit();*/
+
+
 
                     return true;
                 }

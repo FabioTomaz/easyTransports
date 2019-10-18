@@ -1,6 +1,8 @@
 package com.transports.data;
 
-public class Schedule {
+import java.io.Serializable;
+
+public class TripChild implements Serializable {
 
     private String companyName;
     private String departureDate;
@@ -10,8 +12,8 @@ public class Schedule {
     private String arrivingHour;
     private double price;
 
-    public Schedule(String companyName, String departureDate, String departureHour, String arrivingHour,
-                    String origin, String arrivingLocation, double price) {
+    public TripChild(String companyName, String departureDate, String departureHour, String arrivingHour,
+                     String origin, String arrivingLocation, double price) {
         this.companyName = companyName;
         this.departureDate = departureDate;
         this.departureHour = departureHour;
@@ -22,7 +24,7 @@ public class Schedule {
     }
 
     //temporary...
-    public Schedule(String companyName, String destination) {
+    public TripChild(String companyName, String destination) {
         this.companyName = companyName;
         this.destination = destination;
     }

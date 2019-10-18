@@ -1,6 +1,6 @@
 Ver estas librarias de UI:
 https://github.com/wasabeef/awesome-android-ui
 
-voltar atras na lista de schedules fragment
+voltar atras na lista de schedules fragment -> reset ao titulo da appbar
 
 criar um diagrama com chamadas a api's

@@ -16,11 +16,11 @@ import java.util.ArrayList;
 public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.SchedulesHolder> {
 
     // List to store all the contact details
-    private ArrayList<Schedule> schedulesList;
+    private ArrayList<TripChild> schedulesList;
     private Context mContext;
 
     // Constructor for the Class
-    public SchedulesAdapter(ArrayList<Schedule> schedulesList, Context context) {
+    public SchedulesAdapter(ArrayList<TripChild> schedulesList, Context context) {
         this.schedulesList = schedulesList;
         this.mContext = context;
     }
@@ -44,13 +44,13 @@ public class SchedulesAdapter extends RecyclerView.Adapter<SchedulesAdapter.Sche
     // This method is called when binding the data to the views being created in RecyclerView
     @Override
     public void onBindViewHolder(@NonNull SchedulesHolder holder, final int position) {
-        final Schedule schedule = schedulesList.get(position);
+        final TripChild tripChild = schedulesList.get(position);
 
         // Set the data to the views here
-        holder.setTransportName(schedule.getCompanyName());
-        holder.setDestination(schedule.getOrigin(), schedule.getDestination());
-        holder.setTravelingHours(schedule.getDepartureHour(), schedule.getArrivingHour());
-        holder.setPrice(schedule.getPrice());
+        holder.setTransportName(tripChild.getCompanyName());
+        holder.setDestination(tripChild.getOrigin(), tripChild.getDestination());
+        holder.setTravelingHours(tripChild.getDepartureHour(), tripChild.getArrivingHour());
+        holder.setPrice(tripChild.getPrice());
 
         // You can set click listners to indvidual items in the viewholder here
         // make sure you pass down the listner or make the Data members of the viewHolder public
