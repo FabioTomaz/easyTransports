@@ -16,11 +16,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.transports.data.TripChild;
-import com.transports.data.SchedulesAdapter;
+import com.transports.expandable_list.TripAdapter;
+import com.transports.expandable_list.TripChild;
+import com.transports.expandable_list.TripParent;
+import com.transports.expandable_list.TripParentViewHolder;
 import com.transports.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static android.widget.LinearLayout.VERTICAL;
 
 
 /**
@@ -36,9 +42,10 @@ public class SchedulesViewerFragment extends Fragment {
     private String departureDate;
     private String origin;
     private String destination;
-    private SchedulesAdapter listAdapter;
     private ArrayList<TripChild> schedulesList = new ArrayList<>();
+    private ArrayList<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
+    private TripParentViewHolder tripParentViewHolder;
 
     public SchedulesViewerFragment() {
         // Required empty public constructor
@@ -72,18 +79,6 @@ public class SchedulesViewerFragment extends Fragment {
             //call service give info and receive
 
 
-            //place this on the rest api call response
-            recycler = getView().findViewById(R.id.schedules_list);
-            recycler.addItemDecoration(new DividerItemDecoration(getContext(),
-                    DividerItemDecoration.VERTICAL));//add separator
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recycler.setLayoutManager(layoutManager);
-            listAdapter = new SchedulesAdapter(schedulesList, getContext());
-            recycler.setAdapter(listAdapter);
-
-            //Load the date from the network or other resources
-            //into the array list asynchronously
-
             //place all transports in the adapter
             schedulesList.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
             schedulesList.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
@@ -92,7 +87,24 @@ public class SchedulesViewerFragment extends Fragment {
             schedulesList.add(new TripChild("CP ", "12/12/2019", "14:50", "15:10", "Aveiro", "Porto", 1.45));
             schedulesList.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
 
-            listAdapter.notifyDataSetChanged();
+
+            TripParent t1 = new TripParent("13:25", "14:20", "12/12/2019", "Aveiro", "Porto", schedulesList);
+            TripParent t2 = new TripParent("14:25", "15:30", "12/12/2019", "Aveiro", "Porto", schedulesList);
+            TripParent t3 = new TripParent("14:30", "15:50", "12/12/2019", "Aveiro", "Porto", schedulesList);
+            final List<TripParent> tripParents = Arrays.asList(t1, t2, t3);
+
+
+            recycler = (RecyclerView) getView().findViewById(R.id.schedules_list);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+            //instantiate your adapter with the list of genres
+            TripAdapter adapter = new TripAdapter(tripParents);
+            recycler.setLayoutManager(layoutManager);
+            recycler.setAdapter(adapter);
+
+            DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+            recycler.addItemDecoration(decoration);
+
         }
     }
 
