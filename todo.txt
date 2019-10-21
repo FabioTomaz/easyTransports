@@ -4,3 +4,9 @@ https://github.com/wasabeef/awesome-android-ui
 voltar atras na lista de schedules fragment -> reset ao titulo da appbar
 
 criar um diagrama com chamadas a api's
+
+https://demonuts.com/android-horizontal-recyclerview/
+
+http://www.devexchanges.info/2016/06/carousel-layout-with-viewpager-in.html
+
+textview: https://github.com/vipulasri/TicketView

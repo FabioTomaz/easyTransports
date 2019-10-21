@@ -1,4 +1,4 @@
-package com.transports.expandable_list;
+package com.transports.expandable_list.schedule_list;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ public class TripAdapter extends ExpandableRecyclerViewAdapter<TripParentViewHol
     @Override
     public TripChildViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.schedules_row, parent, false);
+                .inflate(R.layout.trip_child, parent, false);
         return new TripChildViewHolder(view);
     }
 

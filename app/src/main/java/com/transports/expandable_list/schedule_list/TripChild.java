@@ -1,4 +1,4 @@
-package com.transports.expandable_list;
+package com.transports.expandable_list.schedule_list;
 
 import android.os.Parcel;
 import android.os.Parcelable;

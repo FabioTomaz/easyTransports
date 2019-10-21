@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.transports.expandable_list.TripAdapter;
-import com.transports.expandable_list.TripChild;
-import com.transports.expandable_list.TripParent;
-import com.transports.expandable_list.TripParentViewHolder;
+import com.transports.expandable_list.schedule_list.TripAdapter;
+import com.transports.expandable_list.schedule_list.TripChild;
+import com.transports.expandable_list.schedule_list.TripParent;
+import com.transports.expandable_list.schedule_list.TripParentViewHolder;
 import com.transports.utils.Constants;
 
 import java.util.ArrayList;
