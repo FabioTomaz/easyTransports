@@ -3,10 +3,12 @@ https://github.com/wasabeef/awesome-android-ui
 
 voltar atras na lista de schedules fragment -> reset ao titulo da appbar
 
-criar um diagrama com chamadas a api's
 
 https://demonuts.com/android-horizontal-recyclerview/
 
-http://www.devexchanges.info/2016/06/carousel-layout-with-viewpager-in.html
+horizontal recycle view: https://stackoverflow.com/questions/29171436/how-to-create-a-horizontal-cardview-using-recyclerview-with-only-one-card-on-the
+
+detetar qual elemento na recycle view esta no centro:
+https://stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
 
 textview: https://github.com/vipulasri/TicketView

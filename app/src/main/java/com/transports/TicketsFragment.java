@@ -4,11 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.transports.expandable_list.tickets_list.Ticket;
+import com.transports.expandable_list.tickets_list.TicketListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,14 +27,19 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link TicketsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TicketsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class TicketsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RecyclerView mRecyclerView;
+    private TicketListAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    /**
+     * You shouldn't define first page = 0.
+     * Let define firstpage = 'number viewpager size' to make endless carousel
+     */
+    private static int FIRST_PAGE = 10;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -35,31 +51,9 @@ public class TicketsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TicketsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TicketsFragment newInstance(String param1, String param2) {
-        TicketsFragment fragment = new TicketsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -68,6 +62,66 @@ public class TicketsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tickets, container, false);
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        //RecyclerView
+        mRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
+        mRecyclerView.setHasFixedSize(true);
+
+        mAdapter = new TicketListAdapter(getContext(), getData());
+        mRecyclerView.setAdapter(mAdapter);
+
+        //Layout manager for the Recycler View
+        mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int position = getCurrentItem();
+                    //onPageChanged(position);
+                    Log.i("item", getCurrentItem()+"");
+                }
+            }
+        });
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mRecyclerView);
+    }
+
+    private int getCurrentItem(){
+        return ((LinearLayoutManager)mRecyclerView.getLayoutManager())
+                .findFirstVisibleItemPosition();
+    }
+
+    private void setCurrentItem(int position, boolean smooth){
+        if (smooth)
+            mRecyclerView.smoothScrollToPosition(position);
+        else
+            mRecyclerView.scrollToPosition(position);
+    }
+
+    public static List<Ticket> getData() {
+        List<Ticket> ticketList = new ArrayList<>();
+        String[] cardTitle = {
+                "Card 1",
+                "Card 2",
+                "Card 3",
+                "Card 4",
+                "Card 5",
+                "Card 6",
+        };
+        for (int i = 0; i < cardTitle.length; i++) {
+            Ticket current = new Ticket();
+            current.setOriginDestination(cardTitle[i]);
+            ticketList.add(current);
+        }
+
+        return ticketList;
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -106,5 +160,9 @@ public class TicketsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public static int getFirstPage() {
+        return FIRST_PAGE;
     }
 }
