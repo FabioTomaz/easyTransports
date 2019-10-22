@@ -4,13 +4,17 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A trip chas at least 1 transportation. Departure hour is same as first trip. and arriving hours are same as last trip's arriving hours.
  * Same logic for origin and destination. Price is the sum of all individual trips
  */
 public class TripParent extends ExpandableGroup<TripChild> implements Serializable {
+    private String transports;
     private String departureHour;
     private String arrivalHour;
     private String date;
@@ -77,7 +81,27 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
         for (TripChild t : trips){
             totalPrice+=t.getPrice();
         }
+        totalPrice = (double) Math.round(totalPrice * 100) / 100;
         return totalPrice;
+    }
+
+    //get all diferent transports involved in the trip (in the format transport + transport...)
+    public String getTransports(){
+        if (trips.isEmpty())
+            return "";
+        String t = "";
+        Set<TripChild> uniqueTransports = new HashSet<>(trips);
+        Iterator<TripChild> iterator = uniqueTransports.iterator();
+        int i = 0;
+        while(iterator.hasNext()) {
+            TripChild trip = iterator.next();
+            if (i == uniqueTransports.size()-1)
+                t += trip.getCompanyName();
+            else
+                t += trip.getCompanyName() + " + ";
+            i++;
+        }
+        return t;
     }
 
     public double getTotalPrice() {

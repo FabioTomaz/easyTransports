@@ -35,8 +35,8 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Su
     @Override
     public void onBindViewHolder(SubActivityViewHolder holder, int position) {
         Ticket currentCard = subActivityData.get(position);
-        holder.title.setText(currentCard.getOriginDestination());
-
+        holder.originDestinationText.setText(currentCard.getOriginDestination());
+        holder.transportsText.setText(currentCard.getTransports());
     }
 
     @Override
@@ -46,12 +46,14 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Su
 
     class SubActivityViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
+        TextView originDestinationText;
+        TextView transportsText;
 
         public SubActivityViewHolder(View itemView) {
             super(itemView);
 
-            title = (TextView) itemView.findViewById(R.id.card_text);
+            originDestinationText = (TextView) itemView.findViewById(R.id.origin_destination_ticket);
+            transportsText = (TextView) itemView.findViewById(R.id.transport_ticket);
         }
     }
 }

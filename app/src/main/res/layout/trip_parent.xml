@@ -30,7 +30,7 @@
             android:id="@+id/transports_names"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:padding="5dp"/>
         <TextView
@@ -54,14 +54,14 @@
             android:id="@+id/n_transports"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:padding="5dp"/>
         <TextView
             android:id="@+id/price_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
     </LinearLayout>

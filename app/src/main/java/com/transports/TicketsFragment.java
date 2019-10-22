@@ -3,17 +3,16 @@ package com.transports;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
@@ -40,10 +39,6 @@ public class TicketsFragment extends Fragment {
      * Let define firstpage = 'number viewpager size' to make endless carousel
      */
     private static int FIRST_PAGE = 10;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -105,20 +100,9 @@ public class TicketsFragment extends Fragment {
 
     public static List<Ticket> getData() {
         List<Ticket> ticketList = new ArrayList<>();
-        String[] cardTitle = {
-                "Card 1",
-                "Card 2",
-                "Card 3",
-                "Card 4",
-                "Card 5",
-                "Card 6",
-        };
-        for (int i = 0; i < cardTitle.length; i++) {
-            Ticket current = new Ticket();
-            current.setOriginDestination(cardTitle[i]);
-            ticketList.add(current);
-        }
-
+        ticketList.add(new Ticket("Aveiro - Porto", "CP + Metro", "12/10/2019", "12:00-13:00"));
+        ticketList.add(new Ticket("Aveiro - Coimbra", "CP", "13/10/2019", "14:15-15:00"));
+        ticketList.add(new Ticket("Aveiro - Coimbra", "CP", "14/10/2019", "9:30-10:15"));
         return ticketList;
     }
 
