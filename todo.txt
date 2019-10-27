@@ -12,3 +12,4 @@ detetar qual elemento na recycle view esta no centro:
 https://stackoverflow.com/questions/38247602/android-how-can-i-get-current-positon-on-recyclerview-that-user-scrolled-to-item
 
 textview: https://github.com/vipulasri/TicketView
+

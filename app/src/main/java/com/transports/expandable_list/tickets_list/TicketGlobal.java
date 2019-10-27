@@ -1,17 +1,24 @@
 package com.transports.expandable_list.tickets_list;
 
-public class Ticket {
+import java.util.List;
 
-    private String ticketHash;
+/**
+ * Contains a set of tickets making a trip.
+ */
+public class TicketGlobal {
+
     private String originDestination;
     private String transports;
     private String schedule;
-    private String state;
+    private List<Ticket> tickets;
 
-    public Ticket(String transports, String originDestination, String schedule) {
+    public TicketGlobal(){}
+
+    public TicketGlobal(String originDestination, String transports, String schedule, List<Ticket> tickets) {
         this.originDestination = originDestination;
         this.transports = transports;
         this.schedule = schedule;
+        this.tickets = tickets;
     }
 
     public String getOriginDestination() {
@@ -20,14 +27,6 @@ public class Ticket {
 
     public void setOriginDestination(String originDestination) {
         this.originDestination = originDestination;
-    }
-
-    public String getTicketHash() {
-        return ticketHash;
-    }
-
-    public void setTicketHash(String ticketHash) {
-        this.ticketHash = ticketHash;
     }
 
     public String getTransports() {
@@ -46,21 +45,11 @@ public class Ticket {
         this.schedule = schedule;
     }
 
-    public String getState() {
-        return state;
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    @Override
-    public String toString() {
-        return "Ticket{" +
-                "originDestination='" + originDestination + '\'' +
-                ", transports='" + transports + '\'' +
-                ", schedule='" + schedule + '\'' +
-                ", state='" + state + '\'' +
-                '}';
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
     }
 }

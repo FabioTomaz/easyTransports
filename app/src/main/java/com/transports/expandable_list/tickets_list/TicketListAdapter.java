@@ -13,29 +13,34 @@ import com.transports.R;
 import java.util.Collections;
 import java.util.List;
 
-public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.SubActivityViewHolder> {
+/**
+ * Adapter used for list of global tickets, shown in cards
+ */
+public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.TicketViewHolder> {
 
     private final LayoutInflater inflater;
-    List<Ticket> subActivityData = Collections.EMPTY_LIST;
+    List<TicketGlobal> subActivityData = Collections.EMPTY_LIST;
 
-    public TicketListAdapter(Context context, List<Ticket> subActivityData) {
+    public TicketListAdapter(Context context, List<TicketGlobal> subActivityData) {
         inflater = LayoutInflater.from(context);
         this.subActivityData = subActivityData;
     }
 
 
     @Override
-    public SubActivityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TicketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = inflater.inflate(R.layout.ticket_item, parent, false);
-        SubActivityViewHolder subActivityViewHolder = new SubActivityViewHolder(view);
-        return subActivityViewHolder;
+        TicketViewHolder ticketViewHolder = new TicketViewHolder(view);
+        return ticketViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(SubActivityViewHolder holder, int position) {
-        Ticket currentCard = subActivityData.get(position);
-        holder.title.setText(currentCard.getOriginDestination());
+    public void onBindViewHolder(TicketViewHolder holder, int position) {
+        TicketGlobal currentTicketGlobal = subActivityData.get(position);
+        holder.originDestination.setText(currentTicketGlobal.getOriginDestination());
+        holder.schedule.setText(currentTicketGlobal.getSchedule());
+        holder.transport.setText(currentTicketGlobal.getTransports());
 
     }
 
@@ -44,14 +49,18 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Su
         return subActivityData.size();
     }
 
-    class SubActivityViewHolder extends RecyclerView.ViewHolder {
+    class TicketViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title;
+        TextView originDestination;
+        TextView schedule;
+        TextView transport;
 
-        public SubActivityViewHolder(View itemView) {
+        public TicketViewHolder(View itemView) {
             super(itemView);
 
-            title = (TextView) itemView.findViewById(R.id.card_text);
+            originDestination = (TextView) itemView.findViewById(R.id.ticket_origin_destination);
+            schedule = (TextView) itemView.findViewById(R.id.ticket_hour);
+            transport = (TextView) itemView.findViewById(R.id.ticket_transports);
         }
     }
 }

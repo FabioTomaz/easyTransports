@@ -39,7 +39,7 @@ public class SchedulesViewerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private String transportCompany;
-    private String departureDate;
+    private String date;
     private String origin;
     private String destination;
     private ArrayList<TripChild> schedulesList = new ArrayList<>();
@@ -69,7 +69,7 @@ public class SchedulesViewerFragment extends Fragment {
 
         if(bundle != null){
             transportCompany = bundle.getString(Constants.TRANSPORT_COMPANY);
-            departureDate = bundle.getString(Constants.DEPARTURE_DATE);
+            date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = bundle.getString(Constants.ORIGIN);
             destination = bundle.getString(Constants.DESTINATION);
 

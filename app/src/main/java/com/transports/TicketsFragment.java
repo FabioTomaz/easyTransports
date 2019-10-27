@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +16,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.transports.expandable_list.schedule_list.TripAdapter;
+import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
+import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.LinearLayout.VERTICAL;
 
 
 /**
@@ -31,9 +37,11 @@ import java.util.List;
 public class TicketsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private RecyclerView mRecyclerView;
+    private RecyclerView cardRecyclerView;
     private TicketListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView detailsRecylerView;
+    private List<TicketGlobal> ticketList;
 
     /**
      * You shouldn't define first page = 0.
@@ -66,17 +74,20 @@ public class TicketsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //RecyclerView
-        mRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
-        mRecyclerView.setHasFixedSize(true);
+        cardRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
+        cardRecyclerView.setHasFixedSize(true);
+        detailsRecylerView = (RecyclerView) getView().findViewById(R.id.tickets_list_details_viewpager);
 
-        mAdapter = new TicketListAdapter(getContext(), getData());
-        mRecyclerView.setAdapter(mAdapter);
+        //initialize global ticket cards recyclerview
+        this.ticketList = getData();
+        mAdapter = new TicketListAdapter(getContext(), ticketList);
 
-        //Layout manager for the Recycler View
+        cardRecyclerView.setAdapter(mAdapter);
+
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        cardRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        cardRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -84,28 +95,37 @@ public class TicketsFragment extends Fragment {
                     int position = getCurrentItem();
                     //onPageChanged(position);
                     Log.i("item", getCurrentItem()+"");
+
+                    //initialize individual tickets recycler view
+                    Log.i("item", ticketList.get(position).getTickets()+"");
+                    MyTicketsListAdapter adapter = new MyTicketsListAdapter(getContext(), ticketList.get(position).getTickets());
+                    detailsRecylerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    detailsRecylerView.setAdapter(adapter);
+
+                    DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+                    detailsRecylerView.addItemDecoration(decoration);
                 }
             }
         });
         PagerSnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(mRecyclerView);
+        snapHelper.attachToRecyclerView(cardRecyclerView);
     }
 
     private int getCurrentItem(){
-        return ((LinearLayoutManager)mRecyclerView.getLayoutManager())
+        return ((LinearLayoutManager) cardRecyclerView.getLayoutManager())
                 .findFirstVisibleItemPosition();
     }
 
     private void setCurrentItem(int position, boolean smooth){
         if (smooth)
-            mRecyclerView.smoothScrollToPosition(position);
+            cardRecyclerView.smoothScrollToPosition(position);
         else
-            mRecyclerView.scrollToPosition(position);
+            cardRecyclerView.scrollToPosition(position);
     }
 
-    public static List<Ticket> getData() {
-        List<Ticket> ticketList = new ArrayList<>();
-        String[] cardTitle = {
+    public static List<TicketGlobal> getData() {
+        List<TicketGlobal> ticketList = new ArrayList<>();
+        /*String[] cardTitle = {
                 "Card 1",
                 "Card 2",
                 "Card 3",
@@ -114,10 +134,20 @@ public class TicketsFragment extends Fragment {
                 "Card 6",
         };
         for (int i = 0; i < cardTitle.length; i++) {
-            Ticket current = new Ticket();
+            TicketGlobal current = new TicketGlobal();
             current.setOriginDestination(cardTitle[i]);
             ticketList.add(current);
         }
+
+        return ticketList;*/
+
+        List<Ticket> tickets1 = new ArrayList<>();
+        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
+
+        ticketList.add(new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1));
+        ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets1));
 
         return ticketList;
     }
