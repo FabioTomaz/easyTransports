@@ -12,6 +12,7 @@ import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
 public class TripParentViewHolder extends GroupViewHolder {
 
+    private TextView transports;
     private TextView hoursTotal;
     private TextView priceTotal;
     private TextView nTransports;
@@ -19,6 +20,7 @@ public class TripParentViewHolder extends GroupViewHolder {
 
     public TripParentViewHolder(View itemView) {
         super(itemView);
+        transports = (TextView) itemView.findViewById(R.id.transports_names);
         hoursTotal = (TextView) itemView.findViewById(R.id.hours_total);
         priceTotal = (TextView) itemView.findViewById(R.id.price_total);
         nTransports = (TextView) itemView.findViewById(R.id.n_transports);
@@ -26,6 +28,7 @@ public class TripParentViewHolder extends GroupViewHolder {
     }
 
     public void setTripParent(TripParent tripTotal) {
+        transports.setText(tripTotal.getTransports());
         hoursTotal.setText(tripTotal.getDepartureHour() + " - "+tripTotal.getArrivalHour());
         priceTotal.setText(tripTotal.getTotalPrice()+"€");
         nTransports.setText(tripTotal.getTotalTransports()+"");

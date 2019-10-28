@@ -82,9 +82,6 @@ public class SchedulesViewerFragment extends Fragment {
             //place all transports in the adapter
             schedulesList.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
             schedulesList.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
-            schedulesList.add(new TripChild("CP ", "12/12/2019", "13:10", "13:42", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new TripChild("CP ", "12/12/2019", "13:20", "13:52", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new TripChild("CP ", "12/12/2019", "14:50", "15:10", "Aveiro", "Porto", 1.45));
             schedulesList.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
 
 
