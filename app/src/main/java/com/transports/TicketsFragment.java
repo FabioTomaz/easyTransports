@@ -15,12 +15,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,8 @@ public class TicketsFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView detailsRecylerView;
     private List<TicketGlobal> ticketList;
+    private int currentTicketIndex;
+    private TextView noTicketsText;
 
     /**
      * You shouldn't define first page = 0.
@@ -73,6 +77,8 @@ public class TicketsFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        noTicketsText = (TextView) getView().findViewById(R.id.no_tickets);
+        noTicketsText.setVisibility(View.VISIBLE);
         //RecyclerView
         cardRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
         cardRecyclerView.setHasFixedSize(true);
@@ -87,6 +93,14 @@ public class TicketsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         cardRecyclerView.setLayoutManager(mLayoutManager);
 
+        currentTicketIndex = 0;
+
+        if (ticketList.isEmpty()){
+            noTicketsText.setVisibility(View.VISIBLE);
+        }
+        else
+            showTicketsListForGlobalTicket(currentTicketIndex);
+
         cardRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -95,15 +109,11 @@ public class TicketsFragment extends Fragment {
                     int position = getCurrentItem();
                     //onPageChanged(position);
                     Log.i("item", getCurrentItem()+"");
-
-                    //initialize individual tickets recycler view
-                    Log.i("item", ticketList.get(position).getTickets()+"");
-                    MyTicketsListAdapter adapter = new MyTicketsListAdapter(getContext(), ticketList.get(position).getTickets());
-                    detailsRecylerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    detailsRecylerView.setAdapter(adapter);
-
-                    DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
-                    detailsRecylerView.addItemDecoration(decoration);
+                    if (currentTicketIndex != position ){
+                        currentTicketIndex = position;
+                        //initialize individual tickets recycler view
+                        showTicketsListForGlobalTicket(currentTicketIndex);
+                    }
                 }
             }
         });
@@ -146,8 +156,13 @@ public class TicketsFragment extends Fragment {
         tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
         tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
 
+        List<Ticket> tickets2 = new ArrayList<>();
+        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
+
         ticketList.add(new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1));
-        ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets1));
+        ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets2));
 
         return ticketList;
     }
@@ -194,5 +209,15 @@ public class TicketsFragment extends Fragment {
 
     public static int getFirstPage() {
         return FIRST_PAGE;
+    }
+
+    private void showTicketsListForGlobalTicket (int position){
+        Log.i("item", ticketList.get(position).getTickets()+"");
+        MyTicketsListAdapter adapter = new MyTicketsListAdapter(getContext(), ticketList.get(position).getTickets());
+        detailsRecylerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        detailsRecylerView.setAdapter(adapter);
+
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+        detailsRecylerView.addItemDecoration(decoration);
     }
 }
