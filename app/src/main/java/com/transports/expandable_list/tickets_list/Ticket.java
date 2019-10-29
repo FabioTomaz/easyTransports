@@ -1,6 +1,8 @@
 package com.transports.expandable_list.tickets_list;
 
-public class Ticket {
+import java.io.Serializable;
+
+public class Ticket implements Serializable {
 
     private String ticketHash;
     private String originDestination;

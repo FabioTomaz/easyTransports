@@ -22,7 +22,7 @@
         app:ticketCornerType="rounded"
         app:ticketElevation="8dp"/>
 
-    <androidx.constraintlayout.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,19 +73,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="transports"
+            android:text="Aveiro - Porto"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="fffffff"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
+            android:text="CP"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ticket genre"
+            android:text=""
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
         <LinearLayout
@@ -104,13 +104,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="hour"
+                    android:text="9:30 - 10:30"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ticker state"
+                    android:text="duration: 1hr"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
             </LinearLayout>
@@ -132,13 +132,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="time"
+                    android:text="Ticket purchased at:"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ff"
+                    android:text="12/10/2018"
                     android:textColor="@color/material_grey_300"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
@@ -161,13 +161,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="dsgxgssg"
+                    android:text="Ticket Valid"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="fff"
+                    android:text=""
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
             </LinearLayout>

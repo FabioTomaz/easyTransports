@@ -2,12 +2,10 @@ package com.transports.expandable_list.tickets_list;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +15,8 @@ import com.transports.TicketUseActivity;
 
 import java.util.Collections;
 import java.util.List;
+
+import static com.transports.utils.Constants.TICKET_EXTRA_INTENT;
 
 /**
  * Adapter used for list of individual tickets, that make a global ticket
@@ -41,7 +41,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
     }
 
     @Override
-    public void onBindViewHolder(MyTicketViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyTicketViewHolder holder, final int position) {
         Ticket currentTicket = tickets.get(position);
         holder.originDestination.setText(currentTicket.getOriginDestination());
         holder.transports.setText(currentTicket.getTransports());
@@ -52,7 +52,8 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
             public void onClick(View v) {
                 //((RecyclerView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
                 Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
-                intent.putExtra("", "");
+                //Log.d("ticketPos", tickets.get(holder.getAdapterPosition())+"");
+                intent.putExtra(TICKET_EXTRA_INTENT, tickets.get(holder.getAdapterPosition())+"");
                 v.getContext().startActivity(intent);
             }
         });

@@ -113,8 +113,19 @@ public class SchedulesFragment extends Fragment {
                     destinationDropdown.setError( getString(R.string.destination_error_message ));
                     return;
                 }
-                String originStopID = AppDataInfo.stops.get(originDropdown.getListSelection()).getStopId();
-                String destinationStopID = AppDataInfo.stops.get(destinationDropdown.getListSelection()).getStopId();
+
+                int originSelectedIndex = AppDataInfo.stops.indexOf(originDropdown.getText().toString());
+                if (originSelectedIndex < 0 || originSelectedIndex >= AppDataInfo.stops.size()){
+                    originDropdown.setError(getString(R.string.stop_error_message));
+                    return;
+                }
+                int destinationSelectedIndex = AppDataInfo.stops.indexOf(originDropdown.getText().toString());
+                if (destinationSelectedIndex < 0 || destinationSelectedIndex >= AppDataInfo.stops.size()){
+                    destinationDropdown.setError(getString(R.string.stop_error_message));
+                    return;
+                }
+                String originStopID = AppDataInfo.stops.get(originSelectedIndex).getStopId();
+                String destinationStopID = AppDataInfo.stops.get(destinationSelectedIndex).getStopId();
                 Bundle bundle = new Bundle();
                 bundle.putString(TRANSPORT_COMPANY, transportsDropdown.getSelectedItem().toString());
                 bundle.putString(ORIGIN, originStopID);

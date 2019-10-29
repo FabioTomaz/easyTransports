@@ -49,6 +49,7 @@
     <string name="search_schedules_btn">Search</string>
     <string name="buy_ticket_btn">Buy</string>
     <string name="origin_error_message">Origin stop must be selected</string>
+    <string name="stop_error_message">You must select a valid stop from the available list</string>
     <string name="destination_error_message">Destination stop must be selected</string>
     <!-- Tickets -->
     <string name="no_tickets">You have no tickets to use. Go to the "Schedules" screen to purchase tickets.</string>
