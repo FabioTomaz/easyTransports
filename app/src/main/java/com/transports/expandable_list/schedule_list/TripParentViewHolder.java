@@ -1,7 +1,9 @@
 package com.transports.expandable_list.schedule_list;
 
+import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ public class TripParentViewHolder extends GroupViewHolder {
     private TextView priceTotal;
     private TextView nTransports;
     private ImageView dropdownArrow;
+    private Button buyBtn;
 
     public TripParentViewHolder(View itemView) {
         super(itemView);
@@ -25,6 +28,17 @@ public class TripParentViewHolder extends GroupViewHolder {
         priceTotal = (TextView) itemView.findViewById(R.id.price_total);
         nTransports = (TextView) itemView.findViewById(R.id.n_transports);
         dropdownArrow = (ImageView) itemView.findViewById(R.id.dropdown_image);
+        buyBtn = (Button) itemView.findViewById(R.id.buy);
+
+        buyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("buyBtn", "");
+                /*Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
+                intent.putExtra("", "");
+                v.getContext().startActivity(intent);*/
+            }
+        });
     }
 
     public void setTripParent(TripParent tripTotal) {

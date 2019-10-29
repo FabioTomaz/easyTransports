@@ -11,8 +11,8 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
-        app:cardBackgroundColor="#B6B6B6">
+        android:elevation="50dp"
+        app:cardBackgroundColor="#FFFFFF">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

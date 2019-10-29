@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class SchedulesFragment extends Fragment {
     private Spinner transportsDropdown;
     private AutoCompleteTextView originDropdown;
     private AutoCompleteTextView destinationDropdown;
+    private String[] stopNames;
 
     public SchedulesFragment() {
         // Required empty public constructor
@@ -113,8 +115,33 @@ public class SchedulesFragment extends Fragment {
                     destinationDropdown.setError( getString(R.string.destination_error_message ));
                     return;
                 }
-                String originStopID = AppDataInfo.stops.get(originDropdown.getListSelection()).getStopId();
-                String destinationStopID = AppDataInfo.stops.get(destinationDropdown.getListSelection()).getStopId();
+
+                //user cannot select same origin and destination stop
+                if (destinationDropdown.getText().toString().equals(originDropdown.getText().toString())){
+                    destinationDropdown.setError(getString(R.string.stop_error_message2));
+                    return;
+                }
+
+                Log.d("stop", originDropdown.getText().toString());
+                int originSelectedIndex = -1;
+                int destinationSelectedIndex = -1;
+                for (int i = 0; i < stopNames.length; i++){
+                    if (stopNames[i].equals(originDropdown.getText().toString()))
+                        originSelectedIndex = i;
+                    if (stopNames[i].equals(destinationDropdown.getText().toString()))
+                        destinationSelectedIndex = i;
+                }
+                if (originSelectedIndex < 0 || originSelectedIndex >= AppDataInfo.stops.size()){
+                    originDropdown.setError(getString(R.string.stop_error_message));
+                    return;
+                }
+                if (destinationSelectedIndex < 0 || destinationSelectedIndex >= AppDataInfo.stops.size()){
+                    destinationDropdown.setError(getString(R.string.stop_error_message));
+                    return;
+                }
+
+                String originStopID = AppDataInfo.stops.get(originSelectedIndex).getStopId();
+                String destinationStopID = AppDataInfo.stops.get(destinationSelectedIndex).getStopId();
                 Bundle bundle = new Bundle();
                 bundle.putString(TRANSPORT_COMPANY, transportsDropdown.getSelectedItem().toString());
                 bundle.putString(ORIGIN, originStopID);
@@ -222,7 +249,7 @@ public class SchedulesFragment extends Fragment {
     }
 
     public void setStopsOnDropDowns(){
-        String[] stopNames = new String [AppDataInfo.stops.size()];
+        stopNames = new String [AppDataInfo.stops.size()];
         for (int i = 0; i < AppDataInfo.stops.size(); i++){
             stopNames[i] = AppDataInfo.stops.get(i).getStopName();
         }
@@ -248,55 +275,5 @@ public class SchedulesFragment extends Fragment {
 
             }
         }, 10);
-    }
-
-    public void getRoute(String originStopID, String destinationStopID) {
-        // Initialize a new RequestQueue instance
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        // Initialize a new JsonObjectRequest instance
-        JsonArrayRequest jsonArrayRequest  = new JsonArrayRequest(
-                Request.Method.GET,
-                GET_ROUTE+"/originStopID/"+destinationStopID,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        // Do something with response
-
-
-                        // Process the JSON
-                        try {
-                            // Get the JSON array
-                            // Loop through the array elements
-                            for (int i = 0; i < response.length(); i++) {
-                                // Get current json object
-                                JSONObject stop = response.getJSONObject(i);
-
-                                // Get the current student (json object) data
-                                String stopId = stop.getString("stop_id");
-                                String stopName = stop.getString("stop_name");
-                                double stopLat = Double.parseDouble(stop.getJSONArray("loc").getString(0));
-                                double stopLong = Double.parseDouble(stop.getJSONArray("loc").getString(1));
-                                Stop stopObjet = new Stop(stopId, stopName, stopLat, stopLong);
-                                AppDataInfo.stops.add(stopObjet);
-                            }
-                            setStopsOnDropDowns();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Do something when error occurred
-                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
-
-        // Add JsonObjectRequest to the RequestQueue
-        requestQueue.add(jsonArrayRequest);
     }
 }

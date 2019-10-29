@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,17 +17,26 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
 import com.transports.expandable_list.schedule_list.TripParentViewHolder;
 import com.transports.utils.Constants;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
+import static com.transports.data.URLs.GET_ROUTE;
 
 
 /**
@@ -140,6 +150,42 @@ public class SchedulesViewerFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    public void getRoute(String originStopID, String destinationStopID) {
+        // Initialize a new RequestQueue instance
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        // Initialize a new JsonObjectRequest instance
+        JsonArrayRequest jsonArrayRequest  = new JsonArrayRequest(
+                Request.Method.GET,
+                GET_ROUTE+"/"+originStopID+"/"+destinationStopID,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // Do something with response
+
+                        // Process the JSON
+                        /*try {
+                            Log.d("routes", response+"");
+                            setStopsOnDropDowns();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }*/
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Do something when error occurred
+                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
