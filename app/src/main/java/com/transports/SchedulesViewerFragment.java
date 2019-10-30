@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
@@ -50,8 +51,8 @@ public class SchedulesViewerFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private String transportCompany;
     private String date;
-    private String origin;
-    private String destination;
+    private Stop origin;
+    private Stop destination;
     private ArrayList<TripChild> schedulesList = new ArrayList<>();
     private ArrayList<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
@@ -80,11 +81,11 @@ public class SchedulesViewerFragment extends Fragment {
         if(bundle != null){
             transportCompany = bundle.getString(Constants.TRANSPORT_COMPANY);
             date = bundle.getString(Constants.DEPARTURE_DATE);
-            origin = bundle.getString(Constants.ORIGIN);
-            destination = bundle.getString(Constants.DESTINATION);
+            origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
+            destination = (Stop) bundle.getSerializable(Constants.DESTINATION);
 
 
-            getActivity().setTitle(origin+" - "+destination);
+            getActivity().setTitle(origin.getStopName()+" - "+destination.getStopName());
 
             //call service give info and receive
 
@@ -143,13 +144,17 @@ public class SchedulesViewerFragment extends Fragment {
                             .add(R.id.container, fragInstance)
                             .commit();*/
 
-
-
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().setTitle(getString(R.string.app_name_full));
     }
 
     public void getRoute(String originStopID, String destinationStopID) {

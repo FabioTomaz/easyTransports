@@ -144,8 +144,8 @@ public class SchedulesFragment extends Fragment {
                 String destinationStopID = AppDataInfo.stops.get(destinationSelectedIndex).getStopId();
                 Bundle bundle = new Bundle();
                 bundle.putString(TRANSPORT_COMPANY, transportsDropdown.getSelectedItem().toString());
-                bundle.putString(ORIGIN, originStopID);
-                bundle.putString(DESTINATION, destinationStopID);
+                bundle.putSerializable(ORIGIN, AppDataInfo.stops.get(originSelectedIndex));
+                bundle.putSerializable(DESTINATION, AppDataInfo.stops.get(destinationSelectedIndex));
 
                 SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
                 schedulesViewFragment.setArguments(bundle);

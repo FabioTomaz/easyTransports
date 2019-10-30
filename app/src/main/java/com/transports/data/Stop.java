@@ -1,9 +1,11 @@
 package com.transports.data;
 
+import java.io.Serializable;
+
 /**
  * A stop in which a transport (train, bus, metro) stops to pick up passengers.
  */
-public class Stop {
+public class Stop implements Serializable {
     private String stopId;
     private String stopName;
     private double stopLat;

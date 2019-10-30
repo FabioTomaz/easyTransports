@@ -33,7 +33,7 @@ public class TripParentViewHolder extends GroupViewHolder {
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("buyBtn", "");
+                Log.d("buyBtn", getAdapterPosition()+"");
                 /*Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
                 intent.putExtra("", "");
                 v.getContext().startActivity(intent);*/
