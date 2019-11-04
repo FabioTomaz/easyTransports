@@ -7,22 +7,25 @@ import android.view.ViewGroup;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.transports.R;
+import com.transports.SchedulesViewerFragment;
 
 import java.util.List;
 
 public class TripAdapter extends ExpandableRecyclerViewAdapter<TripParentViewHolder, TripChildViewHolder> {
 
     private LayoutInflater mInflator;
+    private SchedulesViewerFragment schedulesViewerFragment;
 
-    public TripAdapter(List<? extends ExpandableGroup> groups) {
+    public TripAdapter(List<? extends ExpandableGroup> groups, SchedulesViewerFragment schedulesViewerFragment) {
         super(groups);
+        this.schedulesViewerFragment = schedulesViewerFragment;
     }
 
     @Override
     public TripParentViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trip_parent, parent, false);
-        return new TripParentViewHolder(view);
+        return new TripParentViewHolder(view, schedulesViewerFragment);
     }
 
     @Override

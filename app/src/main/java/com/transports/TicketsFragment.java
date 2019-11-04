@@ -130,21 +130,6 @@ public class TicketsFragment extends Fragment {
 
     public static List<TicketGlobal> getData() {
         List<TicketGlobal> ticketList = new ArrayList<>();
-        /*String[] cardTitle = {
-                "Card 1",
-                "Card 2",
-                "Card 3",
-                "Card 4",
-                "Card 5",
-                "Card 6",
-        };
-        for (int i = 0; i < cardTitle.length; i++) {
-            TicketGlobal current = new TicketGlobal();
-            current.setOriginDestination(cardTitle[i]);
-            ticketList.add(current);
-        }
-
-        return ticketList;*/
 
         List<Ticket> tickets1 = new ArrayList<>();
         tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));

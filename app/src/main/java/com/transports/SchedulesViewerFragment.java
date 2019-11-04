@@ -1,6 +1,8 @@
 package com.transports;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -22,22 +24,30 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.transports.data.AppDataInfo;
 import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
 import com.transports.expandable_list.schedule_list.TripParentViewHolder;
+import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.utils.Constants;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
+import static com.transports.data.AppDataInfo.getAppContext;
+import static com.transports.data.URLs.CREATE_TICKET;
 import static com.transports.data.URLs.GET_ROUTE;
+import static com.transports.data.URLs.GET_SCHEDULES;
 
 
 /**
@@ -106,7 +116,7 @@ public class SchedulesViewerFragment extends Fragment {
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
             //instantiate your adapter with the list of genres
-            TripAdapter adapter = new TripAdapter(tripParents);
+            TripAdapter adapter = new TripAdapter(tripParents, this);
             recycler.setLayoutManager(layoutManager);
             recycler.setAdapter(adapter);
 
@@ -230,5 +240,53 @@ public class SchedulesViewerFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void handlePurchase(int tripParentPosition){
+        TripParent tripParent = tripParentList.get(tripParentPosition);
+        showConfirmPurchaseDialog(tripParent);
+    }
+
+    public void showConfirmPurchaseDialog(final TripParent tripParent){
+        new AlertDialog.Builder(getContext())
+                .setTitle("Ticket purchase confirmation")
+                .setMessage("Are you sure you want to purchase this(these) ticket(s)? \n All purchases are final.\n The total value is "+tripParent.getTotalPrice())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //user confirmed ticket purchase
+                        purchaseTicket(tripParent);
+                    }})
+                .setNegativeButton(android.R.string.no, null).show();
+    }
+
+    private void purchaseTicket(TripParent tripParent){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        // Initialize a new JsonObjectRequest instance
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+                Request.Method.GET,
+                CREATE_TICKET,
+                null,
+                new Response.Listener<JSONObject >() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Process the JSON
+                        //share the json in shared preferences:
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Do something when error occurred
+                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
     }
 }

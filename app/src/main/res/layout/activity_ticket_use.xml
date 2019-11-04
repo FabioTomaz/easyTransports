@@ -70,6 +70,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline">
 
         <TextView
+            android:id="@+id/ticket_origin_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -77,6 +78,7 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
 
         <TextView
+            android:id="@+id/ticket_transport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CP"
@@ -102,15 +104,16 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/ticket_schedule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="9:30 - 10:30"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
+                    android:id="@+id/ticket_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="duration: 1hr"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
             </LinearLayout>
@@ -132,14 +135,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ticket purchased at:"
+                    android:text="@string/ticket_purchase_date"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
+                    android:id="@+id/ticket_ticket_purchase_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="12/10/2018"
-                    android:textColor="@color/material_grey_300"
+                    android:textColor="@color/material_grey_600"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
             </LinearLayout>
@@ -161,10 +165,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ticket Valid"
+                    android:text="@string/ticket_state_label"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"/>
 
                 <TextView
+                    android:id="@+id/ticket_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""

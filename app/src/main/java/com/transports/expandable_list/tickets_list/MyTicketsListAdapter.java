@@ -53,7 +53,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
                 //((RecyclerView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
                 Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
                 //Log.d("ticketPos", tickets.get(holder.getAdapterPosition())+"");
-                intent.putExtra(TICKET_EXTRA_INTENT, tickets.get(holder.getAdapterPosition())+"");
+                intent.putExtra(TICKET_EXTRA_INTENT, tickets.get(holder.getAdapterPosition()));
                 v.getContext().startActivity(intent);
             }
         });

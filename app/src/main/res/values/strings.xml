@@ -58,4 +58,7 @@
     <string name="schedule_label">Schedule</string>
     <string name="transports_label">Transports</string>
     <string name="origin_destination_label">Origin/Destination</string>
+    <string name="ticket_state_label">Ticket State</string>
+    <string name="ticket_purchase_date">Ticket purchased at</string>
+    <string name="ticket_duration_label">Duration: </string>
 </resources>

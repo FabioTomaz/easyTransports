@@ -1,14 +1,18 @@
 package com.transports.expandable_list.schedule_list;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import com.transports.R;
+import com.transports.SchedulesViewerFragment;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
@@ -20,9 +24,11 @@ public class TripParentViewHolder extends GroupViewHolder {
     private TextView nTransports;
     private ImageView dropdownArrow;
     private Button buyBtn;
+    private SchedulesViewerFragment schedulesViewerFragment;
 
-    public TripParentViewHolder(View itemView) {
+    public TripParentViewHolder(View itemView, SchedulesViewerFragment schedulesViewerFragmentP) {
         super(itemView);
+        this.schedulesViewerFragment = schedulesViewerFragmentP;
         transports = (TextView) itemView.findViewById(R.id.transports_names);
         hoursTotal = (TextView) itemView.findViewById(R.id.hours_total);
         priceTotal = (TextView) itemView.findViewById(R.id.price_total);
@@ -34,9 +40,8 @@ public class TripParentViewHolder extends GroupViewHolder {
             @Override
             public void onClick(View v) {
                 Log.d("buyBtn", getAdapterPosition()+"");
-                /*Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
-                intent.putExtra("", "");
-                v.getContext().startActivity(intent);*/
+                //buy all tickets
+                schedulesViewerFragment.handlePurchase(getAdapterPosition());
             }
         });
     }
