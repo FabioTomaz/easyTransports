@@ -12,11 +12,14 @@ public class Constants {
     public static final String DEPARTURE_DATE = "departure_date";
 
     //Json fields
+
+    // create ticket / receive tickets
     public static final String TRIP = "trip";
     public static final String COMPANY = "company";
     public static final String PRICE = "price";
     public static final String DATE_FIELD = "date_purchased";
     public static final String SCHEDULE = "schedule";
+    public static final String SECRET_FIELD = "secret";
     public static final String TICKET_STATUS_FIELD = "status";
     public static final String TICKET_ID_FIELD = "status";
     public static final String TICKET_INFO_FIELD = "details";

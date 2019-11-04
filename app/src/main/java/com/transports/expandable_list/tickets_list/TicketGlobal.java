@@ -1,5 +1,6 @@
 package com.transports.expandable_list.tickets_list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,13 @@ public class TicketGlobal {
         this.transports = transports;
         this.schedule = schedule;
         this.tickets = tickets;
+    }
+
+    public TicketGlobal(String originDestination, String transports, String schedule) {
+        this.originDestination = originDestination;
+        this.transports = transports;
+        this.schedule = schedule;
+        this.tickets = new ArrayList<>();
     }
 
     public String getOriginDestination() {

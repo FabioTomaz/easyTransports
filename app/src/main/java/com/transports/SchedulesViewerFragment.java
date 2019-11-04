@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +27,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.transports.data.AppDataInfo;
+import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
 import com.transports.expandable_list.schedule_list.TripParentViewHolder;
+import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.utils.Constants;
 
@@ -41,13 +43,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.transports.data.AppDataInfo.getAppContext;
 import static com.transports.data.URLs.CREATE_TICKET;
 import static com.transports.data.URLs.GET_ROUTE;
-import static com.transports.data.URLs.GET_SCHEDULES;
+import static com.transports.utils.Constants.DATE_FIELD;
+import static com.transports.utils.Constants.PRICE;
+import static com.transports.utils.Constants.SCHEDULE;
+import static com.transports.utils.Constants.SECRET_FIELD;
+import static com.transports.utils.Constants.TICKET_INFO_FIELD;
+import static com.transports.utils.Constants.TRANSPORT_COMPANY;
+import static com.transports.utils.Constants.TRIP;
 
 
 /**
@@ -256,24 +264,70 @@ public class SchedulesViewerFragment extends Fragment {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //user confirmed ticket purchase
-                        purchaseTicket(tripParent);
+                        //purchaseTicket(tripParent);
+
+                        List<Ticket> tickets = new ArrayList<>();
+                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
+                        //parse list of purchased tickets
+
+                        List<Ticket> tickets1 = new ArrayList<>();
+                        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+                        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+                        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
+
+                        ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
+                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                        bd.addGlobalTicket(ticketGlobal);
+
+                        Log.d("db", bd.getAllGlobalTickets()+"");
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
     }
 
-    private void purchaseTicket(TripParent tripParent){
+    private void purchaseTicket(final TripParent tripParent){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        //create list of request ticket creation json objects
+        List<JSONObject> jsonTickets = new ArrayList<>();
+        try{
+            for (TripChild trip : tripParent.getTripsChilds()) {
+                JSONObject jsonTicket = new JSONObject();
+                jsonTicket.put(TRANSPORT_COMPANY, trip.getCompanyName());
+                jsonTicket.put(SCHEDULE, trip.getSchedule());
+                jsonTicket.put(TRIP, trip.getTrip());
+                jsonTicket.put(PRICE, trip.getPrice());
+                jsonTicket.put(DATE_FIELD, new Date());
+
+                JSONObject jsonBody = new JSONObject();
+                jsonBody.put(SECRET_FIELD, "secret xyz");
+                jsonBody.put(TICKET_INFO_FIELD, jsonTicket);
+
+                jsonTickets.add(jsonBody);
+            }
+        } catch (JSONException e){ }
+
 
         // Initialize a new JsonObjectRequest instance
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
-                Request.Method.GET,
+                Request.Method.POST,
                 CREATE_TICKET,
                 null,
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
                         // Process the JSON
-                        //share the json in shared preferences:
+                        List<Ticket> tickets = new ArrayList<>();
+                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
+                        //parse list of purchased tickets
+
+                        List<Ticket> tickets1 = new ArrayList<>();
+                        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+                        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+                        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
+
+                        ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
+                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                        bd.addGlobalTicket(ticketGlobal);
+
 
                     }
                 },

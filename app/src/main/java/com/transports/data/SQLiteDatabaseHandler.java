@@ -11,7 +11,6 @@ import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.utils.UtilityFunctions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,6 +143,8 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
             values.put(TICKET_COLUMNS[1], ticket.getDetails());
             values.put(TICKET_COLUMNS[2], ticket.getState());
             values.put(TICKET_COLUMNS[3], id);
+            db.insert(TICKET_TABLE_NAME,null, values);
+            values.clear();
         }
         db.close();
     }

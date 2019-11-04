@@ -110,6 +110,14 @@ public class TripChild implements Parcelable {
         this.price = price;
     }
 
+    public String getSchedule(){
+        return this.departureHour+"-"+this.arrivingHour;
+    }
+
+    public String getTrip(){
+        return this.origin+"-"+this.destination;
+    }
+
     @Override
     public int describeContents() {
         return 0;
