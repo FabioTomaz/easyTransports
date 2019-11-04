@@ -101,10 +101,13 @@ public class Ticket implements Serializable {
     @Override
     public String toString() {
         return "Ticket{" +
-                "originDestination='" + originDestination + '\'' +
+                "details='" + details + '\'' +
+                ", originDestination='" + originDestination + '\'' +
                 ", transports='" + transports + '\'' +
                 ", schedule='" + schedule + '\'' +
                 ", state='" + state + '\'' +
+                ", datePurchased='" + datePurchased + '\'' +
+                ", id=" + id +
                 '}';
     }
 }

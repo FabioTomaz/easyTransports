@@ -72,7 +72,7 @@ public class SchedulesViewerFragment extends Fragment {
     private Stop origin;
     private Stop destination;
     private ArrayList<TripChild> schedulesList = new ArrayList<>();
-    private ArrayList<TripParent> tripParentList = new ArrayList<>();
+    private List<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
     private TripParentViewHolder tripParentViewHolder;
 
@@ -118,8 +118,7 @@ public class SchedulesViewerFragment extends Fragment {
             TripParent t2 = new TripParent("14:25", "15:30", "12/12/2019", "Aveiro", "Porto", schedulesList);
             TripParent t3 = new TripParent("14:30", "15:50", "12/12/2019", "Aveiro", "Porto", schedulesList);
             final List<TripParent> tripParents = Arrays.asList(t1, t2, t3);
-
-
+            this.tripParentList = tripParents;
             recycler = (RecyclerView) getView().findViewById(R.id.schedules_list);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -271,15 +270,14 @@ public class SchedulesViewerFragment extends Fragment {
                         //parse list of purchased tickets
 
                         List<Ticket> tickets1 = new ArrayList<>();
-                        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
-                        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
-                        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
+                        tickets1.add(new Ticket(1, "", "active"));
+                        tickets1.add(new Ticket(2, "", "active"));
 
                         ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                        Log.d("db", bd.getAllGlobalTickets()+"");
                         bd.addGlobalTicket(ticketGlobal);
 
-                        Log.d("db", bd.getAllGlobalTickets()+"");
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
     }

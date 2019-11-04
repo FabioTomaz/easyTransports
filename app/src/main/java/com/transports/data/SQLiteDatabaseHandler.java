@@ -45,7 +45,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
                 + "details TEXT, "
                 + "state TEXT, "
                 + "global_ticket INTEGER ,"
-                + " FOREIGN KEY (global_ticket) REFERENCES Tickets(id));";
+                + " FOREIGN KEY (global_ticket) REFERENCES "+GLOBAL_TICKET_TABLE_NAME+"(id));";
 
         db.execSQL(CREATION_TICKET_TABLE);
 
@@ -77,6 +77,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 int id = cursor.getInt(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[0]));
+                Log.d("getGlobalTicketsDB", id+"");
                 String originDestination = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[1]));
                 String schedule = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[2]));
                 String transports = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[3]));

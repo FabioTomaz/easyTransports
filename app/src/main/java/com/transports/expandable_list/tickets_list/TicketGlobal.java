@@ -60,4 +60,14 @@ public class TicketGlobal {
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
     }
+
+    @Override
+    public String toString() {
+        return "TicketGlobal{" +
+                "originDestination='" + originDestination + '\'' +
+                ", transports='" + transports + '\'' +
+                ", schedule='" + schedule + '\'' +
+                ", tickets=" + tickets +
+                '}';
+    }
 }
