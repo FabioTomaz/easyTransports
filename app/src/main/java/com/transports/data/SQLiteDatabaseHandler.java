@@ -102,7 +102,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
         List<Ticket> tickets = new ArrayList<>();
         Cursor cursor = db.query(TICKET_TABLE_NAME, // a. table
                 TICKET_COLUMNS, // b. column names
-                " global_ticket = ?", // c. selections
+                TICKET_COLUMNS[3]+" = ?", // c. selections
                 new String[] { String.valueOf(globalTicketID) }, // d. selections args
                 null, // e. group by
                 null, // f. having
@@ -110,11 +110,11 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
                 null); // h. limit
 
         if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
+            do {
                 String details = cursor.getString(cursor.getColumnIndex(TICKET_COLUMNS[1]));
                 Ticket ticket = UtilityFunctions.parseJsonToTicket(details);
                 tickets.add(ticket);
-            }
+            } while(cursor.moveToNext());
         }
         return tickets;
     }

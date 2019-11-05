@@ -270,12 +270,12 @@ public class SchedulesViewerFragment extends Fragment {
                         //parse list of purchased tickets
 
                         List<Ticket> tickets1 = new ArrayList<>();
-                        tickets1.add(new Ticket(1, "", "active"));
-                        tickets1.add(new Ticket(2, "", "active"));
+                        tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
+                        tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
 
                         ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                        Log.d("db", bd.getAllGlobalTickets()+"");
+                        Log.d("dbtickets", bd.getAllGlobalTickets()+"");
                         bd.addGlobalTicket(ticketGlobal);
 
                     }})

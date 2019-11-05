@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
-import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -43,6 +42,7 @@ public class TicketsFragment extends Fragment {
     private List<TicketGlobal> ticketList;
     private int currentIndex;
     private TextView noTicketsText;
+    private SQLiteDatabaseHandler bd;
     /**
      * You shouldn't define first page = 0.
      * Let define firstpage = 'number viewpager size' to make endless carousel
@@ -73,6 +73,8 @@ public class TicketsFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        bd = new SQLiteDatabaseHandler(getContext());
+
         noTicketsText = (TextView) getView().findViewById(R.id.no_tickets);
         noTicketsText.setVisibility(View.INVISIBLE);
         currentIndex = 0;
@@ -128,10 +130,12 @@ public class TicketsFragment extends Fragment {
             cardRecyclerView.scrollToPosition(position);
     }
 
-    public static List<TicketGlobal> getData() {
-        List<TicketGlobal> ticketList = new ArrayList<>();
+    public List<TicketGlobal> getData() {
+        //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
+        List<TicketGlobal> ticketList = bd.getAllGlobalTickets();
+        return ticketList;
 
-        List<Ticket> tickets1 = new ArrayList<>();
+        /*List<Ticket> tickets1 = new ArrayList<>();
         tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
         tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
         tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
@@ -141,9 +145,7 @@ public class TicketsFragment extends Fragment {
         tickets2.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Coimbra"));
 
         ticketList.add(new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1));
-        ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets2));
-
-        return ticketList;
+        ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets2));*/
     }
 
 
