@@ -69,6 +69,28 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
      * Get all global tickets that are not yet used (that is, there is at least one ticket that is valid)
      * @return
      */
+    public List<Ticket> getAllTickets() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Ticket> tickets = new ArrayList<>();
+        Cursor  cursor = db.rawQuery("select * from "+TICKET_TABLE_NAME,null);
+
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                int id = cursor.getInt(cursor.getColumnIndex(TICKET_COLUMNS[0]));
+                String details = cursor.getString(cursor.getColumnIndex(TICKET_COLUMNS[1]));
+                String status = cursor.getString(cursor.getColumnIndex(TICKET_COLUMNS[1]));
+                Ticket t = new Ticket(id, details, status);
+                tickets.add(t);
+                cursor.moveToNext();
+            }
+        }
+        return tickets;
+    }
+
+    /**
+     * Get all tickets that MAY not be used
+     * @return
+     */
     public List<TicketGlobal> getAllGlobalTickets() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TicketGlobal> ticketGlobals = new ArrayList<>();
@@ -88,7 +110,6 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
         }
-
         return ticketGlobals;
     }
 

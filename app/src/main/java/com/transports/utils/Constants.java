@@ -11,7 +11,7 @@ public class Constants {
     public static final String DESTINATION = "destination";
     public static final String DEPARTURE_DATE = "departure_date";
 
-    //Json fields
+    // --------------------Json fields ------------------------
 
     // create ticket / receive tickets
     public static final String TRIP = "trip";
@@ -23,6 +23,9 @@ public class Constants {
     public static final String TICKET_STATUS_FIELD = "status";
     public static final String TICKET_ID_FIELD = "ticket_id";
     public static final String TICKET_INFO_FIELD = "details";
+
+    //get ticket status
+    public static final String TICKET_STATE_FIELD = "ticketState";
 
 
     //for testing

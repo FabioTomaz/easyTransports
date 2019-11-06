@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,14 +17,38 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.transports.data.SQLiteDatabaseHandler;
+import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
+import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
+import static com.transports.data.URLs.CREATE_TICKET;
+import static com.transports.utils.Constants.DATE_FIELD;
+import static com.transports.utils.Constants.PRICE;
+import static com.transports.utils.Constants.SCHEDULE;
+import static com.transports.utils.Constants.SECRET_FIELD;
+import static com.transports.utils.Constants.TICKET_INFO_FIELD;
+import static com.transports.utils.Constants.TICKET_STATE_FIELD;
+import static com.transports.utils.Constants.TICKET_STATUS_FIELD;
+import static com.transports.utils.Constants.TRANSPORT_COMPANY;
+import static com.transports.utils.Constants.TRIP;
 
 
 /**
@@ -82,9 +107,12 @@ public class TicketsFragment extends Fragment {
         cardRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
         cardRecyclerView.setHasFixedSize(true);
         detailsRecylerView = (RecyclerView) getView().findViewById(R.id.tickets_list_details_viewpager);
+        getData(); //load tickets from user, update its state from server and
+    }
 
+    public void setTicketsOnView(){
         //initialize global ticket cards recyclerview
-        this.ticketList = getData();
+        this.ticketList = bd.getAllGlobalTickets();
         mAdapter = new TicketListAdapter(getContext(), ticketList);
 
         cardRecyclerView.setAdapter(mAdapter);
@@ -130,10 +158,14 @@ public class TicketsFragment extends Fragment {
             cardRecyclerView.scrollToPosition(position);
     }
 
-    public List<TicketGlobal> getData() {
+    /**load simple tickets from db and call function to request ticket status update
+     *
+     */
+    public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-        List<TicketGlobal> ticketList = bd.getAllGlobalTickets();
-        return ticketList;
+        List<Ticket> ticketList = bd.getAllTickets();
+        getTicketStatesFromServer (ticketList);
+        //return ticketList;
 
         /*List<Ticket> tickets1 = new ArrayList<>();
         tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
@@ -146,6 +178,49 @@ public class TicketsFragment extends Fragment {
 
         ticketList.add(new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1));
         ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets2));*/
+    }
+
+    public void getTicketStatesFromServer(List<Ticket> tickets){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        List<JSONObject> jsonTickets = new ArrayList<>();
+        JSONObject jsonTicketStatus = new JSONObject();
+        try{
+            jsonTicketStatus = new JSONObject();
+            JSONArray ticketIDs = new JSONArray();
+            for (Ticket ticket : tickets) {
+                ticketIDs.put(ticket.getId());
+            }
+            jsonTicketStatus.put(TICKET_STATUS_FIELD, ticketIDs);
+        } catch (JSONException e){ }
+
+
+        // Initialize a new JsonObjectRequest instance
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+                Request.Method.POST,
+                CREATE_TICKET,
+                jsonTicketStatus,
+                new Response.Listener<JSONObject >() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Process the JSON
+                        //for ticket id
+                        //for (Ticket t : response)
+                         //   bd.updateTicketState(t.getId(), t.getState());
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Do something when error occurred
+                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
     }
 
 
