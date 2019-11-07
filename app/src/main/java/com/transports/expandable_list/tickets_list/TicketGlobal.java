@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class TicketGlobal {
 
+    private int id;
     private String originDestination;
     private String transports;
     private String schedule;
@@ -59,6 +60,14 @@ public class TicketGlobal {
 
     public void setTickets(List<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

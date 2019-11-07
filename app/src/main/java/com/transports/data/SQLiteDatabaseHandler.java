@@ -214,6 +214,8 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
     public void deleteOneGlobalTicket(TicketGlobal globalTicket) {
         // Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
+        //delete all single tickets
+        db.delete(TICKET_TABLE_NAME,TICKET_COLUMNS[3]+"=?",new String[]{globalTicket.getId()+""});
         db.delete(GLOBAL_TICKET_TABLE_NAME, "transports = ?", new String[] { String.valueOf(globalTicket.getTransports()) });//ver tmb schedule, date e origin dest
         //delete on table tickets as well (delete cascade??)
         db.close();

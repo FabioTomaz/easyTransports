@@ -206,6 +206,7 @@ public class TicketsFragment extends Fragment {
                         //for ticket id
                         //for (Ticket t : response)
                          //   bd.updateTicketState(t.getId(), t.getState());
+                        //TODO: complete code that gets tickets status from each id and updates on db, then call setTicketsOnView()
 
 
                     }
@@ -213,8 +214,9 @@ public class TicketsFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Do something when error occurred
-                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                        // Could not get ticket status. Set tickets on view but its status may not be updated
+                        Toast.makeText(getContext(), getString(R.string.ticket_status_error_message), Toast.LENGTH_SHORT).show();
+                        setTicketsOnView();
                     }
                 }
         );

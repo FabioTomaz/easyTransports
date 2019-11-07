@@ -61,4 +61,7 @@
     <string name="ticket_state_label">Ticket State</string>
     <string name="ticket_purchase_date">Ticket purchased at</string>
     <string name="ticket_duration_label">Duration: </string>
+
+    <!-- Get ticket status error-->
+    <string name="ticket_status_error_message">Could not fetch ticket status. Some tickets\'s status my not be updated</string>
 </resources>
