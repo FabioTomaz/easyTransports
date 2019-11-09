@@ -1,6 +1,10 @@
 package com.transports.expandable_list.tickets_list;
 
+import com.transports.utils.Constants;
 import com.transports.utils.UtilityFunctions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.Serializable;
 
@@ -34,6 +38,7 @@ public class Ticket implements Serializable {
         this.id = id;
         this.details = details;
         this.state = status;
+        parseDetailsAndSetFields();
     }
 
     public String getOriginDestination() {
@@ -96,6 +101,23 @@ public class Ticket implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void parseDetailsAndSetFields(){
+        if (details != null && !details.isEmpty()){
+            try {
+                JSONObject j = new JSONObject(details);
+                this.datePurchased = j.getString(Constants.DATE_FIELD);
+                j = j.getJSONObject(Constants.TICKET_INFO_FIELD);
+                this.transports = j.getString(Constants.COMPANY);
+                this.schedule = j.getString(Constants.SCHEDULE);
+                this.originDestination = j.getString(Constants.TRIP);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } {
+
+            }
+        }
     }
 
     @Override

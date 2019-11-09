@@ -1,6 +1,7 @@
 package com.transports.expandable_list.schedule_list;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 
 import java.io.Serializable;

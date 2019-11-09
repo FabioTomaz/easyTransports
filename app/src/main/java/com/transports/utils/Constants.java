@@ -21,8 +21,12 @@ public class Constants {
     public static final String SCHEDULE = "schedule";
     public static final String SECRET_FIELD = "secret";
     public static final String TICKET_STATUS_FIELD = "status";
+    public static final String TICKETS_FIELD = "tickets";
     public static final String TICKET_ID_FIELD = "ticket_id";
     public static final String TICKET_INFO_FIELD = "details";
+
+    //payment confirmation link field
+    public static final String PAYMENT_CONFIRM_LINK_FIELD = "link";
 
     //get ticket status
     public static final String TICKET_STATE_FIELD = "ticketState";
@@ -31,7 +35,7 @@ public class Constants {
     //for testing
     public static final String TICKET_JSON_EXAMPLE = "{\n" +
             "    \"ticket_id\": 0,\n" +
-            "    \"timestamp\": \"2019-10-14T10-04-30.651Z\",\n" +
+            "    \"timestamp\": \"2019-10-14T10:04:30.651Z\",\n" +
             "    \"details\": {\n" +
             "        \"trip\": \"Aveiro - Porto\",\n" +
             "        \"company\": \"Transdev\",\n" +

@@ -3,6 +3,7 @@ package com.transports;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,6 +76,8 @@ public class SchedulesViewerFragment extends Fragment {
     private List<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
     private TripParentViewHolder tripParentViewHolder;
+    private boolean browserOpened = false;
+    private TripParent selectedTripParent;
 
     public SchedulesViewerFragment() {
         // Required empty public constructor
@@ -166,6 +169,8 @@ public class SchedulesViewerFragment extends Fragment {
                 return false;
             }
         });
+        if (browserOpened && selectedTripParent != null)
+            this.confirmPurchaseTicket(selectedTripParent);
     }
 
     @Override
@@ -263,7 +268,7 @@ public class SchedulesViewerFragment extends Fragment {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //user confirmed ticket purchase
-                        //purchaseTicket(tripParent);
+                        purchaseTicket(tripParent);
 
                         List<Ticket> tickets = new ArrayList<>();
                         TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
@@ -273,7 +278,7 @@ public class SchedulesViewerFragment extends Fragment {
                         tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
                         tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
 
-                        ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
+                        ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
                         Log.d("dbtickets", bd.getAllGlobalTickets()+"");
                         bd.addGlobalTicket(ticketGlobal);
@@ -285,21 +290,18 @@ public class SchedulesViewerFragment extends Fragment {
     private void purchaseTicket(final TripParent tripParent){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
-        List<JSONObject> jsonTickets = new ArrayList<>();
+        JSONObject jsonBody = new JSONObject();
         try{
+            jsonBody.put(SECRET_FIELD, "secret xyz");
+            JSONArray jsonTicketsArray = new JSONArray();
             for (TripChild trip : tripParent.getTripsChilds()) {
                 JSONObject jsonTicket = new JSONObject();
                 jsonTicket.put(TRANSPORT_COMPANY, trip.getCompanyName());
                 jsonTicket.put(SCHEDULE, trip.getSchedule());
                 jsonTicket.put(TRIP, trip.getTrip());
                 jsonTicket.put(PRICE, trip.getPrice());
-                jsonTicket.put(DATE_FIELD, new Date());
-
-                JSONObject jsonBody = new JSONObject();
-                jsonBody.put(SECRET_FIELD, "secret xyz");
-                jsonBody.put(TICKET_INFO_FIELD, jsonTicket);
-
-                jsonTickets.add(jsonBody);
+                jsonTicket.put(DATE_FIELD, new Date()+"");
+                jsonTicketsArray.put(jsonTicket);
             }
         } catch (JSONException e){ }
 
@@ -308,37 +310,114 @@ public class SchedulesViewerFragment extends Fragment {
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
                 Request.Method.POST,
                 CREATE_TICKET,
-                null,
+                jsonBody,
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Process the JSON
-                        List<Ticket> tickets = new ArrayList<>();
-                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
-                        //parse list of purchased tickets
+                        // get list of purchased tickets and add them to a global ticket. Store in DB
+                        String paymentConfirmationLink = "";
 
-                        List<Ticket> tickets1 = new ArrayList<>();
-                        tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
-                        tickets1.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
-                        tickets1.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));
-
-                        ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets1);
-                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                        bd.addGlobalTicket(ticketGlobal);
-
+                        try {
+                            paymentConfirmationLink = response.getString(Constants.PAYMENT_CONFIRM_LINK_FIELD);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (!paymentConfirmationLink.isEmpty()){
+                            selectedTripParent = tripParent;
+                            openBrowser(paymentConfirmationLink);
+                        }
+                        else{
+                            //error getting link
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle(getString(R.string.ticket_purchase_error_title))
+                                    .setMessage(getString(R.string.ticket_purchase_error_message2))
+                                    .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        }
 
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Do something when error occurred
-                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(getString(R.string.ticket_purchase_error_title))
+                                .setMessage(getString(R.string.ticket_purchase_error_message))
+                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
                     }
                 }
         );
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);
+    }
+
+    private void confirmPurchaseTicket(final TripParent tripParent){
+        this.browserOpened = false;
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        //create list of request ticket creation json objects
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put(SECRET_FIELD, "secret xyz");
+        } catch (JSONException e){ }
+
+
+        // Initialize a new JsonObjectRequest instance
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+                Request.Method.POST,
+                CREATE_TICKET,
+                jsonBody,
+                new Response.Listener<JSONObject >() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // first open browser for payment
+                        List<Ticket> tickets = new ArrayList<>();
+                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
+                        //parse list of purchased tickets and add to list
+                        try {
+                            JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
+                            for (int i = 0; i < purchasedTickets.length(); i++){
+                                JSONObject j = purchasedTickets.getJSONObject(i);
+                                tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), j.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        /*tickets.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+                        tickets.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+                        tickets.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));*/
+
+                        if(tickets.isEmpty()){
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle(getString(R.string.ticket_purchase_error_title))
+                                    .setMessage(getString(R.string.ticket_purchase_error_message3))
+                                    .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                            return;
+                        }
+
+                        //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
+                        ticketGlobal.setTickets(tickets);
+                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                        bd.addGlobalTicket(ticketGlobal);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(getString(R.string.ticket_purchase_error_title))
+                                .setMessage(getString(R.string.ticket_purchase_error_message))
+                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                    }
+                }
+        );
+
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    public void openBrowser(String link){
+        this.browserOpened = true;
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        startActivity(browserIntent);
     }
 }
