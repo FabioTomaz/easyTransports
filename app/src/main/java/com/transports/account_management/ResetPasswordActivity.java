@@ -1,4 +1,4 @@
-package com.transports;
+package com.transports.account_management;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.R;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 

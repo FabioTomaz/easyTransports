@@ -31,6 +31,9 @@ public class Constants {
     //get ticket status
     public static final String TICKET_STATE_FIELD = "ticketState";
 
+    //register user in payments
+    public static final String PAYMENT_USER_ID = "auth_token";
+
 
     //for testing
     public static final String TICKET_JSON_EXAMPLE = "{\n" +

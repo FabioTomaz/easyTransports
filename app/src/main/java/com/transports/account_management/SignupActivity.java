@@ -1,8 +1,10 @@
-package com.transports;
+package com.transports.account_management;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,11 +14,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.MainActivity;
+import com.transports.R;
 import com.transports.utils.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.transports.data.URLs.PAYMENTS_CREATE_ACCOUNT;
+import static com.transports.utils.Constants.PAYMENT_USER_ID;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -91,6 +107,7 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    //Register user in payments service
                                     //sign in user
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
@@ -108,6 +125,43 @@ public class SignupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
+    }
+
+    private void registerUserInPayments(String firebaseID){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        //create list of request ticket creation json objects
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put(PAYMENT_USER_ID, firebaseID);
+        } catch (JSONException e){ }
+
+
+        // Initialize a new JsonObjectRequest instance
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+                Request.Method.POST,
+                PAYMENTS_CREATE_ACCOUNT,
+                jsonBody,
+                new Response.Listener<JSONObject >() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //TODO: store in shared preferences the token of the user of payments
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("errorPayment", error+"");
+                        Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
+                        /*new AlertDialog.Builder(getApplication())
+                                .setTitle(getString(R.string.ticket_purchase_error_title))
+                                .setMessage(getString(R.string.ticket_purchase_error_message))
+                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
+                    }
+                }
+        );
+
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
     }
 
 }

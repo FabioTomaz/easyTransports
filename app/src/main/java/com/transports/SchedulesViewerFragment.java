@@ -54,7 +54,6 @@ import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PRICE;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
-import static com.transports.utils.Constants.TICKET_INFO_FIELD;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
 
@@ -170,7 +169,7 @@ public class SchedulesViewerFragment extends Fragment {
             }
         });
         if (browserOpened && selectedTripParent != null)
-            this.confirmPurchaseTicket(selectedTripParent);
+            this.purchaseTicket2(selectedTripParent);
     }
 
     @Override
@@ -270,7 +269,7 @@ public class SchedulesViewerFragment extends Fragment {
                         //user confirmed ticket purchase
                         purchaseTicket(tripParent);
 
-                        List<Ticket> tickets = new ArrayList<>();
+                        /*List<Ticket> tickets = new ArrayList<>();
                         TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
                         //parse list of purchased tickets
 
@@ -281,7 +280,7 @@ public class SchedulesViewerFragment extends Fragment {
                         ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
                         Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-                        bd.addGlobalTicket(ticketGlobal);
+                        bd.addGlobalTicket(ticketGlobal);*/
 
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
@@ -339,6 +338,7 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d("errorPurchase", error+"");
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.ticket_purchase_error_title))
                                 .setMessage(getString(R.string.ticket_purchase_error_message))
@@ -351,7 +351,7 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    private void confirmPurchaseTicket(final TripParent tripParent){
+    private void purchaseTicket2(final TripParent tripParent){
         this.browserOpened = false;
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
@@ -403,6 +403,7 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d("errorPurchase2", error+"");
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.ticket_purchase_error_title))
                                 .setMessage(getString(R.string.ticket_purchase_error_message))

@@ -166,7 +166,7 @@ public class TicketsFragment extends Fragment {
     public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
         List<Ticket> ticketList = bd.getAllTickets();
-        getTicketStatesFromServer (ticketList);
+        getTicketStatesFromServer(ticketList);
         //return ticketList;
 
         /*List<Ticket> tickets1 = new ArrayList<>();
@@ -216,6 +216,7 @@ public class TicketsFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d("errorTicketsState", error+"");
                         // Could not get ticket status. Set tickets on view but its status may not be updated
                         Toast.makeText(getContext(), getString(R.string.ticket_status_error_message), Toast.LENGTH_SHORT).show();
                         setTicketsOnView();

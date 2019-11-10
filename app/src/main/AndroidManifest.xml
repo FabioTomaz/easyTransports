@@ -17,7 +17,7 @@
         <activity android:name=".TicketUseActivity"></activity>
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".account_management.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,15 +26,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountSettingsFragment"
+            android:name=".account_management.AccountSettingsFragment"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".account_management.SignupActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ResetPasswordActivity"
+            android:name=".account_management.ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
