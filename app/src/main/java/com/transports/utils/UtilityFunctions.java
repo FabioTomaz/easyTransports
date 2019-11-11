@@ -12,6 +12,7 @@ import java.util.Date;
 
 import static com.transports.utils.Constants.COMPANY;
 import static com.transports.utils.Constants.DATE_FIELD;
+import static com.transports.utils.Constants.HASH_FIELD;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.TICKET_ID_FIELD;
 import static com.transports.utils.Constants.TICKET_INFO_FIELD;
@@ -55,13 +56,14 @@ public class UtilityFunctions {
             JSONObject obj = new JSONObject(json);
             String status = obj.getString(TICKET_STATUS_FIELD);
             String date = obj.getString(DATE_FIELD);
+            String hash = obj.getString(HASH_FIELD);
             int id = obj.getInt(TICKET_ID_FIELD);
             obj = obj.getJSONObject(TICKET_INFO_FIELD);
             String trip = obj.getString(TRIP);
             String schedule = obj.getString(SCHEDULE);
             String transport = obj.getString(COMPANY);
 
-            ticket = new Ticket(id, trip, transport, schedule, date, status, json);
+            ticket = new Ticket(id, trip, transport, schedule, date, status, json, hash);
 
         } catch (Throwable t) {
             Log.e("JSONERROR", "Could not parse JSON (either is malformed or field does not exist): \"" + json + "\"");

@@ -23,6 +23,8 @@ public class Constants {
     public static final String TICKET_STATUS_FIELD = "status";
     public static final String TICKETS_FIELD = "tickets";
     public static final String TICKET_ID_FIELD = "ticket_id";
+    public static final String ID_FIELD = "ticket_id";
+    public static final String HASH_FIELD = "hash";
     public static final String TICKET_INFO_FIELD = "details";
 
     //payment confirmation link field
@@ -37,16 +39,17 @@ public class Constants {
 
     //for testing
     public static final String TICKET_JSON_EXAMPLE = "{\n" +
-            "    \"ticket_id\": 0,\n" +
-            "    \"timestamp\": \"2019-10-14T10:04:30.651Z\",\n" +
+            "    \"ticket_id\": 1,\n" +
+            "    \"timestamp\": \"2019-11-11T15:11:47.782Z\",\n" +
             "    \"details\": {\n" +
+            "        \"company\": \"CP\",\n" +
+            "        \"schedule\": \"9:30 - 10:30\",\n" +
+            "        \"price\": \"1.20€\",\n" +
             "        \"trip\": \"Aveiro - Porto\",\n" +
-            "        \"company\": \"Transdev\",\n" +
-            "        \"schedule\": \"9:30-10:30\",\n" +
-            "        \"destinations\": \"Aveiro\",\n" +
-            "        \"price\": 0\n" +
+
             "    },\n" +
-            "    \"hash\": \"afd49088c68c2c17c329aedd6fbbe53a4d16b0ee8f187\",\n" +
-            "    \"status\": \"inactive\"\n" +
+            "    \"hash\": \"9c20c58501c881e8ae3f87ab0afcaadf828add2ca45079feeabf84a2e6dedb2a\",\n" +
+            "    \"previousHash\": \"9d9054f50ce492d04609e5e19155f0556529a4c1ec721c26fc2becb6b860d094\",\n" +
+            "    \"status\": \"valid\"\n" +
             "}";
 }

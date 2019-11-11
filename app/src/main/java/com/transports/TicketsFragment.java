@@ -1,8 +1,6 @@
 package com.transports;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.transports.data.SQLiteDatabaseHandler;
-import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
@@ -37,20 +34,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.transports.data.URLs.CREATE_TICKET;
-import static com.transports.utils.Constants.DATE_FIELD;
-import static com.transports.utils.Constants.PRICE;
-import static com.transports.utils.Constants.SCHEDULE;
+import static com.transports.utils.Constants.HASH_FIELD;
+import static com.transports.utils.Constants.ID_FIELD;
 import static com.transports.utils.Constants.SECRET_FIELD;
-import static com.transports.utils.Constants.TICKET_INFO_FIELD;
-import static com.transports.utils.Constants.TICKET_STATE_FIELD;
-import static com.transports.utils.Constants.TICKET_STATUS_FIELD;
-import static com.transports.utils.Constants.TRANSPORT_COMPANY;
-import static com.transports.utils.Constants.TRIP;
+import static com.transports.utils.Constants.TICKETS_FIELD;
 
 
 /**
@@ -60,7 +51,6 @@ import static com.transports.utils.Constants.TRIP;
  * to handle interaction events.
  */
 public class TicketsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private RecyclerView cardRecyclerView;
     private TicketListAdapter mAdapter;
@@ -166,6 +156,10 @@ public class TicketsFragment extends Fragment {
     public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
         List<Ticket> ticketList = bd.getAllTickets();
+        if (ticketList.isEmpty()) {
+            setTicketsOnView();
+            return;
+        }
         getTicketStatesFromServer(ticketList);
         //return ticketList;
 
@@ -188,13 +182,18 @@ public class TicketsFragment extends Fragment {
         JSONObject jsonTicketStatus = new JSONObject();
         try{
             jsonTicketStatus = new JSONObject();
+            jsonTicketStatus.put(SECRET_FIELD, "xyz");
             JSONArray ticketIDs = new JSONArray();
             for (Ticket ticket : tickets) {
+                JSONObject jsonTicket = new JSONObject();
+                jsonTicket.put(ID_FIELD, ticket.getId());
+                jsonTicket.put(HASH_FIELD, ticket.getHash());
                 ticketIDs.put(ticket.getId());
             }
-            jsonTicketStatus.put(TICKET_STATUS_FIELD, ticketIDs);
+            jsonTicketStatus.put(TICKETS_FIELD, ticketIDs);
         } catch (JSONException e){ }
 
+        Log.d("ticketStat",jsonTicketStatus+"");
 
         // Initialize a new JsonObjectRequest instance
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(

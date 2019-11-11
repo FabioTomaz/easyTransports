@@ -267,9 +267,9 @@ public class SchedulesViewerFragment extends Fragment {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //user confirmed ticket purchase
-                        purchaseTicket(tripParent);
+                        //purchaseTicket(tripParent);
 
-                        /*List<Ticket> tickets = new ArrayList<>();
+                        List<Ticket> tickets = new ArrayList<>();
                         TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
                         //parse list of purchased tickets
 
@@ -280,7 +280,7 @@ public class SchedulesViewerFragment extends Fragment {
                         ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
                         Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-                        bd.addGlobalTicket(ticketGlobal);*/
+                        bd.addGlobalTicket(ticketGlobal);
 
                     }})
                 .setNegativeButton(android.R.string.no, null).show();

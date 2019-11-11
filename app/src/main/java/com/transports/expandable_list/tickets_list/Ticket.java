@@ -16,9 +16,10 @@ public class Ticket implements Serializable {
     private String schedule;
     private String state;
     private String datePurchased;
+    private String hash;
     private int id;
 
-    public Ticket(int id, String originDestination, String transports, String schedule, String datePurchased, String status, String details) {
+    public Ticket(int id, String originDestination, String transports, String schedule, String datePurchased, String status, String details, String hash) {
         this.id = id;
         this.originDestination = originDestination;
         this.transports = transports;
@@ -26,6 +27,7 @@ public class Ticket implements Serializable {
         this.datePurchased = datePurchased;
         this.state = status;
         this.details = details;
+        this.hash = hash;
     }
 
     public Ticket(String transports, String originDestination, String schedule) {
@@ -108,6 +110,7 @@ public class Ticket implements Serializable {
             try {
                 JSONObject j = new JSONObject(details);
                 this.datePurchased = j.getString(Constants.DATE_FIELD);
+                this.hash = j.getString(Constants.HASH_FIELD);
                 j = j.getJSONObject(Constants.TICKET_INFO_FIELD);
                 this.transports = j.getString(Constants.COMPANY);
                 this.schedule = j.getString(Constants.SCHEDULE);
@@ -118,6 +121,14 @@ public class Ticket implements Serializable {
 
             }
         }
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     @Override
