@@ -54,9 +54,10 @@ public class UtilityFunctions {
         try {
 
             JSONObject obj = new JSONObject(json);
-            String status = obj.getString(TICKET_STATUS_FIELD);
             String date = obj.getString(DATE_FIELD);
             String hash = obj.getString(HASH_FIELD);
+            String status = obj.getString(TICKET_STATUS_FIELD);
+
             int id = obj.getInt(TICKET_ID_FIELD);
             obj = obj.getJSONObject(TICKET_INFO_FIELD);
             String trip = obj.getString(TRIP);

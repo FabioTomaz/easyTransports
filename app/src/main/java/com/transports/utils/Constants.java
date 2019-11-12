@@ -22,8 +22,9 @@ public class Constants {
     public static final String SECRET_FIELD = "secret";
     public static final String TICKET_STATUS_FIELD = "status";
     public static final String TICKETS_FIELD = "tickets";
+    public static final String TICKET_FIELD = "ticket";
     public static final String TICKET_ID_FIELD = "ticket_id";
-    public static final String ID_FIELD = "ticket_id";
+    public static final String ID_FIELD = "id";
     public static final String HASH_FIELD = "hash";
     public static final String TICKET_INFO_FIELD = "details";
 
@@ -45,7 +46,7 @@ public class Constants {
             "        \"company\": \"CP\",\n" +
             "        \"schedule\": \"9:30 - 10:30\",\n" +
             "        \"price\": \"1.20€\",\n" +
-            "        \"trip\": \"Aveiro - Porto\",\n" +
+            "        \"trip\": \"Aveiro - Porto\"\n" +
 
             "    },\n" +
             "    \"hash\": \"9c20c58501c881e8ae3f87ab0afcaadf828add2ca45079feeabf84a2e6dedb2a\",\n" +

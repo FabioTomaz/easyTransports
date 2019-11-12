@@ -28,6 +28,7 @@ import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
+import com.transports.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.transports.data.URLs.CREATE_TICKET;
+import static com.transports.data.URLs.GET_TICKET_STATUS;
 import static com.transports.utils.Constants.HASH_FIELD;
 import static com.transports.utils.Constants.ID_FIELD;
 import static com.transports.utils.Constants.SECRET_FIELD;
@@ -182,13 +183,13 @@ public class TicketsFragment extends Fragment {
         JSONObject jsonTicketStatus = new JSONObject();
         try{
             jsonTicketStatus = new JSONObject();
-            jsonTicketStatus.put(SECRET_FIELD, "xyz");
+            jsonTicketStatus.put(SECRET_FIELD, "Secret");
             JSONArray ticketIDs = new JSONArray();
             for (Ticket ticket : tickets) {
                 JSONObject jsonTicket = new JSONObject();
                 jsonTicket.put(ID_FIELD, ticket.getId());
                 jsonTicket.put(HASH_FIELD, ticket.getHash());
-                ticketIDs.put(ticket.getId());
+                ticketIDs.put(jsonTicket);
             }
             jsonTicketStatus.put(TICKETS_FIELD, ticketIDs);
         } catch (JSONException e){ }
@@ -198,7 +199,7 @@ public class TicketsFragment extends Fragment {
         // Initialize a new JsonObjectRequest instance
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
                 Request.Method.POST,
-                CREATE_TICKET,
+                GET_TICKET_STATUS,
                 jsonTicketStatus,
                 new Response.Listener<JSONObject >() {
                     @Override
@@ -207,6 +208,11 @@ public class TicketsFragment extends Fragment {
                         //for ticket id
                         //for (Ticket t : response)
                          //   bd.updateTicketState(t.getId(), t.getState());
+                        try{
+                            JSONArray ticketsJson = response.getJSONArray(Constants.TICKET_EXTRA_INTENT);
+                        } catch(JSONException e){
+
+                        }
                         //TODO: complete code that gets tickets status from each id and updates on db, then call setTicketsOnView()
 
 
