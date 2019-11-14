@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import static com.transports.utils.Constants.COMPANY;
 import static com.transports.utils.Constants.DATE_FIELD;
@@ -83,5 +84,11 @@ public class UtilityFunctions {
             Log.e("JSONERROR", "Could not parse malformed JSON: \"" + t.getDetails() + "\"");
         }
         return jsonUpdated;
+    }
+
+
+    public static String generateString() {
+        String uuid = UUID.randomUUID().toString();
+        return "uuid = " + uuid;
     }
 }

@@ -27,6 +27,7 @@ public class Constants {
     public static final String ID_FIELD = "id";
     public static final String HASH_FIELD = "hash";
     public static final String TICKET_INFO_FIELD = "details";
+    public static final String TICKET_TOKEN_FIELD = "secret";
 
     //payment confirmation link field
     public static final String PAYMENT_CONFIRM_LINK_FIELD = "link";

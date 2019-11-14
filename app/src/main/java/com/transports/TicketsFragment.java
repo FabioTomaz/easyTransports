@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,7 +36,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.transports.data.URLs.GET_TICKET_STATUS;
@@ -157,12 +160,10 @@ public class TicketsFragment extends Fragment {
     public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
         List<Ticket> ticketList = bd.getAllTickets();
-        if (ticketList.isEmpty()) {
-            setTicketsOnView();
-            return;
+        setTicketsOnView();// set chached tickets on view and (try) to update theyr status from server
+        if (!ticketList.isEmpty()) {
+            getTicketStatesFromServer(ticketList);
         }
-        getTicketStatesFromServer(ticketList);
-        //return ticketList;
 
         /*List<Ticket> tickets1 = new ArrayList<>();
         tickets1.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
@@ -177,9 +178,8 @@ public class TicketsFragment extends Fragment {
         ticketList.add(new TicketGlobal("Aveiro - Coimbra", "CP + moveAveiro + metro", "13:30-14:30", tickets2));*/
     }
 
-    public void getTicketStatesFromServer(List<Ticket> tickets){
+    public void getTicketStatesFromServer(final List<Ticket> tickets){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        List<JSONObject> jsonTickets = new ArrayList<>();
         JSONObject jsonTicketStatus = new JSONObject();
         try{
             jsonTicketStatus = new JSONObject();
@@ -215,6 +215,9 @@ public class TicketsFragment extends Fragment {
                         }
                         //TODO: complete code that gets tickets status from each id and updates on db, then call setTicketsOnView()
 
+                        /*for (Ticket t : tickets)
+                            bd.updateTicketState(t.getId(), t.getState());*/
+
 
                     }
                 },
@@ -227,7 +230,16 @@ public class TicketsFragment extends Fragment {
                         setTicketsOnView();
                     }
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+
+                return params;
+            }
+        };
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);

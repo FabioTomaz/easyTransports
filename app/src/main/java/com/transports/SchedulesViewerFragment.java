@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,17 +46,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.transports.data.URLs.CREATE_TICKET;
 import static com.transports.data.URLs.GET_ROUTE;
+import static com.transports.data.URLs.TICKET_PAYMENT1;
 import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PRICE;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
+import static com.transports.utils.UtilityFunctions.generateString;
 
 
 /**
@@ -77,6 +82,7 @@ public class SchedulesViewerFragment extends Fragment {
     private TripParentViewHolder tripParentViewHolder;
     private boolean browserOpened = false;
     private TripParent selectedTripParent;
+    private String ticketsToken;
 
     public SchedulesViewerFragment() {
         // Required empty public constructor
@@ -168,7 +174,7 @@ public class SchedulesViewerFragment extends Fragment {
                 return false;
             }
         });
-        if (browserOpened && selectedTripParent != null)
+        if (browserOpened && selectedTripParent != null && ticketsToken!= null)
             this.purchaseTicket2(selectedTripParent);
     }
 
@@ -214,13 +220,6 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -253,6 +252,7 @@ public class SchedulesViewerFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    //called by user click on "buy" button of a list of tickets
     public void handlePurchase(int tripParentPosition){
         TripParent tripParent = tripParentList.get(tripParentPosition);
         showConfirmPurchaseDialog(tripParent);
@@ -288,10 +288,12 @@ public class SchedulesViewerFragment extends Fragment {
 
     private void purchaseTicket(final TripParent tripParent){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        //generate random token to use with ticket service
+        ticketsToken = generateString();
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         try{
-            jsonBody.put(SECRET_FIELD, "secret xyz");
+            jsonBody.put(SECRET_FIELD, ticketsToken);
             JSONArray jsonTicketsArray = new JSONArray();
             for (TripChild trip : tripParent.getTripsChilds()) {
                 JSONObject jsonTicket = new JSONObject();
@@ -302,13 +304,17 @@ public class SchedulesViewerFragment extends Fragment {
                 jsonTicket.put(DATE_FIELD, new Date()+"");
                 jsonTicketsArray.put(jsonTicket);
             }
+            jsonBody.put(Constants.TICKET_INFO_FIELD, jsonTicketsArray);
+
+            //payments info
+            //JSONObject jsonPayments = new JSONObject();
         } catch (JSONException e){ }
 
 
         // Initialize a new JsonObjectRequest instance
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
                 Request.Method.POST,
-                CREATE_TICKET,
+                TICKET_PAYMENT1,
                 jsonBody,
                 new Response.Listener<JSONObject >() {
                     @Override
@@ -343,9 +349,19 @@ public class SchedulesViewerFragment extends Fragment {
                                 .setTitle(getString(R.string.ticket_purchase_error_title))
                                 .setMessage(getString(R.string.ticket_purchase_error_message))
                                 .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        ticketsToken = null;
                     }
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+                params.put("auth-token", "f");
+                return params;
+            }
+        };
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);
@@ -357,7 +373,7 @@ public class SchedulesViewerFragment extends Fragment {
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         try{
-            jsonBody.put(SECRET_FIELD, "secret xyz");
+            jsonBody.put(SECRET_FIELD, ticketsToken);
         } catch (JSONException e){ }
 
 
@@ -380,6 +396,7 @@ public class SchedulesViewerFragment extends Fragment {
                                 tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), j.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
                             }
                         } catch (JSONException e) {
+                            ticketsToken = null;
                             e.printStackTrace();
                         }
                         /*tickets.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
@@ -408,9 +425,19 @@ public class SchedulesViewerFragment extends Fragment {
                                 .setTitle(getString(R.string.ticket_purchase_error_title))
                                 .setMessage(getString(R.string.ticket_purchase_error_message))
                                 .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        ticketsToken = null;
                     }
                 }
-        );
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+                params.put("auth-token", "");
+                return params;
+            }
+        };
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);

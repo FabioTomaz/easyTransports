@@ -2,6 +2,7 @@ package com.transports.expandable_list.tickets_list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,12 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
         holder.originDestination.setText(currentTicket.getOriginDestination());
         holder.transports.setText(currentTicket.getTransports());
         holder.schedule.setText(currentTicket.getSchedule());
+        holder.status.setText(currentTicket.getState());
+        //set status text color if ticket is ready to user (green) or already used (red)
+        if (currentTicket.getState().equalsIgnoreCase("inactive"))
+            holder.status.setTextColor(Color.parseColor(("#ff0000")));
+        else if (currentTicket.getState().equalsIgnoreCase("active"))
+            holder.status.setTextColor(Color.parseColor(("#00ff00")));
 
         holder.useTicketButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +76,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
         TextView originDestination;
         TextView schedule;
         TextView transports;
+        TextView status;
         Button useTicketButton;
 
         public MyTicketViewHolder(View itemView) {
@@ -76,6 +84,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
             originDestination = (TextView) itemView.findViewById(R.id.ticket_origin_destination);
             schedule = (TextView) itemView.findViewById(R.id.ticket_hours);
             transports = (TextView) itemView.findViewById(R.id.transport_name);
+            status = (TextView) itemView.findViewById(R.id.ticket_state);
             useTicketButton = (Button) itemView.findViewById(R.id.use_ticket_btn);
         }
     }

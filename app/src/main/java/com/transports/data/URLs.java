@@ -17,7 +17,7 @@ public class URLs {
     public static final String TICKETS = "http://192.168.85.208/ticket";
     public static final String CREATE_TICKET = TICKETS+"/createTicket";
     public static final String GET_TICKET_STATUS = TICKETS+"/status";
-    public static final String TICKET_PAYMENT1 = TICKETS+"/purchase";
+    public static final String TICKET_PAYMENT1 = TICKETS+"/createAuth";
     public static final String TICKET_PAYMENT2 = TICKETS+"/purchase2";
 
     //Payment service

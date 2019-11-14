@@ -8,6 +8,10 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
+/**
+ * A ticket object, it was already purchase and stored in ticket service. May be valid or already used.
+ * Contains fields and information to be identified and validated by the ticket service.
+ */
 public class Ticket implements Serializable {
 
     private String details;   //the json format received from ticket service
@@ -109,7 +113,7 @@ public class Ticket implements Serializable {
         if (details != null && !details.isEmpty()){
             try {
                 JSONObject j = new JSONObject(details);
-                this.datePurchased = j.getString(Constants.DATE_FIELD);
+                //this.datePurchased = j.getString(Constants.DATE_FIELD);
                 this.hash = j.getString(Constants.HASH_FIELD);
                 j = j.getJSONObject(Constants.TICKET_INFO_FIELD);
                 this.transports = j.getString(Constants.COMPANY);
