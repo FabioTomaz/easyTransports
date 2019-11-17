@@ -35,13 +35,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.transports.data.URLs.GET_TICKET_STATUS;
+import static com.transports.utils.URLs.GET_TICKET_STATUS;
 import static com.transports.utils.Constants.HASH_FIELD;
 import static com.transports.utils.Constants.ID_FIELD;
 import static com.transports.utils.Constants.SECRET_FIELD;
@@ -227,7 +226,7 @@ public class TicketsFragment extends Fragment {
                         Log.d("errorTicketsState", error+"");
                         // Could not get ticket status. Set tickets on view but its status may not be updated
                         Toast.makeText(getContext(), getString(R.string.ticket_status_error_message), Toast.LENGTH_SHORT).show();
-                        setTicketsOnView();
+                        //setTicketsOnView();
                     }
                 }
         ) {

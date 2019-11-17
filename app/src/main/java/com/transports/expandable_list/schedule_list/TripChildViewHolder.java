@@ -1,5 +1,6 @@
 package com.transports.expandable_list.schedule_list;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,7 +27,8 @@ public class TripChildViewHolder extends ChildViewHolder {
     public void setTripChild(TripChild trip) {
         transportName.setText(trip.getCompanyName());
         departureHour.setText(trip.getDepartureHour() +" - "+trip.getArrivingHour());
-        destination.setText(trip.getOrigin()+" - "+trip.getDestination());
+        destination.setText(trip.getOrigin().getStopName()+" -> "+trip.getDestination().getStopName());
+        Log.d("price", trip.getPrice()+"$");
         price.setText(trip.getPrice() + "€");
     }
 }

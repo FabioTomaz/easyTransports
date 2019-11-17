@@ -26,9 +26,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.developer.kalert.KAlertDialog;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
@@ -47,13 +47,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.transports.data.URLs.CREATE_TICKET;
-import static com.transports.data.URLs.GET_ROUTE;
-import static com.transports.data.URLs.TICKET_PAYMENT1;
+import static com.transports.data.AppDataInfo.stops;
+import static com.transports.utils.Constants.ROUTE_ARRIVAL_FIELD;
+import static com.transports.utils.Constants.ROUTE_CHILD_ARRIVAL_FIELD;
+import static com.transports.utils.Constants.ROUTE_CHILD_DEPARTURE_FIELD;
+import static com.transports.utils.Constants.ROUTE_DEPARTURE_FIELD;
+import static com.transports.utils.Constants.ROUTE_PRICE_FIELD;
+import static com.transports.utils.Constants.ROUTE_STOP_ID_FIELD;
+import static com.transports.utils.Constants.ROUTE_TOTAL_PRICE_FIELD;
+import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
+import static com.transports.utils.Constants.ROUTE_LINK_FIELD;
+import static com.transports.utils.Constants.ROUTE_LIST_FIELD;
+import static com.transports.utils.Constants.ROUTE_PATH_STOPFROM_FIELD;
+import static com.transports.utils.Constants.ROUTE_PATH_STOPTO_FIELD;
+import static com.transports.utils.Constants.TOKEN;
+import static com.transports.utils.URLs.CREATE_TICKET;
+import static com.transports.utils.URLs.GET_ROUTE;
+import static com.transports.utils.URLs.TICKET_PAYMENT1;
 import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PRICE;
 import static com.transports.utils.Constants.SCHEDULE;
@@ -64,19 +80,18 @@ import static com.transports.utils.UtilityFunctions.generateString;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SchedulesViewerFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * Fragment that shows list of schedules.
+ * Receives the origin and destination stop from SchedulesFragment, calls schedule service and parses response and shows an expandable
+ * list with a trip (TripParent) that may contain sub trips (TripChild).
+ * Calls payment service and handles the payment logic communication when user presses 'buy' button
  */
 public class SchedulesViewerFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private String transportCompany;
     private String date;
     private Stop origin;
     private Stop destination;
-    private ArrayList<TripChild> schedulesList = new ArrayList<>();
+    private List<TripChild> tripChildren = new ArrayList<>();
     private List<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
     private TripParentViewHolder tripParentViewHolder;
@@ -105,40 +120,41 @@ public class SchedulesViewerFragment extends Fragment {
         Bundle bundle = this.getArguments();
 
         if(bundle != null){
-            transportCompany = bundle.getString(Constants.TRANSPORT_COMPANY);
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
             destination = (Stop) bundle.getSerializable(Constants.DESTINATION);
-
-
+            tripChildren = new ArrayList<>();
+            tripParentList = new ArrayList<>();
             getActivity().setTitle(origin.getStopName()+" - "+destination.getStopName());
 
             //call service give info and receive
-
-
+            getRoute(origin.getStopId(), destination.getStopId());
+/*
             //place all transports in the adapter
-            schedulesList.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
-            schedulesList.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
-            schedulesList.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
+            tripChildren.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
+            tripChildren.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
+            tripChildren.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
 
 
-            TripParent t1 = new TripParent("13:25", "14:20", "12/12/2019", "Aveiro", "Porto", schedulesList);
-            TripParent t2 = new TripParent("14:25", "15:30", "12/12/2019", "Aveiro", "Porto", schedulesList);
-            TripParent t3 = new TripParent("14:30", "15:50", "12/12/2019", "Aveiro", "Porto", schedulesList);
-            final List<TripParent> tripParents = Arrays.asList(t1, t2, t3);
-            this.tripParentList = tripParents;
-            recycler = (RecyclerView) getView().findViewById(R.id.schedules_list);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-            //instantiate your adapter with the list of genres
-            TripAdapter adapter = new TripAdapter(tripParents, this);
-            recycler.setLayoutManager(layoutManager);
-            recycler.setAdapter(adapter);
-
-            DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
-            recycler.addItemDecoration(decoration);
+            TripParent t1 = new TripParent("13:25", "14:20", "12/12/2019", "Aveiro", "Porto", tripChildren);
+            TripParent t2 = new TripParent("14:25", "15:30", "12/12/2019", "Aveiro", "Porto", tripChildren);
+            TripParent t3 = new TripParent("14:30", "15:50", "12/12/2019", "Aveiro", "Porto", tripChildren);*/
 
         }
+    }
+
+    private void setSchedulesOnList(final List<TripParent> trips){
+        this.tripParentList = trips;
+        recycler = (RecyclerView) getView().findViewById(R.id.schedules_list);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        //instantiate your adapter with the list of genres
+        TripAdapter adapter = new TripAdapter(trips, this);
+        recycler.setLayoutManager(layoutManager);
+        recycler.setAdapter(adapter);
+
+        DividerItemDecoration decoration = new DividerItemDecoration(getContext(), VERTICAL);
+        recycler.addItemDecoration(decoration);
     }
 
     @Override
@@ -151,24 +167,7 @@ public class SchedulesViewerFragment extends Fragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
-
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    // Get fragment one if exist.
-                    Fragment schedulesFragment = new SchedulesFragment();
-
-                    fragmentTransaction.replace(R.id.container, schedulesFragment);
-
-                    // Do not add fragment three in back stack.
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                    /*Fragment fragInstance = new SchedulesFragment();
-
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.container, fragInstance)
-                            .commit();*/
-
+                    goBack();
                     return true;
                 }
                 return false;
@@ -178,33 +177,74 @@ public class SchedulesViewerFragment extends Fragment {
             this.purchaseTicket2(selectedTripParent);
     }
 
+    private void goBack(){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        // Get fragment one if exist.
+        Fragment schedulesFragment = new SchedulesFragment();
+
+        fragmentTransaction.replace(R.id.container, schedulesFragment);
+
+        // Do not add fragment three in back stack.
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         getActivity().setTitle(getString(R.string.app_name_full));
     }
 
-    public void getRoute(String originStopID, String destinationStopID) {
+    public void getRoute(final String originStopID, String destinationStopID) {
         // Initialize a new RequestQueue instance
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         // Initialize a new JsonObjectRequest instance
-        JsonArrayRequest jsonArrayRequest  = new JsonArrayRequest(
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
                 Request.Method.GET,
-                GET_ROUTE+"/"+originStopID+"/"+destinationStopID,
+                GET_ROUTE+originStopID+"/"+destinationStopID,
                 null,
-                new Response.Listener<JSONArray>() {
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(JSONArray response) {
-                        // Do something with response
+                    public void onResponse(JSONObject response) {
+                        Log.d("schedulesRes", response+"");
 
                         // Process the JSON
-                        /*try {
-                            Log.d("routes", response+"");
-                            setStopsOnDropDowns();
+                        try {
+                            JSONArray routeAlternativesList = response.getJSONArray(ROUTE_LIST_FIELD);
+                            double totalPrice = response.getDouble(ROUTE_TOTAL_PRICE_FIELD);
+                            String departureTimeTotal = response.getString(ROUTE_DEPARTURE_FIELD);
+                            String arrivalTimeTotal = response.getString(ROUTE_ARRIVAL_FIELD);
+                            List<String> stopIds = new ArrayList<>();
+                            if (routeAlternativesList.length() == 0){
+                                showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",  KAlertDialog.WARNING_TYPE);
+                                return;
+                            }
+                            for (int i = 0; i < routeAlternativesList.length(); i++){
+                                JSONObject routeAlternative = routeAlternativesList.getJSONObject(i);//element inside "routes"
+                                JSONArray tripChildList = routeAlternative.getJSONArray(ROUTE_TRIP_CHILD_FIELD);//"path" field of "routes"
+                                //origin and destination stop of this child trip can be obtained by checking the first (origin) and last (destination) stop
+                                String originStopChildID = tripChildList.getJSONObject(0).getString(ROUTE_STOP_ID_FIELD);
+                                String destinationStopChildID = tripChildList.getJSONObject(tripChildList.length()-1).getString(ROUTE_STOP_ID_FIELD);
+
+                                Stop originStopChild = getStopFromID(originStopChildID);
+                                Stop destinationStopChild = getStopFromID(destinationStopChildID);
+                                String companyName = originStopChild.getStopTransport();
+                                double price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
+                                String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
+                                String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);
+                                tripChildren.add(new TripChild(companyName, "", departureTime, arrivalTime,
+                                        originStopChild, destinationStopChild, price));
+                            }
+                            TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
+                            tripParentList.add(tripParent);
+                            setSchedulesOnList(tripParentList);
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                        }*/
+                            showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE);
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -218,6 +258,15 @@ public class SchedulesViewerFragment extends Fragment {
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);
+    }
+
+    public Stop getStopFromID(String stopID){
+        for (Stop stop : stops){
+            if (stop.getStopId().equals(stopID)){
+                return stop;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -306,9 +355,10 @@ public class SchedulesViewerFragment extends Fragment {
             }
             jsonBody.put(Constants.TICKET_INFO_FIELD, jsonTicketsArray);
 
-            //payments info
-            //JSONObject jsonPayments = new JSONObject();
-        } catch (JSONException e){ }
+            Log.d("purchase", jsonBody+"");
+        } catch (JSONException e){
+            showErrorAndGoBack("Purchase failed", "Could not get tickets to buy.",  KAlertDialog.ERROR_TYPE);
+        }
 
 
         // Initialize a new JsonObjectRequest instance
@@ -333,10 +383,8 @@ public class SchedulesViewerFragment extends Fragment {
                         }
                         else{
                             //error getting link
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle(getString(R.string.ticket_purchase_error_title))
-                                    .setMessage(getString(R.string.ticket_purchase_error_message2))
-                                    .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                            showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message2),
+                                    KAlertDialog.ERROR_TYPE);
                         }
 
                     }
@@ -345,10 +393,8 @@ public class SchedulesViewerFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("errorPurchase", error+"");
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message),
+                                KAlertDialog.ERROR_TYPE);
                         ticketsToken = null;
                     }
                 }
@@ -358,7 +404,7 @@ public class SchedulesViewerFragment extends Fragment {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("auth-token", "f");
+                params.put("auth-token", TOKEN);
                 return params;
             }
         };
@@ -421,10 +467,7 @@ public class SchedulesViewerFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("errorPurchase2", error+"");
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE);
                         ticketsToken = null;
                     }
                 }
@@ -434,7 +477,7 @@ public class SchedulesViewerFragment extends Fragment {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("auth-token", "");
+                params.put("auth-token", TOKEN);
                 return params;
             }
         };
@@ -447,5 +490,20 @@ public class SchedulesViewerFragment extends Fragment {
         this.browserOpened = true;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         startActivity(browserIntent);
+    }
+
+    private void showErrorAndGoBack(String title, String descr, int type){
+        new KAlertDialog(getContext(), type)
+                .setTitleText(title)
+                .setContentText(descr)
+                .setConfirmText("OK")
+                .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+                    @Override
+                    public void onClick(KAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        goBack();
+                    }
+                })
+                .show();
     }
 }

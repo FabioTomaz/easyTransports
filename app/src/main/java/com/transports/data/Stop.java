@@ -1,13 +1,17 @@
 package com.transports.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * A stop in which a transport (train, bus, metro) stops to pick up passengers.
  */
-public class Stop implements Serializable {
+public class Stop implements Serializable, Parcelable {
     private String stopId;
     private String stopName;
+    private String stopTransport;
     private double stopLat;
     private double stopLong;
 
@@ -16,12 +20,33 @@ public class Stop implements Serializable {
         this.stopName = stopName;
     }
 
-    public Stop(String stopId, String stopName, double stopLat, double stopLong) {
+    public Stop(String stopId, String stopName, String stopTransport, double stopLat, double stopLong) {
         this.stopId = stopId;
         this.stopName = stopName;
+        this.stopTransport = stopTransport;
         this.stopLat = stopLat;
         this.stopLong = stopLong;
     }
+
+    protected Stop(Parcel in) {
+        stopId = in.readString();
+        stopName = in.readString();
+        stopTransport = in.readString();
+        stopLat = in.readDouble();
+        stopLong = in.readDouble();
+    }
+
+    public static final Creator<Stop> CREATOR = new Creator<Stop>() {
+        @Override
+        public Stop createFromParcel(Parcel in) {
+            return new Stop(in);
+        }
+
+        @Override
+        public Stop[] newArray(int size) {
+            return new Stop[size];
+        }
+    };
 
     public String getStopId() {
         return stopId;
@@ -37,6 +62,14 @@ public class Stop implements Serializable {
 
     public void setStopName(String stopName) {
         this.stopName = stopName;
+    }
+
+    public String getStopTransport() {
+        return stopTransport;
+    }
+
+    public void setStopTransport(String stopTransport) {
+        this.stopTransport = stopTransport;
     }
 
     public double getStopLat() {
@@ -63,5 +96,20 @@ public class Stop implements Serializable {
                 ", stopLat=" + stopLat +
                 ", stopLong=" + stopLong +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        //The parcelable object has to be the first one
+        dest.writeString(this.stopId);
+        dest.writeString(this.stopName);
+        dest.writeString(this.stopTransport);
+        dest.writeDouble(this.stopLat);
+        dest.writeDouble(this.stopLong);
     }
 }

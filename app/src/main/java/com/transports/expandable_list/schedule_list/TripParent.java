@@ -1,6 +1,7 @@
 package com.transports.expandable_list.schedule_list;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.transports.data.Stop;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 
@@ -20,12 +21,12 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
     private String departureHour;
     private String arrivalHour;
     private String date;
-    private String origin;
-    private String destination;
+    private Stop origin;
+    private Stop destination;
     private double totalPrice;
     private List<TripChild> trips;
 
-    public TripParent(String departureHour, String arrivalHour, String date, String origin, String destination, List<TripChild> trips) {
+    public TripParent(String departureHour, String arrivalHour, String date, Stop origin, Stop destination, List<TripChild> trips) {
         super(departureHour +" - "+arrivalHour, trips);
         this.trips = trips;
         this.departureHour = departureHour;
@@ -34,6 +35,17 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
         this.origin = origin;
         this.destination = destination;
         this.totalPrice = calculateToTalPrice();
+    }
+
+    public TripParent(String departureHour, String arrivalHour, String date, Stop origin, Stop destination, List<TripChild> trips, double totalPrice) {
+        super(departureHour +" -> "+arrivalHour, trips);
+        this.trips = trips;
+        this.departureHour = departureHour;
+        this.arrivalHour = arrivalHour;
+        this.date = date;
+        this.origin = origin;
+        this.destination = destination;
+        this.totalPrice = totalPrice;
     }
 
     /*Getters and setters*/
@@ -62,19 +74,19 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
         this.date = date;
     }
 
-    public String getOrigin() {
+    public Stop getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Stop origin) {
         this.origin = origin;
     }
 
-    public String getDestination() {
+    public Stop getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(Stop destination) {
         this.destination = destination;
     }
 

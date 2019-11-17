@@ -3,6 +3,8 @@ package com.transports.expandable_list.schedule_list;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.transports.data.Stop;
+
 import java.util.Objects;
 
 public class TripChild implements Parcelable {
@@ -10,13 +12,13 @@ public class TripChild implements Parcelable {
     private String companyName;
     private String departureDate;
     private String departureHour;
-    private String origin;
-    private String destination;
+    private Stop origin;
+    private Stop destination;
     private String arrivingHour;
     private double price;
 
     public TripChild(String companyName, String departureDate, String departureHour, String arrivingHour,
-                     String origin, String arrivingLocation, double price) {
+                     Stop origin, Stop arrivingLocation, double price) {
         this.companyName = companyName;
         this.departureDate = departureDate;
         this.departureHour = departureHour;
@@ -27,20 +29,12 @@ public class TripChild implements Parcelable {
     }
 
     //temporary...
-    public TripChild(String companyName, String destination) {
+    public TripChild(String companyName, Stop destination) {
         this.companyName = companyName;
         this.destination = destination;
     }
 
-    protected TripChild(Parcel in) {
-        companyName = in.readString();
-        departureDate = in.readString();
-        departureHour = in.readString();
-        origin = in.readString();
-        destination = in.readString();
-        arrivingHour = in.readString();
-        price = in.readDouble();
-    }
+    
 
     public static final Creator<TripChild> CREATOR = new Creator<TripChild>() {
         @Override
@@ -53,6 +47,16 @@ public class TripChild implements Parcelable {
             return new TripChild[size];
         }
     };
+
+    protected TripChild(Parcel in) {
+        companyName = in.readString();
+        departureDate = in.readString();
+        departureHour = in.readString();
+        arrivingHour = in.readString();
+        price = in.readDouble();
+        origin = in.readParcelable(Stop.class.getClassLoader());
+        destination = in.readParcelable(Stop.class.getClassLoader());
+    }
 
     public String getCompanyName() {
         return companyName;
@@ -78,19 +82,19 @@ public class TripChild implements Parcelable {
         this.departureHour = departureHour;
     }
 
-    public String getOrigin() {
+    public Stop getOrigin() {
         return origin;
     }
 
-    public void setOrigin(String origin) {
+    public void setOrigin(Stop origin) {
         this.origin = origin;
     }
 
-    public String getDestination() {
+    public Stop getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
+    public void setDestination(Stop destination) {
         this.destination = destination;
     }
 
@@ -128,8 +132,8 @@ public class TripChild implements Parcelable {
         dest.writeString(companyName);
         dest.writeString(departureDate);
         dest.writeString(departureHour);
-        dest.writeString(origin);
-        dest.writeString(destination);
+        dest.writeParcelable(origin, flags);
+        dest.writeParcelable(destination, flags);
         dest.writeString(arrivingHour);
         dest.writeDouble(price);
     }

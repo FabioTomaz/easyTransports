@@ -31,8 +31,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.transports.data.AppDataInfo.availableTransports;
-import static com.transports.data.URLs.GET_ROUTE;
-import static com.transports.data.URLs.GET_SCHEDULES;
+import static com.transports.utils.Constants.STOP_INFO_COORDS_FIELD;
+import static com.transports.utils.Constants.STOP_INFO_ID_FIELD;
+import static com.transports.utils.Constants.STOP_INFO_NAME_FIELD;
+import static com.transports.utils.Constants.STOP_INFO_TRANSPORT_FIELD;
+import static com.transports.utils.URLs.GET_SCHEDULES;
 import static com.transports.utils.Constants.DESTINATION;
 import static com.transports.utils.Constants.ORIGIN;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
@@ -48,7 +51,6 @@ public class SchedulesFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Spinner transportsDropdown;
     private AutoCompleteTextView originDropdown;
     private AutoCompleteTextView destinationDropdown;
     private String[] stopNames;
@@ -56,7 +58,6 @@ public class SchedulesFragment extends Fragment {
     public SchedulesFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,21 +73,13 @@ public class SchedulesFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        transportsDropdown = getView().findViewById(R.id.transport_companies_spinner);
         originDropdown = getView().findViewById(R.id.departure_stop);
         destinationDropdown = getView().findViewById(R.id.arrival_stop);
+        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        //There are multiple variations of this, but this is the basic variant.
+        //ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, availableTransports);
+        //originDropdown.setAdapter(adapter);
 
-
-        //create a list of items for the spinner.
-
-        if (availableTransports.isEmpty()){
-            //api call
-
-            //(replace with api call)
-            availableTransports.add("Comboios Portugal");
-            availableTransports.add("Carris");
-            availableTransports.add("MoveAveiro");
-        }
 
         if (AppDataInfo.stops.isEmpty()){
             getAllStops();
@@ -94,13 +87,6 @@ public class SchedulesFragment extends Fragment {
         else{
             setStopsOnDropDowns();
         }
-
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        //There are multiple variations of this, but this is the basic variant.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, availableTransports);
-        //set the spinners adapter to the previously created one.
-        transportsDropdown.setAdapter(adapter);
-
         //
         final Button searchSchedulesBtn = (Button) getView().findViewById(R.id.schedules_submit_button);
 
@@ -140,10 +126,7 @@ public class SchedulesFragment extends Fragment {
                     return;
                 }
 
-                String originStopID = AppDataInfo.stops.get(originSelectedIndex).getStopId();
-                String destinationStopID = AppDataInfo.stops.get(destinationSelectedIndex).getStopId();
                 Bundle bundle = new Bundle();
-                bundle.putString(TRANSPORT_COMPANY, transportsDropdown.getSelectedItem().toString());
                 bundle.putSerializable(ORIGIN, AppDataInfo.stops.get(originSelectedIndex));
                 bundle.putSerializable(DESTINATION, AppDataInfo.stops.get(destinationSelectedIndex));
 
@@ -222,11 +205,12 @@ public class SchedulesFragment extends Fragment {
                                 JSONObject stop = response.getJSONObject(i);
 
                                 // Get the current student (json object) data
-                                String stopId = stop.getString("stop_id");
-                                String stopName = stop.getString("stop_name");
-                                double stopLat = Double.parseDouble(stop.getJSONArray("loc").getString(0));
-                                double stopLong = Double.parseDouble(stop.getJSONArray("loc").getString(1));
-                                Stop stopObjet = new Stop(stopId, stopName, stopLat, stopLong);
+                                String stopId = stop.getString(STOP_INFO_ID_FIELD);
+                                String stopName = stop.getString(STOP_INFO_NAME_FIELD);
+                                String stopTransport = stop.getString(STOP_INFO_TRANSPORT_FIELD);
+                                double stopLat = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(0));
+                                double stopLong = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(1));
+                                Stop stopObjet = new Stop(stopId, stopName, stopTransport, stopLat, stopLong);
                                 AppDataInfo.stops.add(stopObjet);
                             }
                             setStopsOnDropDowns();

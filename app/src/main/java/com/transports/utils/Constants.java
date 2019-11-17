@@ -13,6 +13,25 @@ public class Constants {
 
     // --------------------Json fields ------------------------
 
+    //get stops, stop info and route
+    public static final String STOP_INFO_TRANSPORT_FIELD = "agency_key";
+    public static final String STOP_INFO_ID_FIELD = "stop_id";
+    public static final String STOP_INFO_NAME_FIELD = "stop_name";
+    public static final String STOP_INFO_COORDS_FIELD = "loc";
+    //get rout fields
+    public static final String ROUTE_LIST_FIELD = "routes";
+    public static final String ROUTE_TRIP_CHILD_FIELD = "path";
+    public static final String ROUTE_LINK_FIELD = "link";
+    public static final String ROUTE_PATH_STOPFROM_FIELD = "fromId";
+    public static final String ROUTE_PATH_STOPTO_FIELD = "toId";
+    public static final String ROUTE_STOP_ID_FIELD = "id";
+    public static final String ROUTE_TOTAL_PRICE_FIELD = "fareTotal";
+    public static final String ROUTE_PRICE_FIELD = "fare";
+    public static final String ROUTE_DEPARTURE_FIELD = "departureTime";
+    public static final String ROUTE_ARRIVAL_FIELD = "arrivalTime";
+    public static final String ROUTE_CHILD_DEPARTURE_FIELD = "departure_time";
+    public static final String ROUTE_CHILD_ARRIVAL_FIELD = "arrival_time";
+
     // create ticket / receive tickets
     public static final String TRIP = "trip";
     public static final String COMPANY = "company";
@@ -37,6 +56,8 @@ public class Constants {
 
     //register user in payments
     public static final String PAYMENT_USER_ID = "auth_token";
+    //temp
+    public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzM5NzMzOTgsImlhdCI6MTU3Mzk2OTc5OCwic3ViIjoiM2U5ZjcxNGYtZjhjYi00NzZjLThmMWQtNTM0MjJjZDI1MmY5In0.G45ROa52iytFvpWEW9ayoO3USsMEiaVdQJ15QoER10A";
 
 
     //for testing

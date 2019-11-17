@@ -30,7 +30,7 @@ import com.transports.utils.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.transports.data.URLs.PAYMENTS_CREATE_ACCOUNT;
+import static com.transports.utils.URLs.PAYMENTS_CREATE_ACCOUNT;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
 
 public class LoginActivity extends AppCompatActivity {
