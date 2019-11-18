@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.developer.kalert.KAlertDialog;
+import com.google.firebase.auth.FirebaseAuth;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
@@ -70,6 +71,7 @@ import static com.transports.utils.Constants.ROUTE_TOTAL_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
+import static com.transports.utils.Constants.TICKET_AUTH_TOKEN_HEADER_FIELD;
 import static com.transports.utils.Constants.TOKEN;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
@@ -98,7 +100,9 @@ public class SchedulesViewerFragment extends Fragment {
     private TripParentViewHolder tripParentViewHolder;
     private boolean browserOpened = false;
     private TripParent selectedTripParent;
+    private String paymentsResponse;
     private String ticketsToken;
+    private String authToken;
 
     public SchedulesViewerFragment() {
         // Required empty public constructor
@@ -175,7 +179,7 @@ public class SchedulesViewerFragment extends Fragment {
             }
         });
         if (browserOpened && selectedTripParent != null && ticketsToken!= null)
-            this.purchaseTicket2(selectedTripParent);
+            this.purchaseTicket2(selectedTripParent, paymentsResponse);
     }
 
     private void goBack(){
@@ -220,7 +224,8 @@ public class SchedulesViewerFragment extends Fragment {
                             String arrivalTimeTotal = response.getString(ROUTE_ARRIVAL_FIELD);
                             List<String> stopIds = new ArrayList<>();
                             if (routeAlternativesList.length() == 0){
-                                showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",  KAlertDialog.WARNING_TYPE);
+                                showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",
+                                        KAlertDialog.WARNING_TYPE, true);
                                 return;
                             }
                             for (int i = 0; i < routeAlternativesList.length(); i++){
@@ -243,7 +248,7 @@ public class SchedulesViewerFragment extends Fragment {
                             tripParentList.add(tripParent);
                             setSchedulesOnList(tripParentList);
                         } catch (JSONException e) {
-                            showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE);
+                            showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE, true);
                         }
 
                     }
@@ -317,7 +322,7 @@ public class SchedulesViewerFragment extends Fragment {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
                         //user confirmed ticket purchase
-                        purchaseTicket(tripParent);
+                        loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                         /*List<Ticket> tickets = new ArrayList<>();
                         TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
@@ -356,9 +361,9 @@ public class SchedulesViewerFragment extends Fragment {
             }
             jsonBody.put(Constants.TICKET_INFO_FIELD, jsonTicketsArray);
 
-            Log.d("purchase", jsonBody+"");
+            Log.d("responsePurchaseSent", jsonBody+", authToken-> "+authToken);
         } catch (JSONException e){
-            showErrorAndGoBack("Purchase failed", "Could not get tickets to buy.",  KAlertDialog.ERROR_TYPE);
+            showErrorAndGoBack("Purchase failed", "Could not get tickets to buy.",  KAlertDialog.ERROR_TYPE, false);
         }
 
 
@@ -370,6 +375,7 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("responsePurchase", response+"");
                         // get list of purchased tickets and add them to a global ticket. Store in DB
                         String paymentConfirmationLink = "";
 
@@ -380,12 +386,13 @@ public class SchedulesViewerFragment extends Fragment {
                         }
                         if (!paymentConfirmationLink.isEmpty()){
                             selectedTripParent = tripParent;
+                            paymentsResponse = jsonBody.toString();
                             openBrowser(paymentConfirmationLink);
                         }
                         else{
                             //error getting link
                             showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message2),
-                                    KAlertDialog.ERROR_TYPE);
+                                    KAlertDialog.ERROR_TYPE, false);
                         }
 
                     }
@@ -393,9 +400,9 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("errorPurchase", error+"");
+                        Log.d("responsePurchaseErr", error+"");
                         showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message),
-                                KAlertDialog.ERROR_TYPE);
+                                KAlertDialog.ERROR_TYPE, false);
                         ticketsToken = null;
                     }
                 }
@@ -405,7 +412,7 @@ public class SchedulesViewerFragment extends Fragment {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("auth-token", TOKEN);
+                params.put(TICKET_AUTH_TOKEN_HEADER_FIELD, authToken);
                 return params;
             }
         };
@@ -414,13 +421,13 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    private void purchaseTicket2(final TripParent tripParent){
+    private void purchaseTicket2(final TripParent tripParent, String request){
         this.browserOpened = false;
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
-        JSONObject jsonBody = new JSONObject();
+        JSONObject jsonBody = null;
         try{
-            jsonBody.put(SECRET_FIELD, ticketsToken);
+            jsonBody = new JSONObject(request);
         } catch (JSONException e){ }
 
 
@@ -432,6 +439,7 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d("responsePurchase2", response+"");
                         // first open browser for payment
                         List<Ticket> tickets = new ArrayList<>();
                         TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
@@ -467,8 +475,8 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("errorPurchase2", error+"");
-                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE);
+                        Log.d("responsePurchase2ER", error+"");
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE, false);
                         ticketsToken = null;
                     }
                 }
@@ -478,7 +486,7 @@ public class SchedulesViewerFragment extends Fragment {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("auth-token", TOKEN);
+                params.put("auth_token", authToken);
                 return params;
             }
         };
@@ -487,13 +495,14 @@ public class SchedulesViewerFragment extends Fragment {
     }
 
 
-    private void loginUserInPayments(String firebaseID){
+    private void loginUserInPayments(final TripParent tripParent, String firebaseID){
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         try{
-            jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            jsonBody.put(PAYMENT_PASSWORD, "pass");
+            //jsonBody.put(PAYMENT_USER_ID, firebaseID);
+            jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
+            jsonBody.put(PAYMENT_PASSWORD, "transdev");
         } catch (JSONException e){ }
 
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
@@ -503,19 +512,20 @@ public class SchedulesViewerFragment extends Fragment {
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("paymentRegister", response+"");
+                        Log.d("responsPayment", response+"");
 
-                        String auth_token = null;
+                        String authTokenField = null;
                         String status = null;
                         try {
-                            auth_token = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
+                            authTokenField = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
                             status = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_STATUS);
                             if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
-                                showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE);
+                                showErrorAndGoBack("Payment Error", response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_MESSAGE_FIELD), KAlertDialog.ERROR_TYPE, false);
                             }
-                            //purchaseTicket( , auth_token);
+                            authToken = authTokenField;
+                            purchaseTicket( tripParent );
                         } catch (JSONException e) {
-                            showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE);
+                            showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE, false);
                         }
 
                     }
@@ -543,7 +553,7 @@ public class SchedulesViewerFragment extends Fragment {
         startActivity(browserIntent);
     }
 
-    private void showErrorAndGoBack(String title, String descr, int type){
+    private void showErrorAndGoBack(String title, String descr, int type, boolean goBack){
         new KAlertDialog(getContext(), type)
                 .setTitleText(title)
                 .setContentText(descr)
@@ -552,7 +562,8 @@ public class SchedulesViewerFragment extends Fragment {
                     @Override
                     public void onClick(KAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        goBack();
+                        if (goBack)
+                            goBack();
                     }
                 })
                 .show();

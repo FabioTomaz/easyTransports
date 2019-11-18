@@ -47,9 +47,10 @@ public class Constants {
     public static final String HASH_FIELD = "hash";
     public static final String TICKET_INFO_FIELD = "details";
     public static final String TICKET_TOKEN_FIELD = "secret";
+    public static final String TICKET_AUTH_TOKEN_HEADER_FIELD = "AuthToken";
 
     //payment confirmation link field
-    public static final String PAYMENT_CONFIRM_LINK_FIELD = "link";
+    public static final String PAYMENT_CONFIRM_LINK_FIELD = "url";
 
     //get ticket status
     public static final String TICKET_STATE_FIELD = "ticketState";
@@ -62,7 +63,7 @@ public class Constants {
     public static final String PAYMENT_PASSWORD = "password";
     public static final String PAYMENT_CURRENCY_EUR = "EUR";
     public static final String PAYMENT_CURRENCY = "currency";
-    public static final String PAYMENT_STATUS = "currency";
+    public static final String PAYMENT_STATUS = "status";
     public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
     public static final String PAYMENT_MESSAGE_FIELD = "message";
 

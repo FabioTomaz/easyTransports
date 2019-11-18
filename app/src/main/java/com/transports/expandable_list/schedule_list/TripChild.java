@@ -119,7 +119,7 @@ public class TripChild implements Parcelable {
     }
 
     public String getTrip(){
-        return this.origin+"-"+this.destination;
+        return this.origin.getStopName()+"->"+this.destination.getStopName();
     }
 
     @Override
