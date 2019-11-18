@@ -44,38 +44,39 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static android.widget.LinearLayout.VERTICAL;
 import static com.transports.data.AppDataInfo.stops;
+import static com.transports.utils.Constants.DATE_FIELD;
+import static com.transports.utils.Constants.PAYMENT_AUTH_TOKEN;
+import static com.transports.utils.Constants.PAYMENT_MESSAGE_FIELD;
+import static com.transports.utils.Constants.PAYMENT_PASSWORD;
+import static com.transports.utils.Constants.PAYMENT_STATUS;
+import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
+import static com.transports.utils.Constants.PAYMENT_USER_ID;
+import static com.transports.utils.Constants.PRICE;
 import static com.transports.utils.Constants.ROUTE_ARRIVAL_FIELD;
 import static com.transports.utils.Constants.ROUTE_CHILD_ARRIVAL_FIELD;
 import static com.transports.utils.Constants.ROUTE_CHILD_DEPARTURE_FIELD;
 import static com.transports.utils.Constants.ROUTE_DEPARTURE_FIELD;
+import static com.transports.utils.Constants.ROUTE_LIST_FIELD;
 import static com.transports.utils.Constants.ROUTE_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_STOP_ID_FIELD;
 import static com.transports.utils.Constants.ROUTE_TOTAL_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
-import static com.transports.utils.Constants.ROUTE_LINK_FIELD;
-import static com.transports.utils.Constants.ROUTE_LIST_FIELD;
-import static com.transports.utils.Constants.ROUTE_PATH_STOPFROM_FIELD;
-import static com.transports.utils.Constants.ROUTE_PATH_STOPTO_FIELD;
-import static com.transports.utils.Constants.TOKEN;
-import static com.transports.utils.URLs.CREATE_TICKET;
-import static com.transports.utils.URLs.GET_ROUTE;
-import static com.transports.utils.URLs.TICKET_PAYMENT1;
-import static com.transports.utils.Constants.DATE_FIELD;
-import static com.transports.utils.Constants.PRICE;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
+import static com.transports.utils.Constants.TOKEN;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
+import static com.transports.utils.URLs.CREATE_TICKET;
+import static com.transports.utils.URLs.GET_ROUTE;
+import static com.transports.utils.URLs.PAYMENTS_LOGIN_ACCOUNT;
+import static com.transports.utils.URLs.TICKET_PAYMENT1;
 import static com.transports.utils.UtilityFunctions.generateString;
 
 
@@ -481,6 +482,56 @@ public class SchedulesViewerFragment extends Fragment {
                 return params;
             }
         };
+        // Add JsonObjectRequest to the RequestQueue
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
+    private void loginUserInPayments(String firebaseID){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        //create list of request ticket creation json objects
+        JSONObject jsonBody = new JSONObject();
+        try{
+            jsonBody.put(PAYMENT_USER_ID, firebaseID);
+            jsonBody.put(PAYMENT_PASSWORD, "pass");
+        } catch (JSONException e){ }
+
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+                Request.Method.POST,
+                PAYMENTS_LOGIN_ACCOUNT,
+                jsonBody,
+                new Response.Listener<JSONObject >() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("paymentRegister", response+"");
+
+                        String auth_token = null;
+                        String status = null;
+                        try {
+                            auth_token = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
+                            status = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_STATUS);
+                            if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
+                                showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE);
+                            }
+                            //purchaseTicket( , auth_token);
+                        } catch (JSONException e) {
+                            showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE);
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("errorPayment", error+"");
+                        Toast.makeText(getContext(), "Could not login user in payment service", Toast.LENGTH_SHORT);
+                        /*new AlertDialog.Builder(getApplication())
+                                .setTitle(getString(R.string.ticket_purchase_error_title))
+                                .setMessage(getString(R.string.ticket_purchase_error_message))
+                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
+                    }
+                }
+        );
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);

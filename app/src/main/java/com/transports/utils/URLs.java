@@ -22,7 +22,8 @@ public class URLs {
     public static final String TICKET_PAYMENT2 = TICKETS+"/purchase2";
 
     //Payment service
-    public static final String PAYMENTS = "http://192.168.85.208/Payment";
+    public static final String PAYMENTS = "http://192.168.85.208/";
+    public static final String PAYMENTS_LOGIN_ACCOUNT = PAYMENTS + "user/login";
     public static final String PAYMENTS_CREATE_ACCOUNT = PAYMENTS + "account";
 
 

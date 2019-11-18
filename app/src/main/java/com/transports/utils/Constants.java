@@ -54,11 +54,17 @@ public class Constants {
     //get ticket status
     public static final String TICKET_STATE_FIELD = "ticketState";
 
-    //register user in payments
-    public static final String PAYMENT_USER_ID = "auth_token";
     //temp
     public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzM5NzMzOTgsImlhdCI6MTU3Mzk2OTc5OCwic3ViIjoiM2U5ZjcxNGYtZjhjYi00NzZjLThmMWQtNTM0MjJjZDI1MmY5In0.G45ROa52iytFvpWEW9ayoO3USsMEiaVdQJ15QoER10A";
-
+    //register user in payments
+    public static final String PAYMENT_AUTH_TOKEN = "auth_token";
+    public static final String PAYMENT_USER_ID = "user_id";
+    public static final String PAYMENT_PASSWORD = "password";
+    public static final String PAYMENT_CURRENCY_EUR = "EUR";
+    public static final String PAYMENT_CURRENCY = "currency";
+    public static final String PAYMENT_STATUS = "currency";
+    public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
+    public static final String PAYMENT_MESSAGE_FIELD = "message";
 
     //for testing
     public static final String TICKET_JSON_EXAMPLE = "{\n" +

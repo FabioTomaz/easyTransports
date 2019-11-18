@@ -30,6 +30,8 @@ import com.transports.utils.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.transports.utils.Constants.PAYMENT_STATUS;
+import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
 import static com.transports.utils.URLs.PAYMENTS_CREATE_ACCOUNT;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
 
@@ -143,7 +145,18 @@ public class SignupActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject >() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        //TODO: store in shared preferences the token of the user of payments
+                        Log.d("paymentRegister", response+"");
+
+                        String status = null;
+                        try {
+                            status = response.getString(PAYMENT_STATUS);
+                            if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
