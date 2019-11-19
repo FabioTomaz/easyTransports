@@ -18,6 +18,8 @@ public class Constants {
     public static final String STOP_INFO_ID_FIELD = "stop_id";
     public static final String STOP_INFO_NAME_FIELD = "stop_name";
     public static final String STOP_INFO_COORDS_FIELD = "loc";
+    public static final String STOP_INFO_AGENCY_KEY= "agency_key";
+
     //get rout fields
     public static final String ROUTE_LIST_FIELD = "routes";
     public static final String ROUTE_TRIP_CHILD_FIELD = "path";

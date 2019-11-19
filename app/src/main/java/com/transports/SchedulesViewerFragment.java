@@ -25,7 +25,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.developer.kalert.KAlertDialog;
@@ -167,16 +166,13 @@ public class SchedulesViewerFragment extends Fragment {
         super.onResume();
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+        getView().setOnKeyListener((v, keyCode, event) -> {
 
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
-                    goBack();
-                    return true;
-                }
-                return false;
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                goBack();
+                return true;
             }
+            return false;
         });
         if (browserOpened && selectedTripParent != null && ticketsToken!= null)
             this.purchaseTicket2(selectedTripParent, paymentsResponse);
@@ -211,54 +207,48 @@ public class SchedulesViewerFragment extends Fragment {
                 Request.Method.GET,
                 GET_ROUTE+originStopID+"/"+destinationStopID,
                 null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("schedulesRes", response+"");
+                response -> {
+                    Log.d("schedulesRes", response+"");
 
-                        // Process the JSON
-                        try {
-                            JSONArray routeAlternativesList = response.getJSONArray(ROUTE_LIST_FIELD);
-                            double totalPrice = response.getDouble(ROUTE_TOTAL_PRICE_FIELD);
-                            String departureTimeTotal = response.getString(ROUTE_DEPARTURE_FIELD);
-                            String arrivalTimeTotal = response.getString(ROUTE_ARRIVAL_FIELD);
-                            List<String> stopIds = new ArrayList<>();
-                            if (routeAlternativesList.length() == 0){
-                                showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",
-                                        KAlertDialog.WARNING_TYPE, true);
-                                return;
-                            }
-                            for (int i = 0; i < routeAlternativesList.length(); i++){
-                                JSONObject routeAlternative = routeAlternativesList.getJSONObject(i);//element inside "routes"
-                                JSONArray tripChildList = routeAlternative.getJSONArray(ROUTE_TRIP_CHILD_FIELD);//"path" field of "routes"
-                                //origin and destination stop of this child trip can be obtained by checking the first (origin) and last (destination) stop
-                                String originStopChildID = tripChildList.getJSONObject(0).getString(ROUTE_STOP_ID_FIELD);
-                                String destinationStopChildID = tripChildList.getJSONObject(tripChildList.length()-1).getString(ROUTE_STOP_ID_FIELD);
-
-                                Stop originStopChild = getStopFromID(originStopChildID);
-                                Stop destinationStopChild = getStopFromID(destinationStopChildID);
-                                String companyName = originStopChild.getStopTransport();
-                                double price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
-                                String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
-                                String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);
-                                tripChildren.add(new TripChild(companyName, "", departureTime, arrivalTime,
-                                        originStopChild, destinationStopChild, price));
-                            }
-                            TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
-                            tripParentList.add(tripParent);
-                            setSchedulesOnList(tripParentList);
-                        } catch (JSONException e) {
-                            showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE, true);
+                    // Process the JSON
+                    try {
+                        JSONArray routeAlternativesList = response.getJSONArray(ROUTE_LIST_FIELD);
+                        double totalPrice = response.getDouble(ROUTE_TOTAL_PRICE_FIELD);
+                        String departureTimeTotal = response.getString(ROUTE_DEPARTURE_FIELD);
+                        String arrivalTimeTotal = response.getString(ROUTE_ARRIVAL_FIELD);
+                        List<String> stopIds = new ArrayList<>();
+                        if (routeAlternativesList.length() == 0){
+                            showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",
+                                    KAlertDialog.WARNING_TYPE, true);
+                            return;
                         }
+                        for (int i = 0; i < routeAlternativesList.length(); i++){
+                            JSONObject routeAlternative = routeAlternativesList.getJSONObject(i);//element inside "routes"
+                            JSONArray tripChildList = routeAlternative.getJSONArray(ROUTE_TRIP_CHILD_FIELD);//"path" field of "routes"
+                            //origin and destination stop of this child trip can be obtained by checking the first (origin) and last (destination) stop
+                            String originStopChildID = tripChildList.getJSONObject(0).getString(ROUTE_STOP_ID_FIELD);
+                            String destinationStopChildID = tripChildList.getJSONObject(tripChildList.length()-1).getString(ROUTE_STOP_ID_FIELD);
 
+                            Stop originStopChild = getStopFromID(originStopChildID);
+                            Stop destinationStopChild = getStopFromID(destinationStopChildID);
+                            String companyName = originStopChild.getStopTransport();
+                            double price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
+                            String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
+                            String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);
+                            tripChildren.add(new TripChild(companyName, "", departureTime, arrivalTime,
+                                    originStopChild, destinationStopChild, price));
+                        }
+                        TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
+                        tripParentList.add(tripParent);
+                        setSchedulesOnList(tripParentList);
+                    } catch (JSONException e) {
+                        showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE, true);
                     }
+
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Do something when error occurred
-                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
-                    }
+                error -> {
+                    // Do something when error occurred
+                    Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -399,14 +389,11 @@ public class SchedulesViewerFragment extends Fragment {
 
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("responsePurchaseErr", error+"");
-                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message),
-                                KAlertDialog.ERROR_TYPE, false);
-                        ticketsToken = null;
-                    }
+                error -> {
+                    Log.d("responsePurchaseErr", error+"");
+                    showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message),
+                            KAlertDialog.ERROR_TYPE, false);
+                    ticketsToken = null;
                 }
         ) {
             @Override
@@ -438,50 +425,44 @@ public class SchedulesViewerFragment extends Fragment {
                 Request.Method.POST,
                 CREATE_TICKET,
                 jsonBody,
-                new Response.Listener<JSONObject >() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("responsePurchase2", response+"");
-                        // first open browser for payment
-                        List<Ticket> tickets = new ArrayList<>();
-                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
-                        //parse list of purchased tickets and add to list
-                        try {
-                            JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
-                            for (int i = 0; i < purchasedTickets.length(); i++){
-                                JSONObject j = purchasedTickets.getJSONObject(i);
-                                tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), j.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
-                            }
-                        } catch (JSONException e) {
-                            ticketsToken = null;
-                            e.printStackTrace();
+                response -> {
+                    Log.d("responsePurchase2", response+"");
+                    // first open browser for payment
+                    List<Ticket> tickets = new ArrayList<>();
+                    TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
+                    //parse list of purchased tickets and add to list
+                    try {
+                        JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
+                        for (int i = 0; i < purchasedTickets.length(); i++){
+                            JSONObject j = purchasedTickets.getJSONObject(i);
+                            tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), j.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
                         }
-                        /*tickets.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
-                        tickets.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
-                        tickets.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));*/
-
-                        if(tickets.isEmpty()){
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle(getString(R.string.ticket_purchase_error_title))
-                                    .setMessage(getString(R.string.ticket_purchase_error_message3))
-                                    .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
-                            return;
-                        }
-
-                        //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
-                        ticketGlobal.setTickets(tickets);
-                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                        bd.addGlobalTicket(ticketGlobal);
-                        showSuccess("Ticket purchase successfull.", "You have succesffully purchased your tickets. Go to 'My Tickets' to see and use your tickets");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("responsePurchase2ER", error+"");
-                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE, false);
+                    } catch (JSONException e) {
                         ticketsToken = null;
+                        e.printStackTrace();
                     }
+                    /*tickets.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
+                    tickets.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
+                    tickets.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));*/
+
+                    if(tickets.isEmpty()){
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(getString(R.string.ticket_purchase_error_title))
+                                .setMessage(getString(R.string.ticket_purchase_error_message3))
+                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
+                        return;
+                    }
+
+                    //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
+                    ticketGlobal.setTickets(tickets);
+                    SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                    bd.addGlobalTicket(ticketGlobal);
+                    showSuccess("Ticket purchase successfull.", "You have succesffully purchased your tickets. Go to 'My Tickets' to see and use your tickets");
+                },
+                error -> {
+                    Log.d("responsePurchase2ER", error+"");
+                    showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE, false);
+                    ticketsToken = null;
                 }
         ){
             @Override
@@ -513,37 +494,31 @@ public class SchedulesViewerFragment extends Fragment {
                 Request.Method.POST,
                 PAYMENTS_LOGIN_ACCOUNT,
                 jsonBody,
-                new Response.Listener<JSONObject >() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("responsPayment", response+"");
+                response -> {
+                    Log.d("responsPayment", response+"");
 
-                        String authTokenField = null;
-                        String status = null;
-                        try {
-                            authTokenField = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
-                            status = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_STATUS);
-                            if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
-                                showErrorAndGoBack("Payment Error", response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_MESSAGE_FIELD), KAlertDialog.ERROR_TYPE, false);
-                            }
-                            authToken = authTokenField;
-                            purchaseTicket( tripParent );
-                        } catch (JSONException e) {
-                            showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE, false);
+                    String authTokenField = null;
+                    String status = null;
+                    try {
+                        authTokenField = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
+                        status = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_STATUS);
+                        if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
+                            showErrorAndGoBack("Payment Error", response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_MESSAGE_FIELD), KAlertDialog.ERROR_TYPE, false);
                         }
+                        authToken = authTokenField;
+                        purchaseTicket( tripParent );
+                    } catch (JSONException e) {
+                        showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE, false);
+                    }
 
-                    }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("errorPayment", error+"");
-                        Toast.makeText(getContext(), "Could not login user in payment service", Toast.LENGTH_SHORT);
-                        /*new AlertDialog.Builder(getApplication())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
-                    }
+                error -> {
+                    Log.d("errorPayment", error+"");
+                    Toast.makeText(getContext(), "Could not login user in payment service", Toast.LENGTH_SHORT);
+                    /*new AlertDialog.Builder(getApplication())
+                            .setTitle(getString(R.string.ticket_purchase_error_title))
+                            .setMessage(getString(R.string.ticket_purchase_error_message))
+                            .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
                 }
         );
 
@@ -562,13 +537,10 @@ public class SchedulesViewerFragment extends Fragment {
                 .setTitleText(title)
                 .setContentText(descr)
                 .setConfirmText("OK")
-                .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
-                    @Override
-                    public void onClick(KAlertDialog sDialog) {
-                        sDialog.dismissWithAnimation();
-                        if (goBack)
-                            goBack();
-                    }
+                .setConfirmClickListener(sDialog -> {
+                    sDialog.dismissWithAnimation();
+                    if (goBack)
+                        goBack();
                 })
                 .show();
     }

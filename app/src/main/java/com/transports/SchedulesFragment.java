@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.transports.data.AppDataInfo.availableTransports;
+import static com.transports.utils.Constants.STOP_INFO_AGENCY_KEY;
 import static com.transports.utils.Constants.STOP_INFO_COORDS_FIELD;
 import static com.transports.utils.Constants.STOP_INFO_ID_FIELD;
 import static com.transports.utils.Constants.STOP_INFO_NAME_FIELD;
@@ -185,46 +186,38 @@ public class SchedulesFragment extends Fragment {
         // Initialize a new RequestQueue instance
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-        // Initialize a new JsonObjectRequest instance
+        // Initialize a new JsonObjectRequest instanceresponse
         JsonArrayRequest jsonArrayRequest  = new JsonArrayRequest(
                 Request.Method.GET,
                 GET_SCHEDULES,
                 null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        // Do something with response
+                response -> {
+                    // Process the JSON
+                    try {
+                        // Get the JSON array
+                        // Loop through the array elements
+                        for (int i = 0; i < response.length(); i++) {
+                            // Get current json object
+                            JSONObject stop = response.getJSONObject(i);
 
-
-                        // Process the JSON
-                        try {
-                            // Get the JSON array
-                            // Loop through the array elements
-                            for (int i = 0; i < response.length(); i++) {
-                                // Get current json object
-                                JSONObject stop = response.getJSONObject(i);
-
-                                // Get the current student (json object) data
-                                String stopId = stop.getString(STOP_INFO_ID_FIELD);
-                                String stopName = stop.getString(STOP_INFO_NAME_FIELD);
-                                String stopTransport = stop.getString(STOP_INFO_TRANSPORT_FIELD);
-                                double stopLat = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(0));
-                                double stopLong = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(1));
-                                Stop stopObjet = new Stop(stopId, stopName, stopTransport, stopLat, stopLong);
-                                AppDataInfo.stops.add(stopObjet);
-                            }
-                            setStopsOnDropDowns();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            // Get the current student (json object) data
+                            String stopId = stop.getString(STOP_INFO_ID_FIELD);
+                            String stopName = stop.getString(STOP_INFO_NAME_FIELD);
+                            String stopTransport = stop.getString(STOP_INFO_TRANSPORT_FIELD);
+                            String agencyKey = stop.getString(STOP_INFO_AGENCY_KEY);
+                            double stopLat = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(0));
+                            double stopLong = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(1));
+                            Stop stopObjet = new Stop(stopId, stopName, stopTransport, stopLat, stopLong, agencyKey);
+                            AppDataInfo.stops.add(stopObjet);
                         }
+                        setStopsOnDropDowns();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Do something when error occurred
-                        Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
-                    }
+                error -> {
+                    // Do something when error occurred
+                    Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -235,7 +228,8 @@ public class SchedulesFragment extends Fragment {
     public void setStopsOnDropDowns(){
         stopNames = new String [AppDataInfo.stops.size()];
         for (int i = 0; i < AppDataInfo.stops.size(); i++){
-            stopNames[i] = AppDataInfo.stops.get(i).getStopName();
+            Log.i("test", AppDataInfo.stops.get(i).getStopName() + AppDataInfo.stops.get(i).getAgencyKey());
+            stopNames[i] = AppDataInfo.stops.get(i).getStopName() + " (" + AppDataInfo.stops.get(i).getAgencyKey() + ")";
         }
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>

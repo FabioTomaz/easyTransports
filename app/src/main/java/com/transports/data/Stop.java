@@ -12,6 +12,7 @@ public class Stop implements Serializable, Parcelable {
     private String stopId;
     private String stopName;
     private String stopTransport;
+    private String agencyKey;
     private double stopLat;
     private double stopLong;
 
@@ -20,12 +21,13 @@ public class Stop implements Serializable, Parcelable {
         this.stopName = stopName;
     }
 
-    public Stop(String stopId, String stopName, String stopTransport, double stopLat, double stopLong) {
+    public Stop(String stopId, String stopName, String stopTransport, double stopLat, double stopLong, String agencyKey) {
         this.stopId = stopId;
         this.stopName = stopName;
         this.stopTransport = stopTransport;
         this.stopLat = stopLat;
         this.stopLong = stopLong;
+        this.agencyKey = agencyKey;
     }
 
     protected Stop(Parcel in) {
@@ -111,5 +113,13 @@ public class Stop implements Serializable, Parcelable {
         dest.writeString(this.stopTransport);
         dest.writeDouble(this.stopLat);
         dest.writeDouble(this.stopLong);
+    }
+
+    public String getAgencyKey() {
+        return agencyKey;
+    }
+
+    public void setAgencyKey(String agencyKey) {
+        this.agencyKey = agencyKey;
     }
 }
