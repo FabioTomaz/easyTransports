@@ -72,7 +72,6 @@ import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
 import static com.transports.utils.Constants.TICKET_AUTH_TOKEN_HEADER_FIELD;
-import static com.transports.utils.Constants.TOKEN;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
 import static com.transports.utils.URLs.CREATE_TICKET;
@@ -103,6 +102,7 @@ public class SchedulesViewerFragment extends Fragment {
     private String paymentsResponse;
     private String ticketsToken;
     private String authToken;
+    private String paymentID;
 
     public SchedulesViewerFragment() {
         // Required empty public constructor
@@ -310,6 +310,7 @@ public class SchedulesViewerFragment extends Fragment {
     //called by user click on "buy" button of a list of tickets
     public void handlePurchase(int tripParentPosition){
         TripParent tripParent = tripParentList.get(tripParentPosition);
+        Log.d("resTripParent", tripParent+"");
         showConfirmPurchaseDialog(tripParent);
     }
 
@@ -381,6 +382,7 @@ public class SchedulesViewerFragment extends Fragment {
 
                         try {
                             paymentConfirmationLink = response.getString(Constants.PAYMENT_CONFIRM_LINK_FIELD);
+                            paymentID = response.getString("paymentId");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -470,6 +472,7 @@ public class SchedulesViewerFragment extends Fragment {
                         ticketGlobal.setTickets(tickets);
                         SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
                         bd.addGlobalTicket(ticketGlobal);
+                        showSuccess("Ticket purchase successfull.", "You have succesffully purchased your tickets. Go to 'My Tickets' to see and use your tickets");
                     }
                 },
                 new Response.ErrorListener() {
@@ -486,7 +489,8 @@ public class SchedulesViewerFragment extends Fragment {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
-                params.put("auth_token", authToken);
+                params.put(TICKET_AUTH_TOKEN_HEADER_FIELD, authToken);
+                params.put("paymentId", paymentID);
                 return params;
             }
         };
@@ -564,6 +568,20 @@ public class SchedulesViewerFragment extends Fragment {
                         sDialog.dismissWithAnimation();
                         if (goBack)
                             goBack();
+                    }
+                })
+                .show();
+    }
+
+    private void showSuccess(String title, String descr){
+        new KAlertDialog(getContext(), KAlertDialog.SUCCESS_TYPE)
+                .setTitleText(title)
+                .setContentText(descr)
+                .setConfirmText("OK")
+                .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+                    @Override
+                    public void onClick(KAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
                     }
                 })
                 .show();

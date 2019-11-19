@@ -2,7 +2,6 @@ package com.transports.expandable_list.schedule_list;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.transports.data.Stop;
-import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 
 import java.io.Serializable;
@@ -135,7 +134,20 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
     }
 
     public TicketGlobal convertToGlobalTicket(){
-        return new TicketGlobal(this.getOrigin()+"-"+this.getDestination(), this.transports, this.departureHour +"-"+this.arrivalHour);
+        return new TicketGlobal(this.getOrigin().getStopName()+"->"+this.getDestination().getStopName(), this.transports, this.departureHour +"-"+this.arrivalHour);
     }
 
+    @Override
+    public String toString() {
+        return "TripParent{" +
+                "transports='" + transports + '\'' +
+                ", departureHour='" + departureHour + '\'' +
+                ", arrivalHour='" + arrivalHour + '\'' +
+                ", date='" + date + '\'' +
+                ", origin=" + origin +
+                ", destination=" + destination +
+                ", totalPrice=" + totalPrice +
+                ", trips=" + trips +
+                '}';
+    }
 }

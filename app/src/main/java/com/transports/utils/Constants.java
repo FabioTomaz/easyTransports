@@ -34,7 +34,7 @@ public class Constants {
 
     // create ticket / receive tickets
     public static final String TRIP = "trip";
-    public static final String COMPANY = "company";
+    public static final String COMPANY = "transport";
     public static final String PRICE = "price";
     public static final String DATE_FIELD = "timestamp";
     public static final String SCHEDULE = "schedule";
