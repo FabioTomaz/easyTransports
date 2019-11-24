@@ -10,17 +10,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.transports.account_management.AccountSettingsFragment;
+import com.transports.data.Stop;
 import com.transports.utils.Constants;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, StopFragment.OnListFragmentInteractionListener {
 
     private com.google.android.material.bottomnavigation.BottomNavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        navigationView = (BottomNavigationView) findViewById(R.id.navigationView);
-        
+        navigationView = findViewById(R.id.navigationView);
+
         navigationView.setOnNavigationItemSelectedListener(this);
         int menuID = getIntent().getIntExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);
         navigateToMenu(menuID);
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return navigateToMenu(item.getItemId());
     }
 
-    public boolean navigateToMenu(int menuID){
+    public boolean navigateToMenu(int menuID) {
         switch (menuID) {
             case R.id.bottom_menu_tickets: {
                 openFragment(new TicketsFragment());
@@ -39,6 +41,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
             case R.id.bottom_menu_schedule: {
                 openFragment(new SchedulesFragment());
+                break;
+            }
+            case R.id.bottom_menu_stops: {
+                openFragment(new StopFragment());
                 break;
             }
             case R.id.bottom_menu_settings: {
@@ -54,5 +60,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Stop stop) {
+
     }
 }

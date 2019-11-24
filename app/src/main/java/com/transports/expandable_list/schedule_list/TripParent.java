@@ -134,7 +134,7 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
     }
 
     public TicketGlobal convertToGlobalTicket(){
-        return new TicketGlobal(this.getOrigin().getStopName()+"->"+this.getDestination().getStopName(), this.transports, this.departureHour +"-"+this.arrivalHour);
+        return new TicketGlobal(this.getOrigin().getStop_name()+"->"+this.getDestination().getStop_name(), this.transports, this.departureHour +"-"+this.arrivalHour);
     }
 
     @Override

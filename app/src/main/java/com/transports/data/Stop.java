@@ -9,33 +9,33 @@ import java.io.Serializable;
  * A stop in which a transport (train, bus, metro) stops to pick up passengers.
  */
 public class Stop implements Serializable, Parcelable {
-    private String stopId;
-    private String stopName;
-    private String stopTransport;
-    private String agencyKey;
-    private double stopLat;
-    private double stopLong;
+    private String stop_id;
+    private String stop_name;
+    private String stop_transport;
+    private String agency_key;
+    private double stop_lat;
+    private double stop_long;
 
-    public Stop(String stopId, String stopName) {
-        this.stopId = stopId;
-        this.stopName = stopName;
+    public Stop(String stop_id, String stop_name) {
+        this.stop_id = stop_id;
+        this.stop_name = stop_name;
     }
 
-    public Stop(String stopId, String stopName, String stopTransport, double stopLat, double stopLong, String agencyKey) {
-        this.stopId = stopId;
-        this.stopName = stopName;
-        this.stopTransport = stopTransport;
-        this.stopLat = stopLat;
-        this.stopLong = stopLong;
-        this.agencyKey = agencyKey;
+    public Stop(String stop_id, String stop_name, String stop_transport, double stop_lat, double stop_long, String agency_key) {
+        this.stop_id = stop_id;
+        this.stop_name = stop_name;
+        this.stop_transport = stop_transport;
+        this.stop_lat = stop_lat;
+        this.stop_long = stop_long;
+        this.agency_key = agency_key;
     }
 
     protected Stop(Parcel in) {
-        stopId = in.readString();
-        stopName = in.readString();
-        stopTransport = in.readString();
-        stopLat = in.readDouble();
-        stopLong = in.readDouble();
+        stop_id = in.readString();
+        stop_name = in.readString();
+        stop_transport = in.readString();
+        stop_lat = in.readDouble();
+        stop_long = in.readDouble();
     }
 
     public static final Creator<Stop> CREATOR = new Creator<Stop>() {
@@ -51,52 +51,52 @@ public class Stop implements Serializable, Parcelable {
     };
 
     public String getStopId() {
-        return stopId;
+        return stop_id;
     }
 
     public void setStopId(String stopId) {
-        this.stopId = stopId;
+        this.stop_id = stopId;
     }
 
-    public String getStopName() {
-        return stopName;
+    public String getStop_name() {
+        return stop_name;
     }
 
-    public void setStopName(String stopName) {
-        this.stopName = stopName;
+    public void setStop_name(String stop_name) {
+        this.stop_name = stop_name;
     }
 
-    public String getStopTransport() {
-        return stopTransport;
+    public String getStop_transport() {
+        return stop_transport;
     }
 
-    public void setStopTransport(String stopTransport) {
-        this.stopTransport = stopTransport;
+    public void setStop_transport(String stop_transport) {
+        this.stop_transport = stop_transport;
     }
 
-    public double getStopLat() {
-        return stopLat;
+    public double getStop_lat() {
+        return stop_lat;
     }
 
-    public void setStopLat(double stopLat) {
-        this.stopLat = stopLat;
+    public void setStop_lat(double stop_lat) {
+        this.stop_lat = stop_lat;
     }
 
-    public double getStopLong() {
-        return stopLong;
+    public double getStop_long() {
+        return stop_long;
     }
 
-    public void setStopLong(double stopLong) {
-        this.stopLong = stopLong;
+    public void setStop_long(double stop_long) {
+        this.stop_long = stop_long;
     }
 
     @Override
     public String toString() {
         return "Stop{" +
-                "stopId='" + stopId + '\'' +
-                ", stopName='" + stopName + '\'' +
-                ", stopLat=" + stopLat +
-                ", stopLong=" + stopLong +
+                "stop_id='" + stop_id + '\'' +
+                ", stop_name='" + stop_name + '\'' +
+                ", stop_lat=" + stop_lat +
+                ", stop_long=" + stop_long +
                 '}';
     }
 
@@ -108,18 +108,18 @@ public class Stop implements Serializable, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         //The parcelable object has to be the first one
-        dest.writeString(this.stopId);
-        dest.writeString(this.stopName);
-        dest.writeString(this.stopTransport);
-        dest.writeDouble(this.stopLat);
-        dest.writeDouble(this.stopLong);
+        dest.writeString(this.stop_id);
+        dest.writeString(this.stop_name);
+        dest.writeString(this.stop_transport);
+        dest.writeDouble(this.stop_lat);
+        dest.writeDouble(this.stop_long);
     }
 
-    public String getAgencyKey() {
-        return agencyKey;
+    public String getAgency_key() {
+        return agency_key;
     }
 
-    public void setAgencyKey(String agencyKey) {
-        this.agencyKey = agencyKey;
+    public void setAgency_key(String agency_key) {
+        this.agency_key = agency_key;
     }
 }

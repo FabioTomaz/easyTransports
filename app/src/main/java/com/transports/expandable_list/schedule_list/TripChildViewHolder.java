@@ -27,7 +27,7 @@ public class TripChildViewHolder extends ChildViewHolder {
     public void setTripChild(TripChild trip) {
         transportName.setText(trip.getCompanyName());
         departureHour.setText(trip.getDepartureHour() +" - "+trip.getArrivingHour());
-        destination.setText(trip.getOrigin().getStopName()+" -> "+trip.getDestination().getStopName());
+        destination.setText(trip.getOrigin().getStop_name()+" -> "+trip.getDestination().getStop_name());
         Log.d("price", trip.getPrice()+"$");
         price.setText(trip.getPrice() + "€");
     }

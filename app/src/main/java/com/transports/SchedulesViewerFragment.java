@@ -129,7 +129,7 @@ public class SchedulesViewerFragment extends Fragment {
             destination = (Stop) bundle.getSerializable(Constants.DESTINATION);
             tripChildren = new ArrayList<>();
             tripParentList = new ArrayList<>();
-            getActivity().setTitle(origin.getStopName()+" - "+destination.getStopName());
+            getActivity().setTitle(origin.getStop_name()+" - "+destination.getStop_name());
 
             //call service give info and receive
             getRoute(origin.getStopId(), destination.getStopId());
@@ -231,7 +231,7 @@ public class SchedulesViewerFragment extends Fragment {
 
                             Stop originStopChild = getStopFromID(originStopChildID);
                             Stop destinationStopChild = getStopFromID(destinationStopChildID);
-                            String companyName = originStopChild.getStopTransport();
+                            String companyName = originStopChild.getStop_transport();
                             double price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
                             String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
                             String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);

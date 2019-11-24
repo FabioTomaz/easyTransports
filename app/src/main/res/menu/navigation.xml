@@ -12,6 +12,11 @@
         android:title="@string/bottom_menu_item_schedule"/>
 
     <item
+        android:id="@+id/bottom_menu_stops"
+        android:icon="@drawable/ic_arrow_down"
+        android:title="@string/bottom_menu_item_stops"/>
+
+    <item
         android:id="@+id/bottom_menu_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/bottom_menu_item_settings"/>
