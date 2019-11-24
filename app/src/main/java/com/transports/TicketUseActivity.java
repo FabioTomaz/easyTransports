@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.transports.expandable_list.tickets_list.Ticket;
+import com.transports.utils.UtilityFunctions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,6 +31,8 @@ public class TicketUseActivity extends AppCompatActivity {
 
     private Ticket ticket;
     private TextView transport;
+    private ImageView transportIcon;
+    private TextView ticketID;
     private TextView originDestination;
     private TextView schedule;
     private TextView duration;
@@ -46,6 +50,8 @@ public class TicketUseActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         transport = (TextView) findViewById(R.id.ticket_transport);
+        ticketID = (TextView) findViewById(R.id.ticket_id);
+        transportIcon= (ImageView) findViewById(R.id.ticket_transport_icon);
         originDestination = (TextView) findViewById(R.id.ticket_origin_destination);
         schedule = (TextView) findViewById(R.id.ticket_schedule);
         duration = (TextView) findViewById(R.id.ticket_duration);
@@ -55,10 +61,13 @@ public class TicketUseActivity extends AppCompatActivity {
         this.ticket = (Ticket) getIntent().getSerializableExtra(TICKET_EXTRA_INTENT);
         //set ticket info in right place
         transport.setText(ticket.getTransports());
+        transportIcon.setImageResource(UtilityFunctions.getIconOfTransport(ticket.getTransports()));
+        ticketID.setText("TicketID: "+ticket.getId());
         originDestination.setText(ticket.getOriginDestination());
         schedule.setText(ticket.getSchedule());
         duration.setText(ticket.getDuration());
         ticketState.setText(ticket.getState());
+        Log.d("ticketDetails", ticket.getDetails());
         try {
             Bitmap qrCodeTicket = getQRCodeImage(ticket.getDetails(), 500, 500);
             qrCode.setImageBitmap(qrCodeTicket);
