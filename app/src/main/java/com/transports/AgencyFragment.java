@@ -17,13 +17,13 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.transports.data.Stop;
+import com.transports.data.Agency;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
-import static com.transports.utils.URLs.GET_STOPS;
+import static com.transports.utils.URLs.GET_AGENCIES;
 
 /**
  * A fragment representing a list of Items.
@@ -31,7 +31,7 @@ import static com.transports.utils.URLs.GET_STOPS;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class StopFragment extends Fragment {
+public class AgencyFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -45,13 +45,13 @@ public class StopFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public StopFragment() {
+    public AgencyFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static StopFragment newInstance(int columnCount) {
-        StopFragment fragment = new StopFragment();
+    public static AgencyFragment newInstance(int columnCount) {
+        AgencyFragment fragment = new AgencyFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -70,7 +70,7 @@ public class StopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stop_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_agency_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -81,22 +81,21 @@ public class StopFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
             // Initialize a new JsonArrayRequest instance
             JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                     Request.Method.GET,
-                    GET_STOPS,
+                    GET_AGENCIES,
                     null,
                     response -> {
                         try{
-                            ArrayList<Stop> stopList = new ArrayList<>();
+                            ArrayList<Agency> agencyList = new ArrayList<>();
                             for (int i = 0; i < response.length(); i++) {
-                                stopList.add(gson.fromJson(response.getString(i), Stop.class));
+                                agencyList.add(gson.fromJson(response.getString(i), Agency.class));
                             }
                             recyclerView.setAdapter(
-                                    new StopRecyclerViewAdapter(stopList, mListener)
+                                    new AgencyRecyclerViewAdapter(agencyList, mListener)
                             );
                         }catch (JSONException e){
                             e.printStackTrace();
@@ -113,7 +112,6 @@ public class StopFragment extends Fragment {
             );
 
             requestQueue.add(jsonArrayRequest);
-
         }
         return view;
     }
@@ -148,6 +146,6 @@ public class StopFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Stop item);
+        void onListAgencyFragmentInteraction(Agency item);
     }
 }

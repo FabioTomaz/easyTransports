@@ -17,6 +17,11 @@
         android:title="@string/bottom_menu_item_stops"/>
 
     <item
+        android:id="@+id/bottom_menu_agencies"
+        android:icon="@drawable/ic_transport_agency"
+        android:title="@string/bottom_menu_item_agencies"/>
+
+    <item
         android:id="@+id/bottom_menu_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/bottom_menu_item_settings"/>

@@ -10,10 +10,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.transports.account_management.AccountSettingsFragment;
+import com.transports.data.Agency;
 import com.transports.data.Stop;
 import com.transports.utils.Constants;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, StopFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        BottomNavigationView.OnNavigationItemSelectedListener,
+        StopFragment.OnListFragmentInteractionListener,
+        AgencyFragment.OnListFragmentInteractionListener{
 
     private com.google.android.material.bottomnavigation.BottomNavigationView navigationView;
 
@@ -47,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 openFragment(new StopFragment());
                 break;
             }
+            case R.id.bottom_menu_agencies: {
+                openFragment(new AgencyFragment());
+                break;
+            }
             case R.id.bottom_menu_settings: {
                 openFragment(new AccountSettingsFragment());
                 break;
@@ -64,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onListFragmentInteraction(Stop stop) {
+
+    }
+
+    @Override
+    public void onListAgencyFragmentInteraction(Agency item) {
 
     }
 }

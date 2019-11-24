@@ -13,6 +13,8 @@ public class URLs {
     public static final String GET_STOP_INFO = SCHEDULES+"/stop/"; //+stopid
     public static final String GET_ROUTE = SCHEDULES+"/route/"; //+stopid / stopid
 
+    //get list of agencies
+    public static final String GET_AGENCIES = SCHEDULES+"/agency";
 
     //tickets service
     public static final String TICKETS = "http://192.168.85.208/ticket";
