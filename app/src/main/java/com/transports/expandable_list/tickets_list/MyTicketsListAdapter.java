@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.transports.R;
 import com.transports.TicketUseActivity;
+import com.transports.utils.UtilityFunctions;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +22,8 @@ import java.util.List;
 import static com.transports.utils.Constants.TICKET_EXTRA_INTENT;
 
 /**
- * Adapter used for list of individual tickets, that make a global ticket
+ * Adapter used for list of individual tickets, that make a global ticket. This ticket is a single trip, from one stop to another in 1 transportaion
+ * This is used to place information in each item of the list
  */
 public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdapter.MyTicketViewHolder> {
 
@@ -46,6 +49,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
         Ticket currentTicket = tickets.get(position);
         holder.originDestination.setText(currentTicket.getOriginDestination());
         holder.transports.setText(currentTicket.getTransports());
+        holder.transportIcon.setImageResource(UtilityFunctions.getIconOfTransport(currentTicket.getTransports()));
         holder.schedule.setText(currentTicket.getSchedule());
         holder.status.setText(currentTicket.getState());
         //set status text color if ticket is ready to user (green) or already used (red)
@@ -76,6 +80,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
         TextView originDestination;
         TextView schedule;
         TextView transports;
+        ImageView transportIcon;
         TextView status;
         Button useTicketButton;
 
@@ -86,6 +91,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
             transports = (TextView) itemView.findViewById(R.id.transport_name);
             status = (TextView) itemView.findViewById(R.id.ticket_state);
             useTicketButton = (Button) itemView.findViewById(R.id.use_ticket_btn);
+            transportIcon = (ImageView) itemView.findViewById(R.id.transport_icon);
         }
     }
 }

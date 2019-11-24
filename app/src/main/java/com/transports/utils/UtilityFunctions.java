@@ -2,6 +2,7 @@ package com.transports.utils;
 
 import android.util.Log;
 
+import com.transports.R;
 import com.transports.expandable_list.tickets_list.Ticket;
 
 import org.json.JSONObject;
@@ -84,6 +85,19 @@ public class UtilityFunctions {
             Log.e("JSONERROR", "Could not parse malformed JSON: \"" + t.getDetails() + "\"");
         }
         return jsonUpdated;
+    }
+
+    public static int getIconOfTransport(String transport){
+        if (transport.equalsIgnoreCase("cp")){
+            return R.drawable.ic_cp;
+        }
+        if (transport.equalsIgnoreCase("metro")){
+            return R.drawable.ic_metro;
+        }
+        if (transport.equalsIgnoreCase("transtejo")){
+            return R.drawable.ic_transtejo;
+        }
+        return R.drawable.ic_trip;
     }
 
 
