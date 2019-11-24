@@ -435,15 +435,12 @@ public class SchedulesViewerFragment extends Fragment {
                         JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
                         for (int i = 0; i < purchasedTickets.length(); i++){
                             JSONObject j = purchasedTickets.getJSONObject(i);
-                            tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), j.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
+                            tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), response.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
                         }
                     } catch (JSONException e) {
                         ticketsToken = null;
                         e.printStackTrace();
                     }
-                    /*tickets.add(new Ticket("CP ", "12:50-13:25", "Aveiro - Porto"));
-                    tickets.add(new Ticket("Carris ", "12:59-13:32", "Aveiro - Porto"));
-                    tickets.add(new Ticket("CP ", "13:10-13:42", "Aveiro - Porto"));*/
 
                     if(tickets.isEmpty()){
                         new AlertDialog.Builder(getContext())
