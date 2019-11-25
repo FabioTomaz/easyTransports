@@ -45,10 +45,12 @@
     <!-- Schedules form-->
     <string name="transport_dropdown_title">Transport Company:</string>
     <string name="origin_stop_title">Origin:</string>
-    <string name="start_writing_hint_origin">Origin (Start writting to see sugestions)</string>
-    <string name="start_writing_hint_destination">Destination (Start writting to see sugestions)</string>
+    <string name="start_writing_hint">Write to see suggestions</string>
     <string name="destination_stop_title">Destination:</string>
-    <string name="departure_title">Departure Date:</string>
+    <string name="departure_title">Departure Time: </string>
+    <string name="departure">Departure: </string>
+    <string name="destination">Destination: </string>
+
     <string name="search_schedules_btn">Search</string>
     <string name="buy_ticket_btn">Buy</string>
     <string name="origin_error_message">Origin stop must be selected</string>

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -54,7 +53,6 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
     private AutoCompleteTextView originDropdown;
     private AutoCompleteTextView destinationDropdown;
     private Button btnTimePicker;
-    private EditText txtTime;
 
     private String[] stopNames;
 
@@ -82,7 +80,6 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
         originDropdown = getView().findViewById(R.id.departure_stop);
         destinationDropdown = getView().findViewById(R.id.arrival_stop);
         btnTimePicker = getView().findViewById(R.id.btn_time);
-        txtTime = getView().findViewById(R.id.in_time);
 
         btnTimePicker.setOnClickListener(this);
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
@@ -187,7 +184,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 this.getContext(),
                 (view, hourOfDay, minute) -> {
-                    txtTime.setText(hourOfDay + ":" + minute);
+                    btnTimePicker.setText(hourOfDay + ":" + minute);
                     //date.setHours(hourOfDay);
                     //date.setMinutes(minute);
                 },
@@ -263,7 +260,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
             stopNames[i] = AppDataInfo.stops.get(i).getStop_name() + " (" + AppDataInfo.stops.get(i).getAgency_key() + ")";
         }
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<> (getContext(), android.R.layout.select_dialog_item, stopNames);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_item, stopNames);
 
         originDropdown.setAdapter(adapter);
         originDropdown.postDelayed(() -> {
