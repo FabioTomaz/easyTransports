@@ -18,6 +18,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.transports.data.Stop;
+import com.transports.expandable_list.StopRecyclerViewAdapter;
 
 import org.json.JSONException;
 
