@@ -41,22 +41,27 @@ public class MainActivity extends AppCompatActivity implements
         switch (menuID) {
             case R.id.bottom_menu_tickets: {
                 openFragment(new TicketsFragment());
+                setTitle("Tickets");
                 break;
             }
             case R.id.bottom_menu_schedule: {
                 openFragment(new SchedulesFragment());
+                setTitle("Routing/Scheduling");
                 break;
             }
             case R.id.bottom_menu_stops: {
                 openFragment(new StopFragment());
+                setTitle("Stops");
                 break;
             }
             case R.id.bottom_menu_agencies: {
                 openFragment(new AgencyFragment());
+                setTitle("Agencies");
                 break;
             }
             case R.id.bottom_menu_settings: {
                 openFragment(new AccountSettingsFragment());
+                setTitle("Settings");
                 break;
             }
         }
