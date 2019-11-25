@@ -483,6 +483,8 @@ public class SchedulesViewerFragment extends Fragment {
         JSONObject jsonBody = new JSONObject();
         try{
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
+            /*jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(PAYMENT_USER_ID, ""));
+            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(PAYMENT_PASSWORD, ""));*/
             jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
             jsonBody.put(PAYMENT_PASSWORD, "transdev");
         } catch (JSONException e){ }

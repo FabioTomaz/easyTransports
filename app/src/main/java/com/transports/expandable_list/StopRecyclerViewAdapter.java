@@ -1,4 +1,4 @@
-package com.transports;
+package com.transports.expandable_list;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,22 +7,23 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.transports.AgencyFragment.OnListFragmentInteractionListener;
-import com.transports.data.Agency;
+import com.transports.R;
+import com.transports.StopFragment.OnListFragmentInteractionListener;
+import com.transports.data.Stop;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link Agency} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class AgencyRecyclerViewAdapter extends RecyclerView.Adapter<AgencyRecyclerViewAdapter.ViewHolder> {
+public class StopRecyclerViewAdapter extends RecyclerView.Adapter<StopRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Agency> mValues;
+    private final List<Stop> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    AgencyRecyclerViewAdapter(List<Agency> items, OnListFragmentInteractionListener listener) {
+    public StopRecyclerViewAdapter(List<Stop> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -30,21 +31,21 @@ public class AgencyRecyclerViewAdapter extends RecyclerView.Adapter<AgencyRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_agency, parent, false);
+                .inflate(R.layout.fragment_stop, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getAgency_id());
-        holder.mContentView.setText(mValues.get(position).getAgency_name());
+        holder.mIdView.setText(mValues.get(position).getAgency_key());
+        holder.mContentView.setText(mValues.get(position).getStop_name());
 
         holder.mView.setOnClickListener(v -> {
             if (null != mListener) {
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
-                mListener.onListAgencyFragmentInteraction(holder.mItem);
+                mListener.onListFragmentInteraction(holder.mItem);
             }
         });
     }
@@ -58,7 +59,7 @@ public class AgencyRecyclerViewAdapter extends RecyclerView.Adapter<AgencyRecycl
         final View mView;
         final TextView mIdView;
         final TextView mContentView;
-        Agency mItem;
+        Stop mItem;
 
         ViewHolder(View view) {
             super(view);

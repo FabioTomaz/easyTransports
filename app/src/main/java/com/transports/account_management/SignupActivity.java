@@ -2,6 +2,7 @@ package com.transports.account_management;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -30,10 +31,13 @@ import com.transports.utils.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.transports.utils.Constants.PAYMENT_CURRENCY;
+import static com.transports.utils.Constants.PAYMENT_CURRENCY_EUR;
+import static com.transports.utils.Constants.PAYMENT_PASSWORD;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
 import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
-import static com.transports.utils.URLs.PAYMENTS_CREATE_ACCOUNT;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
+import static com.transports.utils.URLs.PAYMENTS_CREATE_ACCOUNT;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -134,6 +138,8 @@ public class SignupActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         try{
             jsonBody.put(PAYMENT_USER_ID, firebaseID);
+            jsonBody.put(PAYMENT_PASSWORD, "pass1234");
+            jsonBody.put(PAYMENT_CURRENCY, PAYMENT_CURRENCY_EUR);
         } catch (JSONException e){ }
 
 
@@ -147,16 +153,16 @@ public class SignupActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Log.d("paymentRegister", response+"");
 
-                        String status = null;
                         try {
-                            status = response.getString(PAYMENT_STATUS);
+                             String status = response.getString(PAYMENT_STATUS);
                             if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
-
+                                Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
                             }
+                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(PAYMENT_USER_ID, firebaseID).apply();
+                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(PAYMENT_PASSWORD, "pass1234").apply();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
