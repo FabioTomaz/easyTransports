@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_AUTH_TOKEN;
 import static com.transports.utils.Constants.PAYMENT_MESSAGE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_PASSWORD;
+import static com.transports.utils.Constants.PAYMENT_SHAREDPREFERENCES_PASS;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
 import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
@@ -453,7 +455,7 @@ public class SchedulesViewerFragment extends Fragment {
                     //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
                     ticketGlobal.setTickets(tickets);
                     SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                    bd.addGlobalTicket(ticketGlobal);
+                    bd.addGlobalTicket(ticketGlobal, FirebaseAuth.getInstance().getUid());
                     showSuccess("Ticket purchase successfull.", "You have succesffully purchased your tickets. Go to 'My Tickets' to see and use your tickets");
                 },
                 error -> {
@@ -483,10 +485,10 @@ public class SchedulesViewerFragment extends Fragment {
         JSONObject jsonBody = new JSONObject();
         try{
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            /*jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(PAYMENT_USER_ID, ""));
-            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(PAYMENT_PASSWORD, ""));*/
-            jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
-            jsonBody.put(PAYMENT_PASSWORD, "transdev");
+            jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID, ""));
+            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, ""));
+            /*jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
+            jsonBody.put(PAYMENT_PASSWORD, "transdev");*/
         } catch (JSONException e){ }
 
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
@@ -494,7 +496,7 @@ public class SchedulesViewerFragment extends Fragment {
                 PAYMENTS_LOGIN_ACCOUNT,
                 jsonBody,
                 response -> {
-                    Log.d("responsPayment", response+"");
+                    Log.d("paymentRes", response+"");
 
                     String authTokenField = null;
                     String status = null;

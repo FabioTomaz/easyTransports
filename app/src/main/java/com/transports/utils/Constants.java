@@ -65,6 +65,8 @@ public class Constants {
     public static final String PAYMENT_PASSWORD = "password";
     public static final String PAYMENT_CURRENCY_EUR = "EUR";
     public static final String PAYMENT_CURRENCY = "currency";
+    public static final String PAYMENT_UUID = "uuid";
+    public static final String PAYMENT_SHAREDPREFERENCES_PASS = "_pass";//shared preferences pass field identifier (<userID>_pass
     public static final String PAYMENT_STATUS = "status";
     public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
     public static final String PAYMENT_MESSAGE_FIELD = "message";

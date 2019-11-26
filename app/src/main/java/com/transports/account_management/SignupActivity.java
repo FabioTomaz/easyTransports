@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.transports.MainActivity;
 import com.transports.R;
 import com.transports.utils.Constants;
+import com.transports.utils.UtilityFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,7 @@ import org.json.JSONObject;
 import static com.transports.utils.Constants.PAYMENT_CURRENCY;
 import static com.transports.utils.Constants.PAYMENT_CURRENCY_EUR;
 import static com.transports.utils.Constants.PAYMENT_PASSWORD;
+import static com.transports.utils.Constants.PAYMENT_SHAREDPREFERENCES_PASS;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
 import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
@@ -103,7 +105,7 @@ public class SignupActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
@@ -113,6 +115,7 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Register user in payments service
+                                    registerUserInPayments(auth.getUid());
                                     //sign in user
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
@@ -121,7 +124,6 @@ public class SignupActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
             }
         });
     }
@@ -136,12 +138,13 @@ public class SignupActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
+        String uuid = UtilityFunctions.generateString();
         try{
-            jsonBody.put(PAYMENT_USER_ID, firebaseID);
+            jsonBody.put(firebaseID, uuid);
             jsonBody.put(PAYMENT_PASSWORD, "pass1234");
             jsonBody.put(PAYMENT_CURRENCY, PAYMENT_CURRENCY_EUR);
         } catch (JSONException e){ }
-
+        Log.d("paymentRequest", jsonBody+"");
 
         // Initialize a new JsonObjectRequest instance
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
@@ -158,8 +161,8 @@ public class SignupActivity extends AppCompatActivity {
                             if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
                                 Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
                             }
-                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(PAYMENT_USER_ID, firebaseID).apply();
-                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(PAYMENT_PASSWORD, "pass1234").apply();
+                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID, PAYMENT_SHAREDPREFERENCES_PASS).apply();
+                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234").apply();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

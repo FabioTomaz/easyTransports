@@ -20,7 +20,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "TicketsDB";
     private static final String TICKET_TABLE_NAME = "Tickets";
     private static final String GLOBAL_TICKET_TABLE_NAME = "GlobalTickets";
-    private static final String[] GLOBAL_TICKET_COLUMNS = {"id", "originDestination", "schedule", "transports"};
+    private static final String[] GLOBAL_TICKET_COLUMNS = {"id", "originDestination", "schedule", "transports", "userID"};
     private static final String[] TICKET_COLUMNS = {"id", "details", "state", "global_ticket"};
 
     public SQLiteDatabaseHandler(Context context) {
@@ -32,11 +32,11 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
         //creates two tables: one for global tickets, another for individiual tickets.
         //Individual tickets have a foreigner key for global tickets
         String CREATION_TICKET_GLOBAL_TABLE = "CREATE TABLE "+GLOBAL_TICKET_TABLE_NAME+" ( "
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "originDestination TEXT, "
-                + "schedule TEXT, "
-                + "transports TEXT) ";
-                //+ "date TEXT )";
+                + GLOBAL_TICKET_COLUMNS[0]+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + GLOBAL_TICKET_COLUMNS[1]+" TEXT, "
+                + GLOBAL_TICKET_COLUMNS[2]+" TEXT, "
+                + GLOBAL_TICKET_COLUMNS[3]+" TEXT, "
+                + GLOBAL_TICKET_COLUMNS[4]+" TEXT)" ;
 
         db.execSQL(CREATION_TICKET_GLOBAL_TABLE);
 
@@ -67,9 +67,10 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
 
     /**
      * Get all global tickets that are not yet used (that is, there is at least one ticket that is valid)
+     * MIGHT NOT BE NECESSARY
      * @return
      */
-    public List<Ticket> getAllTickets() {
+    public List<Ticket> getAllUserTickets() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Ticket> tickets = new ArrayList<>();
         Cursor  cursor = db.rawQuery("select * from "+TICKET_TABLE_NAME,null);
@@ -88,13 +89,13 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Get all tickets that MAY not be used
+     * Get all tickets that MAY not be used from a user
      * @return
      */
-    public List<TicketGlobal> getAllGlobalTickets() {
+    public List<TicketGlobal> getAllGlobalTickets(String userID) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TicketGlobal> ticketGlobals = new ArrayList<>();
-        Cursor  cursor = db.rawQuery("select * from "+GLOBAL_TICKET_TABLE_NAME,null);
+        Cursor  cursor = db.rawQuery("select * from "+GLOBAL_TICKET_TABLE_NAME +" where "+ GLOBAL_TICKET_COLUMNS[4] +" = ?",new String[]{userID});
 
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -146,12 +147,13 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
      * and at least one entry is added on the tickets table
      * @param ticketGlobal
      */
-    public void addGlobalTicket(TicketGlobal ticketGlobal) {
+    public void addGlobalTicket(TicketGlobal ticketGlobal, String userID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(GLOBAL_TICKET_COLUMNS[1], ticketGlobal.getOriginDestination());
         values.put(GLOBAL_TICKET_COLUMNS[2], ticketGlobal.getSchedule());
         values.put(GLOBAL_TICKET_COLUMNS[3], ticketGlobal.getTransports());
+        values.put(GLOBAL_TICKET_COLUMNS[4], userID);
         // insert
         int id = (int) db.insert(GLOBAL_TICKET_TABLE_NAME,null, values); //TODO: does it actually return that id in column "id" or just and id of the row?
         //if no good, use this

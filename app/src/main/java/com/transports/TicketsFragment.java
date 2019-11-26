@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
@@ -107,7 +108,8 @@ public class TicketsFragment extends Fragment {
 
     public void setTicketsOnView(){
         //initialize global ticket cards recyclerview
-        this.ticketList = bd.getAllGlobalTickets();
+        if (ticketList.isEmpty() || ticketList == null)
+            this.ticketList = bd.getAllGlobalTickets(FirebaseAuth.getInstance().getUid());
         mAdapter = new TicketListAdapter(getContext(), ticketList);
 
         cardRecyclerView.setAdapter(mAdapter);
@@ -153,15 +155,19 @@ public class TicketsFragment extends Fragment {
             cardRecyclerView.scrollToPosition(position);
     }
 
-    /**load simple tickets from db and call function to request ticket status update
+    /**load all tickets from this user form the DB
      *
      */
     public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-        List<Ticket> ticketList = bd.getAllTickets();
+        this.ticketList = bd.getAllGlobalTickets(FirebaseAuth.getInstance().getUid());
+        List<Ticket> simpleTickets = bd.getAllUserTickets();
+        for (TicketGlobal t : ticketList){
+            simpleTickets.addAll(t.getTickets());
+        }
         setTicketsOnView();// set chached tickets on view and (try) to update theyr status from server
         if (!ticketList.isEmpty()) {
-            getTicketStatesFromServer(ticketList);
+            getTicketStatesFromServer(simpleTickets);
         }
 
         /*List<Ticket> tickets1 = new ArrayList<>();
