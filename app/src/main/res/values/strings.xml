@@ -48,6 +48,7 @@
     <string name="start_writing_hint">See suggestions</string>
     <string name="destination_stop_title">Destination:</string>
     <string name="time_title">Time: </string>
+    <string name="time_variance_title">Time Variance: </string>
     <string name="departure">Departure: </string>
     <string name="destination">Destination: </string>
 

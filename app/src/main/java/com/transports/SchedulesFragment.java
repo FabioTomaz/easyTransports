@@ -1,5 +1,7 @@
 package com.transports;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -12,9 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.Request;
@@ -46,13 +50,14 @@ import static com.transports.utils.URLs.GET_SCHEDULES;
  * {@link SchedulesFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class SchedulesFragment extends Fragment implements View.OnClickListener {
+public class SchedulesFragment extends Fragment implements View.OnClickListener, NumberPicker.OnValueChangeListener {
 
     private OnFragmentInteractionListener mListener;
 
     private AutoCompleteTextView originDropdown;
     private AutoCompleteTextView destinationDropdown;
     private Button btnTimePicker;
+    private Button btnTimeVariance;
 
     private String[] stopNames;
 
@@ -80,8 +85,15 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
         originDropdown = getView().findViewById(R.id.departure_stop);
         destinationDropdown = getView().findViewById(R.id.arrival_stop);
         btnTimePicker = getView().findViewById(R.id.btn_time);
+        btnTimeVariance = getView().findViewById(R.id.btn_time_variance);
 
         btnTimePicker.setOnClickListener(this);
+        btnTimeVariance.setOnClickListener(v -> {
+            NumberPickerDialog newFragment = new NumberPickerDialog();
+            newFragment.setValueChangeListener(this);
+            newFragment.show(SchedulesFragment.this.getFragmentManager(), "time picker");
+        });
+
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.
         //ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, availableTransports);
@@ -93,10 +105,13 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
         } else {
             setStopsOnDropDowns();
         }
-        //
-        final Button searchSchedulesBtn = (Button) getView().findViewById(R.id.schedules_submit_button);
 
-        searchSchedulesBtn.setOnClickListener(v -> {
+        //
+        final Button searchSchedulesBtn = getView().findViewById(R.id.schedules_submit_button);
+
+        searchSchedulesBtn.setOnClickListener(v ->
+
+        {
             //validate input
             if (TextUtils.isEmpty(originDropdown.getText())) {
                 originDropdown.setError(getString(R.string.origin_error_message));
@@ -208,6 +223,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
     }
 
     private void getAllStops() {
@@ -253,7 +269,63 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener 
         requestQueue.add(jsonArrayRequest);
     }
 
-    public void setStopsOnDropDowns() {
+    @Override
+    public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+        Toast.makeText(
+                getContext(),
+                "selected number " + numberPicker.getValue(),
+                Toast.LENGTH_SHORT
+        ).show();
+        btnTimeVariance.setText("" + numberPicker.getValue());
+    }
+
+    public static class NumberPickerDialog extends DialogFragment {
+        private NumberPicker.OnValueChangeListener valueChangeListener;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+            final NumberPicker numberPicker = new NumberPicker(getActivity());
+
+            numberPicker.setMinValue(1);
+            numberPicker.setMaxValue(5);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Choose Number of Hours");
+
+            builder.setPositiveButton(
+                    "OK",
+                    (dialog, which) -> valueChangeListener.onValueChange(
+                            numberPicker,
+                            numberPicker.getValue(),
+                            numberPicker.getValue()
+                    )
+            );
+
+            builder.setNegativeButton(
+                    "CANCEL",
+                    (dialog, which) -> valueChangeListener.onValueChange(
+                            numberPicker,
+                            numberPicker.getValue(),
+                            numberPicker.getValue()
+                    )
+            );
+
+            builder.setView(numberPicker);
+            return builder.create();
+        }
+
+        public NumberPicker.OnValueChangeListener getValueChangeListener() {
+            return valueChangeListener;
+        }
+
+        void setValueChangeListener(NumberPicker.OnValueChangeListener valueChangeListener) {
+            this.valueChangeListener = valueChangeListener;
+        }
+    }
+
+
+    private void setStopsOnDropDowns() {
         stopNames = new String[AppDataInfo.stops.size()];
         for (int i = 0; i < AppDataInfo.stops.size(); i++) {
             Log.i("test", AppDataInfo.stops.get(i).getStop_name() + AppDataInfo.stops.get(i).getAgency_key());
