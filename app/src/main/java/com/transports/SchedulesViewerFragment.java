@@ -2,7 +2,6 @@ package com.transports;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.developer.kalert.KAlertDialog;
@@ -43,10 +41,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
@@ -92,6 +93,9 @@ public class SchedulesViewerFragment extends Fragment {
     private String date;
     private Stop origin;
     private Stop destination;
+    private boolean isDepartureDate;
+    private Date time;
+    private int variance;
     private List<TripChild> tripChildren = new ArrayList<>();
     private List<TripParent> tripParentList = new ArrayList<>();
     private RecyclerView recycler;
@@ -123,16 +127,20 @@ public class SchedulesViewerFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
 
-        if(bundle != null){
+        if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
             destination = (Stop) bundle.getSerializable(Constants.DESTINATION);
+            isDepartureDate = bundle.getBoolean(Constants.IS_DEPARTURE_DATE);
+            time = (Date) bundle.getSerializable(Constants.TIME);
+            variance = bundle.getInt(Constants.VARIANCE);
+
             tripChildren = new ArrayList<>();
             tripParentList = new ArrayList<>();
-            getActivity().setTitle(origin.getStop_name()+" - "+destination.getStop_name());
+            getActivity().setTitle(origin.getStop_name() + " - " + destination.getStop_name());
 
             //call service give info and receive
-            getRoute(origin.getStopId(), destination.getStopId());
+            getRoute(origin.getStopId(), destination.getStopId(), isDepartureDate, time, variance);
 /*
             //place all transports in the adapter
             tripChildren.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
@@ -147,9 +155,9 @@ public class SchedulesViewerFragment extends Fragment {
         }
     }
 
-    private void setSchedulesOnList(final List<TripParent> trips){
+    private void setSchedulesOnList(final List<TripParent> trips) {
         this.tripParentList = trips;
-        recycler = (RecyclerView) getView().findViewById(R.id.schedules_list);
+        recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
         //instantiate your adapter with the list of genres
@@ -168,17 +176,17 @@ public class SchedulesViewerFragment extends Fragment {
         getView().requestFocus();
         getView().setOnKeyListener((v, keyCode, event) -> {
 
-            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+            if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
                 goBack();
                 return true;
             }
             return false;
         });
-        if (browserOpened && selectedTripParent != null && ticketsToken!= null)
+        if (browserOpened && selectedTripParent != null && ticketsToken != null)
             this.purchaseTicket2(selectedTripParent, paymentsResponse);
     }
 
-    private void goBack(){
+    private void goBack() {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -198,17 +206,44 @@ public class SchedulesViewerFragment extends Fragment {
         getActivity().setTitle(getString(R.string.app_name_full));
     }
 
-    public void getRoute(final String originStopID, String destinationStopID) {
+    private void getRoute(
+            final String originStopID,
+            String destinationStopID,
+            boolean isDepartureTime,
+            Date time,
+            int variance
+    ) {
         // Initialize a new RequestQueue instance
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
+        String url = GET_ROUTE + originStopID + "/" + destinationStopID;
+
+        if (time != null || variance != -1) {
+            url.concat("?");
+            boolean previousQueryParam = false;
+            if (time != null) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.getDefault());
+                String timeQuery = isDepartureTime ? "departureTime=" : "arrivalTime=";
+                timeQuery.concat(df.format(time));
+                url.concat(timeQuery);
+                previousQueryParam = true;
+            }
+
+            if (variance != -1) {
+                if (previousQueryParam) {
+                    url.concat("&");
+                }
+                url.concat("variance=" + variance);
+            }
+        }
+
         // Initialize a new JsonObjectRequest instance
-        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
                 Request.Method.GET,
-                GET_ROUTE+originStopID+"/"+destinationStopID,
+                url,
                 null,
                 response -> {
-                    Log.d("schedulesRes", response+"");
+                    Log.d("schedulesRes", response + "");
 
                     // Process the JSON
                     try {
@@ -217,17 +252,17 @@ public class SchedulesViewerFragment extends Fragment {
                         String departureTimeTotal = response.getString(ROUTE_DEPARTURE_FIELD);
                         String arrivalTimeTotal = response.getString(ROUTE_ARRIVAL_FIELD);
                         List<String> stopIds = new ArrayList<>();
-                        if (routeAlternativesList.length() == 0){
+                        if (routeAlternativesList.length() == 0) {
                             showErrorAndGoBack("No schedules found", "Transportation for the specified schedule could not be found. Please try another stop or another schedule",
                                     KAlertDialog.WARNING_TYPE, true);
                             return;
                         }
-                        for (int i = 0; i < routeAlternativesList.length(); i++){
+                        for (int i = 0; i < routeAlternativesList.length(); i++) {
                             JSONObject routeAlternative = routeAlternativesList.getJSONObject(i);//element inside "routes"
                             JSONArray tripChildList = routeAlternative.getJSONArray(ROUTE_TRIP_CHILD_FIELD);//"path" field of "routes"
                             //origin and destination stop of this child trip can be obtained by checking the first (origin) and last (destination) stop
                             String originStopChildID = tripChildList.getJSONObject(0).getString(ROUTE_STOP_ID_FIELD);
-                            String destinationStopChildID = tripChildList.getJSONObject(tripChildList.length()-1).getString(ROUTE_STOP_ID_FIELD);
+                            String destinationStopChildID = tripChildList.getJSONObject(tripChildList.length() - 1).getString(ROUTE_STOP_ID_FIELD);
 
                             Stop originStopChild = getStopFromID(originStopChildID);
                             Stop destinationStopChild = getStopFromID(destinationStopChildID);
@@ -242,7 +277,7 @@ public class SchedulesViewerFragment extends Fragment {
                         tripParentList.add(tripParent);
                         setSchedulesOnList(tripParentList);
                     } catch (JSONException e) {
-                        showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules",  KAlertDialog.ERROR_TYPE, true);
+                        showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules", KAlertDialog.ERROR_TYPE, true);
                     }
 
                 },
@@ -256,9 +291,9 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    public Stop getStopFromID(String stopID){
-        for (Stop stop : stops){
-            if (stop.getStopId().equals(stopID)){
+    private Stop getStopFromID(String stopID) {
+        for (Stop stop : stops) {
+            if (stop.getStopId().equals(stopID)) {
                 return stop;
             }
         }
@@ -298,47 +333,45 @@ public class SchedulesViewerFragment extends Fragment {
     }
 
     //called by user click on "buy" button of a list of tickets
-    public void handlePurchase(int tripParentPosition){
+    public void handlePurchase(int tripParentPosition) {
         TripParent tripParent = tripParentList.get(tripParentPosition);
-        Log.d("resTripParent", tripParent+"");
+        Log.d("resTripParent", tripParent + "");
         showConfirmPurchaseDialog(tripParent);
     }
 
-    public void showConfirmPurchaseDialog(final TripParent tripParent){
+    private void showConfirmPurchaseDialog(final TripParent tripParent) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Ticket purchase confirmation")
-                .setMessage("Are you sure you want to purchase this(these) ticket(s)? \n All purchases are final.\n The total value is "+tripParent.getTotalPrice())
+                .setMessage("Are you sure you want to purchase this(these) ticket(s)? \n All purchases are final.\n The total value is " + tripParent.getTotalPrice())
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
+                    //user confirmed ticket purchase
+                    loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //user confirmed ticket purchase
-                        loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    /*List<Ticket> tickets = new ArrayList<>();
+                    TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
+                    //parse list of purchased tickets
 
-                        /*List<Ticket> tickets = new ArrayList<>();
-                        TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
-                        //parse list of purchased tickets
+                    List<Ticket> tickets1 = new ArrayList<>();
+                    tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
+                    tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
 
-                        List<Ticket> tickets1 = new ArrayList<>();
-                        tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
-                        tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
+                    ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
+                    SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
+                    //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
+                    bd.addGlobalTicket(ticketGlobal);*/
 
-                        ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
-                        SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                        //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-                        bd.addGlobalTicket(ticketGlobal);*/
-
-                    }})
+                })
                 .setNegativeButton(android.R.string.no, null).show();
     }
 
-    private void purchaseTicket(final TripParent tripParent){
+    private void purchaseTicket(final TripParent tripParent) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //generate random token to use with ticket service
         ticketsToken = generateString();
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
-        try{
+        try {
             jsonBody.put(SECRET_FIELD, ticketsToken);
             JSONArray jsonTicketsArray = new JSONArray();
             for (TripChild trip : tripParent.getTripsChilds()) {
@@ -347,50 +380,46 @@ public class SchedulesViewerFragment extends Fragment {
                 jsonTicket.put(SCHEDULE, trip.getSchedule());
                 jsonTicket.put(TRIP, trip.getTrip());
                 jsonTicket.put(PRICE, trip.getPrice());
-                jsonTicket.put(DATE_FIELD, new Date()+"");
+                jsonTicket.put(DATE_FIELD, new Date() + "");
                 jsonTicketsArray.put(jsonTicket);
             }
             jsonBody.put(Constants.TICKET_INFO_FIELD, jsonTicketsArray);
 
-            Log.d("responsePurchaseSent", jsonBody+", authToken-> "+authToken);
-        } catch (JSONException e){
-            showErrorAndGoBack("Purchase failed", "Could not get tickets to buy.",  KAlertDialog.ERROR_TYPE, false);
+            Log.d("responsePurchaseSent", jsonBody + ", authToken-> " + authToken);
+        } catch (JSONException e) {
+            showErrorAndGoBack("Purchase failed", "Could not get tickets to buy.", KAlertDialog.ERROR_TYPE, false);
         }
 
 
         // Initialize a new JsonObjectRequest instance
-        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 TICKET_PAYMENT1,
                 jsonBody,
-                new Response.Listener<JSONObject >() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("responsePurchase", response+"");
-                        // get list of purchased tickets and add them to a global ticket. Store in DB
-                        String paymentConfirmationLink = "";
+                response -> {
+                    Log.d("responsePurchase", response + "");
+                    // get list of purchased tickets and add them to a global ticket. Store in DB
+                    String paymentConfirmationLink = "";
 
-                        try {
-                            paymentConfirmationLink = response.getString(Constants.PAYMENT_CONFIRM_LINK_FIELD);
-                            paymentID = response.getString("paymentId");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (!paymentConfirmationLink.isEmpty()){
-                            selectedTripParent = tripParent;
-                            paymentsResponse = jsonBody.toString();
-                            openBrowser(paymentConfirmationLink);
-                        }
-                        else{
-                            //error getting link
-                            showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message2),
-                                    KAlertDialog.ERROR_TYPE, false);
-                        }
-
+                    try {
+                        paymentConfirmationLink = response.getString(Constants.PAYMENT_CONFIRM_LINK_FIELD);
+                        paymentID = response.getString("paymentId");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                    if (!paymentConfirmationLink.isEmpty()) {
+                        selectedTripParent = tripParent;
+                        paymentsResponse = jsonBody.toString();
+                        openBrowser(paymentConfirmationLink);
+                    } else {
+                        //error getting link
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message2),
+                                KAlertDialog.ERROR_TYPE, false);
+                    }
+
                 },
                 error -> {
-                    Log.d("responsePurchaseErr", error+"");
+                    Log.d("responsePurchaseErr", error + "");
                     showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message),
                             KAlertDialog.ERROR_TYPE, false);
                     ticketsToken = null;
@@ -398,7 +427,7 @@ public class SchedulesViewerFragment extends Fragment {
         ) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
                 params.put(TICKET_AUTH_TOKEN_HEADER_FIELD, authToken);
@@ -410,30 +439,31 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    private void purchaseTicket2(final TripParent tripParent, String request){
+    private void purchaseTicket2(final TripParent tripParent, String request) {
         this.browserOpened = false;
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
         JSONObject jsonBody = null;
-        try{
+        try {
             jsonBody = new JSONObject(request);
-        } catch (JSONException e){ }
+        } catch (JSONException e) {
+        }
 
 
         // Initialize a new JsonObjectRequest instance
-        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 CREATE_TICKET,
                 jsonBody,
                 response -> {
-                    Log.d("responsePurchase2", response+"");
+                    Log.d("responsePurchase2", response + "");
                     // first open browser for payment
                     List<Ticket> tickets = new ArrayList<>();
                     TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
                     //parse list of purchased tickets and add to list
                     try {
                         JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
-                        for (int i = 0; i < purchasedTickets.length(); i++){
+                        for (int i = 0; i < purchasedTickets.length(); i++) {
                             JSONObject j = purchasedTickets.getJSONObject(i);
                             JSONObject details = new JSONObject();
                             details.put("secret", ticketsToken);
@@ -445,7 +475,7 @@ public class SchedulesViewerFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    if(tickets.isEmpty()){
+                    if (tickets.isEmpty()) {
                         new AlertDialog.Builder(getContext())
                                 .setTitle(getString(R.string.ticket_purchase_error_title))
                                 .setMessage(getString(R.string.ticket_purchase_error_message3))
@@ -460,14 +490,14 @@ public class SchedulesViewerFragment extends Fragment {
                     showSuccess("Ticket purchase successfull.", "You have succesffully purchased your tickets. Go to 'My Tickets' to see and use your tickets");
                 },
                 error -> {
-                    Log.d("responsePurchase2ER", error+"");
+                    Log.d("responsePurchase2ER", error + "");
                     showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message), KAlertDialog.ERROR_TYPE, false);
                     ticketsToken = null;
                 }
-        ){
+        ) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("Accept", "application/json");
                 params.put("Content-Type", "application/json");
                 params.put(TICKET_AUTH_TOKEN_HEADER_FIELD, authToken);
@@ -480,11 +510,11 @@ public class SchedulesViewerFragment extends Fragment {
     }
 
 
-    private void loginUserInPayments(final TripParent tripParent, String firebaseID){
+    private void loginUserInPayments(final TripParent tripParent, String firebaseID) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
-        try{
+        try {
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
             /*jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID, ""));
             jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, ""));*/
@@ -504,11 +534,11 @@ public class SchedulesViewerFragment extends Fragment {
                     try {
                         authTokenField = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_AUTH_TOKEN);
                         status = response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_STATUS);
-                        if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
+                        if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)) {
                             showErrorAndGoBack("Payment Error", response.getJSONObject(PAYMENT_MESSAGE_FIELD).getString(PAYMENT_MESSAGE_FIELD), KAlertDialog.ERROR_TYPE, false);
                         }
                         authToken = authTokenField;
-                        purchaseTicket( tripParent );
+                        purchaseTicket(tripParent);
                     } catch (JSONException e) {
                         showErrorAndGoBack("Payment Error", "Error fetching payment account.", KAlertDialog.ERROR_TYPE, false);
                     }
@@ -528,13 +558,13 @@ public class SchedulesViewerFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
-    public void openBrowser(String link){
+    private void openBrowser(String link) {
         this.browserOpened = true;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         startActivity(browserIntent);
     }
 
-    private void showErrorAndGoBack(String title, String descr, int type, boolean goBack){
+    private void showErrorAndGoBack(String title, String descr, int type, boolean goBack) {
         new KAlertDialog(getContext(), type)
                 .setTitleText(title)
                 .setContentText(descr)
@@ -547,17 +577,12 @@ public class SchedulesViewerFragment extends Fragment {
                 .show();
     }
 
-    private void showSuccess(String title, String descr){
+    private void showSuccess(String title, String descr) {
         new KAlertDialog(getContext(), KAlertDialog.SUCCESS_TYPE)
                 .setTitleText(title)
                 .setContentText(descr)
                 .setConfirmText("OK")
-                .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
-                    @Override
-                    public void onClick(KAlertDialog sDialog) {
-                        sDialog.dismissWithAnimation();
-                    }
-                })
+                .setConfirmClickListener(sDialog -> sDialog.dismissWithAnimation())
                 .show();
     }
 }
