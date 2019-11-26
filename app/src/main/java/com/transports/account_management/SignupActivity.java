@@ -14,10 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +30,9 @@ import com.transports.utils.UtilityFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.transports.utils.Constants.PAYMENT_CURRENCY;
 import static com.transports.utils.Constants.PAYMENT_CURRENCY_EUR;
@@ -140,7 +142,7 @@ public class SignupActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
         String uuid = UtilityFunctions.generateString();
         try{
-            jsonBody.put(firebaseID, uuid);
+            jsonBody.put(PAYMENT_USER_ID, uuid);
             jsonBody.put(PAYMENT_PASSWORD, "pass1234");
             jsonBody.put(PAYMENT_CURRENCY, PAYMENT_CURRENCY_EUR);
         } catch (JSONException e){ }
@@ -151,36 +153,38 @@ public class SignupActivity extends AppCompatActivity {
                 Request.Method.POST,
                 PAYMENTS_CREATE_ACCOUNT,
                 jsonBody,
-                new Response.Listener<JSONObject >() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("paymentRegister", response+"");
+                response -> {
+                    Log.d("paymentRegister", response+"");
 
-                        try {
-                             String status = response.getString(PAYMENT_STATUS);
-                            if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
-                                Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
-                            }
-                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID, PAYMENT_SHAREDPREFERENCES_PASS).apply();
-                            PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234").apply();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    try {
+                         String status = response.getString(PAYMENT_STATUS);
+                        if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
+                            Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT).show();
                         }
+                        PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID, uuid).apply();
+                        PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234").apply();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("errorPayment", error+"");
-                        Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
-                        /*new AlertDialog.Builder(getApplication())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
-                    }
+                error -> {
+                    Log.d("errorPayment", error+"");
+                    Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT);
+                    /*new AlertDialog.Builder(getApplication())
+                            .setTitle(getString(R.string.ticket_purchase_error_title))
+                            .setMessage(getString(R.string.ticket_purchase_error_message))
+                            .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();*/
                 }
-        );
-
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String>  params = new HashMap<String, String>();
+                //params.put("Accept", "application/json");
+                params.put("Content-Type", "application/json");
+                return params;
+            }
+        };
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);
     }

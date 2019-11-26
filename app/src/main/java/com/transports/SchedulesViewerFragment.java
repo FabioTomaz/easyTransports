@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -57,7 +56,6 @@ import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_AUTH_TOKEN;
 import static com.transports.utils.Constants.PAYMENT_MESSAGE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_PASSWORD;
-import static com.transports.utils.Constants.PAYMENT_SHAREDPREFERENCES_PASS;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
 import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
@@ -467,7 +465,10 @@ public class SchedulesViewerFragment extends Fragment {
                         JSONArray purchasedTickets = response.getJSONArray(Constants.TICKETS_FIELD);
                         for (int i = 0; i < purchasedTickets.length(); i++) {
                             JSONObject j = purchasedTickets.getJSONObject(i);
-                            tickets.add(new Ticket(j.getInt(Constants.TICKET_ID_FIELD), response.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
+                            JSONObject details = new JSONObject();
+                            details.put("secret", ticketsToken);
+                            details.put("ticket", new JSONObject(j.toString()));
+                            tickets.add( new Ticket(j.getInt(Constants.TICKET_ID_FIELD), details.toString(), j.getString(Constants.TICKET_STATUS_FIELD)));
                         }
                     } catch (JSONException e) {
                         ticketsToken = null;
@@ -515,19 +516,18 @@ public class SchedulesViewerFragment extends Fragment {
         JSONObject jsonBody = new JSONObject();
         try {
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID, ""));
-            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID + PAYMENT_SHAREDPREFERENCES_PASS, ""));
-            /*jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
-            jsonBody.put(PAYMENT_PASSWORD, "transdev");*/
-        } catch (JSONException e) {
-        }
-
-        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
+            /*jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID, ""));
+            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, ""));*/
+            jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
+            jsonBody.put(PAYMENT_PASSWORD, "transdev");
+        } catch (JSONException e){ }
+        Log.d("paymentLogReq", jsonBody+"");
+        JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
                 Request.Method.POST,
                 PAYMENTS_LOGIN_ACCOUNT,
                 jsonBody,
                 response -> {
-                    Log.d("paymentRes", response + "");
+                    Log.d("paymentLogResp", response+"");
 
                     String authTokenField = null;
                     String status = null;
@@ -545,8 +545,8 @@ public class SchedulesViewerFragment extends Fragment {
 
                 },
                 error -> {
-                    Log.d("errorPayment", error + "");
-                    Toast.makeText(getContext(), "Could not login user in payment service", Toast.LENGTH_SHORT);
+                    Log.d("errorPayment", error+"");
+                    Toast.makeText(getContext(), "Could not login user in payment service", Toast.LENGTH_SHORT).show();
                     /*new AlertDialog.Builder(getApplication())
                             .setTitle(getString(R.string.ticket_purchase_error_title))
                             .setMessage(getString(R.string.ticket_purchase_error_message))
