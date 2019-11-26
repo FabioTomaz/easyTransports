@@ -220,8 +220,8 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
                 this.getContext(),
                 (view, hourOfDay, minute) -> {
                     btnTimePicker.setText(hourOfDay + ":" + minute);
-                    //date.setHours(hourOfDay);
-                    //date.setMinutes(minute);
+                    currentDate.setHours(hourOfDay);
+                    currentDate.setMinutes(minute);
                 },
                 mHour,
                 mMinute,

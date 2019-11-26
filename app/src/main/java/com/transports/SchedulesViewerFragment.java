@@ -221,21 +221,21 @@ public class SchedulesViewerFragment extends Fragment {
         String url = GET_ROUTE + originStopID + "/" + destinationStopID;
 
         if (time != null || variance != -1) {
-            url.concat("?");
+            url += "?";
             boolean previousQueryParam = false;
             if (time != null) {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.getDefault());
                 String timeQuery = isDepartureTime ? "departureTime=" : "arrivalTime=";
-                timeQuery.concat(df.format(time));
-                url.concat(timeQuery);
+                timeQuery += df.format(time);
+                url += timeQuery;
                 previousQueryParam = true;
             }
 
             if (variance != -1) {
                 if (previousQueryParam) {
-                    url.concat("&");
+                    url += "&";
                 }
-                url.concat("variance=" + variance);
+                url += "variance=" + variance;
             }
         }
 
