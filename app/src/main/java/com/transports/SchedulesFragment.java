@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -41,6 +42,9 @@ import static com.transports.utils.Constants.STOP_INFO_COORDS_FIELD;
 import static com.transports.utils.Constants.STOP_INFO_ID_FIELD;
 import static com.transports.utils.Constants.STOP_INFO_NAME_FIELD;
 import static com.transports.utils.Constants.STOP_INFO_TRANSPORT_FIELD;
+import static com.transports.utils.Constants.TIME;
+import static com.transports.utils.Constants.IS_DEPARTURE_DATE;
+import static com.transports.utils.Constants.VARIANCE;
 import static com.transports.utils.URLs.GET_SCHEDULES;
 
 
@@ -58,11 +62,14 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
     private AutoCompleteTextView destinationDropdown;
     private Button btnTimePicker;
     private Button btnTimeVariance;
+    private RadioGroup radioGroup;
 
     private String[] stopNames;
 
     private int mHour, mMinute;
     private Date currentDate = new Date();
+    private int timeVariance = 1;
+    private boolean isDepartureDate = true;
 
     public SchedulesFragment() {
         // Required empty public constructor
@@ -92,6 +99,19 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
             NumberPickerDialog newFragment = new NumberPickerDialog();
             newFragment.setValueChangeListener(this);
             newFragment.show(SchedulesFragment.this.getFragmentManager(), "time picker");
+        });
+
+        radioGroup = getView().findViewById(R.id.timeTypeRadioGroup);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case  R.id.departureRadioButton: {
+                    isDepartureDate = true;
+                }
+                case  R.id.destinationRadioButton: {
+                    isDepartureDate = false;
+                }
+                default: isDepartureDate = true;
+            }
         });
 
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
@@ -149,9 +169,9 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
             Bundle bundle = new Bundle();
             bundle.putSerializable(ORIGIN, AppDataInfo.stops.get(originSelectedIndex));
             bundle.putSerializable(DESTINATION, AppDataInfo.stops.get(destinationSelectedIndex));
-            //bundle.putBoolean(ARRIVAL_DATE, isArrivalDate);
-            //bundle.putSerializable(TIME, time);
-            //bundle.putInt(VARIANCE, variance);
+            bundle.putBoolean(IS_DEPARTURE_DATE, isDepartureDate);
+            bundle.putSerializable(TIME, currentDate);
+            bundle.putInt(VARIANCE, timeVariance);
 
             SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
             schedulesViewFragment.setArguments(bundle);
@@ -277,6 +297,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
                 Toast.LENGTH_SHORT
         ).show();
         btnTimeVariance.setText("" + numberPicker.getValue());
+        timeVariance = numberPicker.getValue();
     }
 
     public static class NumberPickerDialog extends DialogFragment {

@@ -9,6 +9,9 @@ public class Constants {
     public static final String TRANSPORT_COMPANY = "transport";
     public static final String ORIGIN = "origin";
     public static final String DESTINATION = "destination";
+    public static final String IS_DEPARTURE_DATE = "is_departure_date";
+    public static final String TIME= "time";
+    public static final String VARIANCE= "variance";
     public static final String DEPARTURE_DATE = "departure_date";
 
     // --------------------Json fields ------------------------
