@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,8 +162,9 @@ public class TicketsFragment extends Fragment {
     public void getData() {
         //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
         this.ticketList = bd.getAllGlobalTickets(FirebaseAuth.getInstance().getUid());
-        List<Ticket> simpleTickets = bd.getAllUserTickets();
+        List<Ticket> simpleTickets = new ArrayList<>();
         for (TicketGlobal t : ticketList){
+            Log.d("resTickets", t.getTickets()+"");
             simpleTickets.addAll(t.getTickets());
         }
         setTicketsOnView();// set chached tickets on view and (try) to update theyr status from server
@@ -188,7 +190,7 @@ public class TicketsFragment extends Fragment {
         JSONObject jsonTicketStatus = new JSONObject();
         try{
             jsonTicketStatus = new JSONObject();
-            jsonTicketStatus.put(SECRET_FIELD, "Secret");
+            jsonTicketStatus.put(SECRET_FIELD, "secret");
             JSONArray ticketIDs = new JSONArray();
             for (Ticket ticket : tickets) {
                 JSONObject jsonTicket = new JSONObject();

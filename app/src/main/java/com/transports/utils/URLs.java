@@ -26,7 +26,7 @@ public class URLs {
     //Payment service
     public static final String PAYMENTS = "http://192.168.85.208/";
     public static final String PAYMENTS_LOGIN_ACCOUNT = PAYMENTS + "user/login";
-    public static final String PAYMENTS_CREATE_ACCOUNT = PAYMENTS + "account";
+    public static final String PAYMENTS_CREATE_ACCOUNT = PAYMENTS + "account/";
 
 
 }

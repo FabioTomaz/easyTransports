@@ -2,7 +2,6 @@ package com.transports;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.utils.UtilityFunctions;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import static com.transports.utils.Constants.TICKET_EXTRA_INTENT;
@@ -68,6 +65,7 @@ public class TicketUseActivity extends AppCompatActivity {
         duration.setText(ticket.getDuration());
         ticketState.setText(ticket.getState());
         Log.d("ticketDetails", ticket.getDetails());
+        Log.d("qrcode", ticket.getDetails());
         try {
             Bitmap qrCodeTicket = getQRCodeImage(ticket.getDetails(), 500, 500);
             qrCode.setImageBitmap(qrCodeTicket);

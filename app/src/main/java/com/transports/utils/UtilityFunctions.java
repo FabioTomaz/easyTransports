@@ -55,7 +55,7 @@ public class UtilityFunctions {
         Ticket ticket = null;
         try {
 
-            JSONObject obj = new JSONObject(json);
+            JSONObject obj = new JSONObject(json).getJSONObject(Constants.TICKET_FIELD);
             String date = obj.getString(DATE_FIELD);
             String hash = obj.getString(HASH_FIELD);
             String status = obj.getString(TICKET_STATUS_FIELD);
