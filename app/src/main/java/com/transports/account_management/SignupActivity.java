@@ -1,6 +1,8 @@
 package com.transports.account_management;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -36,6 +38,7 @@ import java.util.Map;
 
 import static com.transports.utils.Constants.PAYMENT_CURRENCY;
 import static com.transports.utils.Constants.PAYMENT_CURRENCY_EUR;
+import static com.transports.utils.Constants.PAYMENT_MESSAGE;
 import static com.transports.utils.Constants.PAYMENT_PASSWORD;
 import static com.transports.utils.Constants.PAYMENT_SHAREDPREFERENCES_PASS;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
@@ -157,12 +160,16 @@ public class SignupActivity extends AppCompatActivity {
                     Log.d("paymentRegister", response+"");
 
                     try {
-                         String status = response.getString(PAYMENT_STATUS);
+                         String status = response.getJSONObject(PAYMENT_MESSAGE).getString(PAYMENT_STATUS);
                         if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
                             Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT).show();
                         }
-                        PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID, uuid).apply();
-                        PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234").apply();
+                        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("transport", 0);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString(firebaseID, uuid);
+                        editor.apply();
+                        editor.putString(firebaseID, uuid);
+                        Log.d("userSave", firebaseID);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

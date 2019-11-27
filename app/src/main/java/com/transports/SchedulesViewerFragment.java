@@ -3,8 +3,10 @@ package com.transports;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,6 +58,7 @@ import static com.transports.utils.Constants.DATE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_AUTH_TOKEN;
 import static com.transports.utils.Constants.PAYMENT_MESSAGE_FIELD;
 import static com.transports.utils.Constants.PAYMENT_PASSWORD;
+import static com.transports.utils.Constants.PAYMENT_SHAREDPREFERENCES_PASS;
 import static com.transports.utils.Constants.PAYMENT_STATUS;
 import static com.transports.utils.Constants.PAYMENT_STATUS_SUCCESSFULL;
 import static com.transports.utils.Constants.PAYMENT_USER_ID;
@@ -71,6 +74,7 @@ import static com.transports.utils.Constants.ROUTE_TOTAL_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
+import static com.transports.utils.Constants.SHARED_PREFS_NAME;
 import static com.transports.utils.Constants.TICKET_AUTH_TOKEN_HEADER_FIELD;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
@@ -182,8 +186,13 @@ public class SchedulesViewerFragment extends Fragment {
             }
             return false;
         });
+        //Check if we are resuming activity after closing a browser opened for payment service
         if (browserOpened && selectedTripParent != null && ticketsToken != null)
             this.purchaseTicket2(selectedTripParent, paymentsResponse);
+
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREFS_NAME, 0);
+        String retrieved = sharedPref.getString(FirebaseAuth.getInstance().getUid(), "");
+        Log.d("userSave", FirebaseAuth.getInstance().getUid() +", retr: "+retrieved);
     }
 
     private void goBack() {
@@ -283,7 +292,7 @@ public class SchedulesViewerFragment extends Fragment {
                 },
                 error -> {
                     // Do something when error occurred
-                    Toast.makeText(getContext(), "An error occured", Toast.LENGTH_SHORT).show();
+                    showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules. Please try again with a different schedule.", KAlertDialog.ERROR_TYPE, true);
                 }
         );
 
@@ -515,9 +524,12 @@ public class SchedulesViewerFragment extends Fragment {
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         try {
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            String retrieved = sharedPref.getString(firebaseID, "");
+            Log.d("userSave", firebaseID +", retr: "+retrieved);
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            /*jsonBody.put(PAYMENT_USER_ID, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID, ""));
-            jsonBody.put(PAYMENT_PASSWORD, PreferenceManager.getDefaultSharedPreferences(getContext()).getString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, ""));*/
+            /*jsonBody.put(PAYMENT_USER_ID, getPaymentID());
+            jsonBody.put(PAYMENT_PASSWORD, getPaymentPass(), ""));*/
             jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
             jsonBody.put(PAYMENT_PASSWORD, "transdev");
         } catch (JSONException e){ }
@@ -584,5 +596,15 @@ public class SchedulesViewerFragment extends Fragment {
                 .setConfirmText("OK")
                 .setConfirmClickListener(sDialog -> sDialog.dismissWithAnimation())
                 .show();
+    }
+
+    private String getPaymentID(){
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREFS_NAME, 0);
+        return sharedPref.getString(FirebaseAuth.getInstance().getUid(), "");
+    }
+
+    private String getPaymentPass(){
+        SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREFS_NAME, 0);
+        return sharedPref.getString(FirebaseAuth.getInstance().getUid()+PAYMENT_SHAREDPREFERENCES_PASS, "");
     }
 }

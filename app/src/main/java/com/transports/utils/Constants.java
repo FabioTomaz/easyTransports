@@ -60,6 +60,9 @@ public class Constants {
     //get ticket status
     public static final String TICKET_STATE_FIELD = "ticketState";
 
+    //shared prefs name
+    public static final String SHARED_PREFS_NAME = "transport";
+
     //temp
     public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzM5NzMzOTgsImlhdCI6MTU3Mzk2OTc5OCwic3ViIjoiM2U5ZjcxNGYtZjhjYi00NzZjLThmMWQtNTM0MjJjZDI1MmY5In0.G45ROa52iytFvpWEW9ayoO3USsMEiaVdQJ15QoER10A";
     //register user in payments
@@ -71,6 +74,7 @@ public class Constants {
     public static final String PAYMENT_UUID = "uuid";
     public static final String PAYMENT_SHAREDPREFERENCES_PASS = "_pass";//shared preferences pass field identifier (<userID>_pass
     public static final String PAYMENT_STATUS = "status";
+    public static final String PAYMENT_MESSAGE = "message";
     public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
     public static final String PAYMENT_MESSAGE_FIELD = "message";
 
