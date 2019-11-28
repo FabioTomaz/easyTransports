@@ -1,10 +1,8 @@
 package com.transports.account_management;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -167,8 +165,8 @@ public class SignupActivity extends AppCompatActivity {
                         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("transport", 0);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString(firebaseID, uuid);
+                        editor.putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234");
                         editor.apply();
-                        editor.putString(firebaseID, uuid);
                         Log.d("userSave", firebaseID);
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -528,10 +527,11 @@ public class SchedulesViewerFragment extends Fragment {
             String retrieved = sharedPref.getString(firebaseID, "");
             Log.d("userSave", firebaseID +", retr: "+retrieved);
             //jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            /*jsonBody.put(PAYMENT_USER_ID, getPaymentID());
-            jsonBody.put(PAYMENT_PASSWORD, getPaymentPass(), ""));*/
-            jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
-            jsonBody.put(PAYMENT_PASSWORD, "transdev");
+            jsonBody.put(PAYMENT_USER_ID, getPaymentID());
+            jsonBody.put(PAYMENT_PASSWORD, "pass1234");
+            Log.d("payment", getPaymentPass());
+            /*jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
+            jsonBody.put(PAYMENT_PASSWORD, "transdev");*/
         } catch (JSONException e){ }
         Log.d("paymentLogReq", jsonBody+"");
         JsonObjectRequest jsonArrayRequest  = new JsonObjectRequest(
