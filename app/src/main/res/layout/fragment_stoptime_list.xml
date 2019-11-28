@@ -3,13 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/list"
-    android:name="com.transports.AgencyFragment"
+    android:name="com.transports.StoptimeFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:clickable="true"
-    android:focusable="true"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".AgencyFragment"
-    tools:listitem="@layout/fragment_agency" />
+    tools:context=".StoptimeFragment"
+    tools:listitem="@layout/fragment_stoptime" />

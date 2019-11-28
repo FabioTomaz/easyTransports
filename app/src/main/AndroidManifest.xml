@@ -7,6 +7,10 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:name=".data.AppDataInfo"
         android:allowBackup="true"
@@ -16,9 +20,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".AgencyDetailActivity"
+            android:name=".StopDetailActivity"
             android:label="@string/title_activity_stop_detail"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".AgencyDetailActivity"
+            android:label="@string/title_activity_stop_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TicketUseActivity" />
         <activity android:name=".MainActivity" />
         <activity
@@ -42,12 +50,10 @@
             android:name=".account_management.ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBUCpE_kEKGhSUmdXkRMf2Mn6_ydXpiMz0"/>
+            android:value="AIzaSyBUCpE_kEKGhSUmdXkRMf2Mn6_ydXpiMz0" />
     </application>
 
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true"/>
 </manifest>

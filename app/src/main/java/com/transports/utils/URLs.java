@@ -10,6 +10,7 @@ public class URLs {
     //get list of schedules
     public static final String GET_SCHEDULES = SCHEDULES+"/stop";
     public static final String GET_STOPS = SCHEDULES+"/stop";
+    public static final String GET_STOPTIMES = SCHEDULES+"/stoptimes/";
     public static final String GET_STOP_INFO = SCHEDULES+"/stop/"; //+stopid
     public static final String GET_ROUTE = SCHEDULES+"/route/"; //+stopid / stopid
 

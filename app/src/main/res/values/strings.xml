@@ -86,4 +86,7 @@
     <string name="agency_timezone">Timezone</string>
     <string name="agency_lang">Language</string>
     <string name="agency_phone">Contact</string>
+    <string name="agency_name">Agency</string>
+    <string name="stop_id">Stop ID</string>
+    <string name="stoptimes">Stop Times</string>
 </resources>

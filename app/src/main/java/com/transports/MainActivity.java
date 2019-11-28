@@ -15,6 +15,8 @@ import com.transports.data.Agency;
 import com.transports.data.Stop;
 import com.transports.utils.Constants;
 
+import java.io.Serializable;
+
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener,
         StopFragment.OnListFragmentInteractionListener,
@@ -78,7 +80,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListFragmentInteraction(Stop stop) {
-
+        Intent intent = new Intent(this, StopDetailActivity.class);
+        intent.putExtra("Stop", (Serializable)  stop);
+        startActivity(intent);
     }
 
     @Override
