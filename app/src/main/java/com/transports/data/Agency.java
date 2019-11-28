@@ -1,8 +1,9 @@
 package com.transports.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Agency {
+public class Agency  implements Serializable {
     private String agency_key;
     private String agency_id;
     private String agency_name;

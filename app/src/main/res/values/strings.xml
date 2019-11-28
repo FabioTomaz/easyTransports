@@ -78,4 +78,12 @@
     <!-- QR code error-->
     <string name="ticket_qr_code_error">Could not get QR code of ticket.</string>
     <string name="ticket_qr_code_error_title">Ticket QR code error</string>
+    <string name="title_activity_stop_detail">StopDetailActivity</string>
+
+    <!-- agency detail-->
+    <string name="agency_id">ID</string>
+    <string name="agency_url">URL</string>
+    <string name="agency_timezone">Timezone</string>
+    <string name="agency_lang">Language</string>
+    <string name="agency_phone">Contact</string>
 </resources>

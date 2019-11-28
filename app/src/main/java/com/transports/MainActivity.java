@@ -1,5 +1,6 @@
 package com.transports;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onListAgencyFragmentInteraction(Agency item) {
-
+        Intent intent = new Intent(this, AgencyDetailActivity.class);
+        intent.putExtra("Agency", item);
+        startActivity(intent);
     }
 }
