@@ -160,8 +160,7 @@
                 android:layout_alignStart="@+id/btn_date"
                 android:layout_alignLeft="@+id/btn_date"
                 android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="SELECT NUMBER" />
+                android:background="@android:color/transparent" />
 
         </LinearLayout>
 
