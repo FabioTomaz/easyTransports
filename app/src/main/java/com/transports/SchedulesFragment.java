@@ -95,6 +95,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
         btnTimeVariance = getView().findViewById(R.id.btn_time_variance);
 
         btnTimePicker.setOnClickListener(this);
+        btnTimeVariance.setText("1 hour");
         btnTimeVariance.setOnClickListener(v -> {
             NumberPickerDialog newFragment = new NumberPickerDialog();
             newFragment.setValueChangeListener(this);
@@ -291,12 +292,12 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-        Toast.makeText(
+        /*Toast.makeText(
                 getContext(),
                 "selected number " + numberPicker.getValue(),
                 Toast.LENGTH_SHORT
-        ).show();
-        btnTimeVariance.setText("" + numberPicker.getValue());
+        ).show();*/
+        btnTimeVariance.setText(numberPicker.getValue() + " hour");
         timeVariance = numberPicker.getValue();
     }
 
