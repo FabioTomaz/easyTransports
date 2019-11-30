@@ -7,7 +7,7 @@ public class Stoptime {
     private String departure_time;
     private int departure_timestamp;
 
-    private int stop_id;
+    private String stop_id;
     private int stop_sequence;
 
     private String agency_key;
@@ -44,11 +44,11 @@ public class Stoptime {
         this.departure_timestamp = departure_timestamp;
     }
 
-    public int getStop_id() {
+    public String getStop_id() {
         return stop_id;
     }
 
-    public void setStop_id(int stop_id) {
+    public void setStop_id(String stop_id) {
         this.stop_id = stop_id;
     }
 

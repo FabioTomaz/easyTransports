@@ -60,7 +60,6 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
         StoptimeFragment stoptimeFragment = new StoptimeFragment();
         stoptimeFragment.setArguments(bundle);
         transaction.replace(R.id.stoptimes_list_fragment, stoptimeFragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 

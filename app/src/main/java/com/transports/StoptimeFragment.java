@@ -81,6 +81,7 @@ public class StoptimeFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            recyclerView.setNestedScrollingEnabled(false);
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
             // Initialize a new JsonArrayRequest instance
