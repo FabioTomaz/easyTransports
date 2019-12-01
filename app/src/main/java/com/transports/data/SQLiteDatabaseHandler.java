@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
+import com.transports.utils.Constants;
 import com.transports.utils.UtilityFunctions;
 
 import java.util.ArrayList;
@@ -106,12 +107,25 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
                 String transports = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[3]));
                 //String date = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[4]));
                 List<Ticket> tickets = getTicketsFromGlobalTicket(id);
-                TicketGlobal tg = new TicketGlobal(originDestination, transports, schedule, tickets );
-                ticketGlobals.add(tg);
+                if (allTicketsExpired(tickets)){
+                    //delete tickets and global ticket from DB
+                }else {
+                    TicketGlobal tg = new TicketGlobal(originDestination, transports, schedule, tickets);
+                    ticketGlobals.add(tg);
+                }
                 cursor.moveToNext();
             }
         }
         return ticketGlobals;
+    }
+
+    private boolean allTicketsExpired(List<Ticket> tickets){
+        for (Ticket t : tickets){
+            if (!t.getState().equalsIgnoreCase(Constants.TICKET_EXPIRED)){
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

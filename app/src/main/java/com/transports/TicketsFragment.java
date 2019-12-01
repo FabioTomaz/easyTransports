@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.JsonObject;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
@@ -42,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
+import static com.transports.utils.Constants.TICKET_FIELD;
+import static com.transports.utils.Constants.TICKET_STATE_FIELD;
 import static com.transports.utils.URLs.GET_TICKET_STATUS;
 import static com.transports.utils.Constants.HASH_FIELD;
 import static com.transports.utils.Constants.ID_FIELD;
@@ -208,34 +211,28 @@ public class TicketsFragment extends Fragment {
                 Request.Method.POST,
                 GET_TICKET_STATUS,
                 jsonTicketStatus,
-                new Response.Listener<JSONObject >() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Process the JSON
-                        //for ticket id
-                        //for (Ticket t : response)
-                         //   bd.updateTicketState(t.getId(), t.getState());
-                        try{
-                            JSONArray ticketsJson = response.getJSONArray(Constants.TICKET_EXTRA_INTENT);
-                        } catch(JSONException e){
-
+                response -> {
+                    Log.d("responseTicketStat",response+"");
+                    // Process the JSON
+                    //for ticket id
+                    //for (Ticket t : response)
+                     //   bd.updateTicketState(t.getId(), t.getState());
+                    try{
+                        JSONArray ticketsJson = response.getJSONArray(TICKET_FIELD);
+                        for (int i = 0; i < ticketsJson.length(); i++){
+                            JSONObject ticketState = ticketsJson.getJSONObject(i);
+                            bd.updateTicketState(ticketState.getInt(ID_FIELD), ticketState.getString(TICKET_STATE_FIELD));
                         }
-                        //TODO: complete code that gets tickets status from each id and updates on db, then call setTicketsOnView()
-
-                        /*for (Ticket t : tickets)
-                            bd.updateTicketState(t.getId(), t.getState());*/
-
+                        setTicketsOnView();
+                    } catch(JSONException e){
 
                     }
                 },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("errorTicketsState", error+"");
-                        // Could not get ticket status. Set tickets on view but its status may not be updated
-                        Toast.makeText(getContext(), getString(R.string.ticket_status_error_message), Toast.LENGTH_SHORT).show();
-                        //setTicketsOnView();
-                    }
+                error -> {
+                    Log.d("errorTicketsState", error.getMessage()+"");
+                    // Could not get ticket status. Set tickets on view but its status may not be updated
+                    Toast.makeText(getContext(), getString(R.string.ticket_status_error_message), Toast.LENGTH_SHORT).show();
+                    //setTicketsOnView();
                 }
         ) {
             @Override
