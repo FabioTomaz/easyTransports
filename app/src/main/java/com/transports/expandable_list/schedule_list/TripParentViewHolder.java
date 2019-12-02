@@ -1,18 +1,15 @@
 package com.transports.expandable_list.schedule_list;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import com.transports.R;
-import com.transports.SchedulesViewerFragment;
+import com.transports.SchedulesViewerV2Fragment;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
@@ -24,9 +21,9 @@ public class TripParentViewHolder extends GroupViewHolder {
     private TextView nTransports;
     private ImageView dropdownArrow;
     private Button buyBtn;
-    private SchedulesViewerFragment schedulesViewerFragment;
+    private SchedulesViewerV2Fragment schedulesViewerFragment;
 
-    public TripParentViewHolder(View itemView, SchedulesViewerFragment schedulesViewerFragmentP) {
+    public TripParentViewHolder(View itemView, SchedulesViewerV2Fragment schedulesViewerFragmentP) {
         super(itemView);
         this.schedulesViewerFragment = schedulesViewerFragmentP;
         transports = (TextView) itemView.findViewById(R.id.transports_names);

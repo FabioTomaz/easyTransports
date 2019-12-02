@@ -20,18 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.JsonObject;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.expandable_list.tickets_list.TicketListAdapter;
-import com.transports.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 import static android.widget.LinearLayout.VERTICAL;
-import static com.transports.utils.Constants.TICKET_FIELD;
-import static com.transports.utils.Constants.TICKET_STATE_FIELD;
-import static com.transports.utils.URLs.GET_TICKET_STATUS;
 import static com.transports.utils.Constants.HASH_FIELD;
 import static com.transports.utils.Constants.ID_FIELD;
 import static com.transports.utils.Constants.SECRET_FIELD;
 import static com.transports.utils.Constants.TICKETS_FIELD;
+import static com.transports.utils.Constants.TICKET_FIELD;
+import static com.transports.utils.Constants.TICKET_STATE_FIELD;
+import static com.transports.utils.URLs.GET_TICKET_STATUS;
 
 
 /**

@@ -1,50 +1,57 @@
 package com.transports.expandable_list.schedule_list;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.transports.R;
-import com.transports.SchedulesViewerFragment;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.transports.R;
+import com.transports.SchedulesViewerV2Fragment;
+
+import java.util.Collections;
 import java.util.List;
 
-public class TripAdapter extends ExpandableRecyclerViewAdapter<TripParentViewHolder, TripChildViewHolder> {
+public class TripAdapter extends RecyclerView.Adapter<TripChildViewHolder> {
 
     private LayoutInflater mInflator;
-    private SchedulesViewerFragment schedulesViewerFragment;
+    List<TripChild> tripChildren = Collections.EMPTY_LIST;
+    private SchedulesViewerV2Fragment schedulesViewerFragment;
 
-    public TripAdapter(List<? extends ExpandableGroup> groups, SchedulesViewerFragment schedulesViewerFragment) {
-        super(groups);
-        this.schedulesViewerFragment = schedulesViewerFragment;
+    public TripAdapter(Context context, List<TripChild> subActivityData) {
+        mInflator = LayoutInflater.from(context);
+        this.tripChildren = subActivityData;
     }
 
     @Override
-    public TripParentViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.trip_parent, parent, false);
-        return new TripParentViewHolder(view, schedulesViewerFragment);
+    public TripChildViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view = mInflator.inflate(R.layout.ticket_item_details, parent, false);
+        TripChildViewHolder ticketViewHolder = new TripChildViewHolder(view);
+        return ticketViewHolder;
     }
 
     @Override
-    public TripChildViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.trip_child, parent, false);
-        return new TripChildViewHolder(view);
+    public void onBindViewHolder(@NonNull TripChildViewHolder holder, int position) {
+        TripChild currentTrip = tripChildren.get(position);
+        holder.setTripChild(currentTrip);
+
+        /*holder.useTicketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //((RecyclerView) parent).performItemClick(v, position, 0); // Let the event be handled in onItemClick()
+                Intent intent = new Intent(v.getContext(), TicketUseActivity.class);
+                //Log.d("ticketPos", tickets.get(holder.getAdapterPosition())+"");
+                intent.putExtra(TICKET_EXTRA_INTENT, tickets.get(holder.getAdapterPosition()));
+                v.getContext().startActivity(intent);
+            }
+        });*/
     }
 
     @Override
-    public void onBindChildViewHolder(TripChildViewHolder holder, int flatPosition,
-                                      ExpandableGroup group, int childIndex) {
-
-        final TripChild artist = ((TripParent) group).getItems().get(childIndex);
-        holder.setTripChild(artist);
-    }
-
-    @Override
-    public void onBindGroupViewHolder(TripParentViewHolder holder, int flatPosition, ExpandableGroup group) {
-        holder.setTripParent((TripParent) group);
+    public int getItemCount() {
+        return 0;
     }
 }

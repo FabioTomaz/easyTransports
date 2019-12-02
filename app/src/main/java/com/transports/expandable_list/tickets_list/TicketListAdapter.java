@@ -26,7 +26,6 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Ti
         this.subActivityData = subActivityData;
     }
 
-
     @Override
     public TicketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -41,7 +40,6 @@ public class TicketListAdapter extends RecyclerView.Adapter<TicketListAdapter.Ti
         holder.originDestination.setText(currentTicketGlobal.getOriginDestination());
         holder.schedule.setText(currentTicketGlobal.getSchedule());
         holder.transport.setText(currentTicketGlobal.getTransports());
-
     }
 
     @Override
