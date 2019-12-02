@@ -89,7 +89,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
             super(itemView);
             originDestination = (TextView) itemView.findViewById(R.id.ticket_origin_destination);
             schedule = (TextView) itemView.findViewById(R.id.ticket_hours);
-            transports = (TextView) itemView.findViewById(R.id.transport_name);
+            transports = (TextView) itemView.findViewById(R.id.transport_name_ticket);
             status = (TextView) itemView.findViewById(R.id.ticket_state);
             useTicketButton = (Button) itemView.findViewById(R.id.use_ticket_btn);
             transportIcon = (ImageView) itemView.findViewById(R.id.transport_icon);

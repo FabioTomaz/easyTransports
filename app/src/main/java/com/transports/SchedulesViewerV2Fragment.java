@@ -34,7 +34,6 @@ import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
-import com.transports.expandable_list.schedule_list.TripParentViewHolder;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.utils.Constants;
@@ -94,9 +93,8 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private Date time;
     private int variance;
     private List<TripChild> tripChildren = new ArrayList<>();
-    private List<TripParent> tripParentList = new ArrayList<>();
+    private TripParent tripParent;
     private RecyclerView recycler;
-    private TripParentViewHolder tripParentViewHolder;
     private boolean browserOpened = false;
     private TripParent selectedTripParent;
     private String paymentsResponse;
@@ -144,7 +142,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
             destinationLabel.setText(destination.getStop_name());
 
             tripChildren = new ArrayList<>();
-            tripParentList = new ArrayList<>();
             getActivity().setTitle(origin.getStop_name() + " - " + destination.getStop_name());
 
             //call service give info and receive
@@ -155,12 +152,13 @@ public class SchedulesViewerV2Fragment extends Fragment {
         }
     }
 
-    private void setSchedulesOnList(final List<TripParent> trips) {
-        this.tripParentList = trips;
+    private void setSchedulesOnList(final TripParent trip) {
+        this.tripParent = trip;
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         //instantiate your adapter with the list of genres
-        TripAdapter adapter = new TripAdapter(getContext(), trips.get(0).getTripsChilds());
+        Log.d("trips", trip.getTripsChilds()+"");
+        TripAdapter adapter = new TripAdapter(getContext(), trip.getTripsChilds());
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
 
@@ -278,8 +276,8 @@ public class SchedulesViewerV2Fragment extends Fragment {
                                     originStopChild, destinationStopChild, price));
                         }
                         TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
-                        tripParentList.add(tripParent);
-                        setSchedulesOnList(tripParentList);
+                        this.tripParent = tripParent;
+                        setSchedulesOnList(tripParent);
                     } catch (JSONException e) {
                         showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules", KAlertDialog.ERROR_TYPE, true);
                     }
@@ -336,11 +334,10 @@ public class SchedulesViewerV2Fragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    //called by user click on "buy" button of a list of tickets
+    //called by user click on "buy" button
     public void handlePurchase(int tripParentPosition) {
-        TripParent tripParent = tripParentList.get(tripParentPosition);
-        Log.d("resTripParent", tripParent + "");
-        showConfirmPurchaseDialog(tripParent);
+        Log.d("resTripParent", this.tripParent + "");
+        showConfirmPurchaseDialog(this.tripParent);
     }
 
     private void showConfirmPurchaseDialog(final TripParent tripParent) {

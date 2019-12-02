@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.demotxt.droidsrce.profileui.MainActivity"
-        android:background="@color/graylight"
+        android:background="@color/white"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="305dp">
+            android:layout_height="200dp">
             <LinearLayout
                 android:background="@drawable/gradientbackground"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="200dp"
                 android:orientation="vertical">
                 <!--<ImageView
                     android:layout_marginTop="45dp"
@@ -37,7 +37,7 @@
                     android:textStyle="bold"
                     android:textSize="21sp"/>
                 <LinearLayout
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="20dp"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -70,9 +70,9 @@
             </LinearLayout>
             <androidx.cardview.widget.CardView
                 android:layout_width="400dp"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="175dp">
+                android:layout_marginTop="95dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -161,12 +161,12 @@
 
         <Button
             android:textColor="#fff"
-            android:background="@color/trans_success_stroke_color"
-            android:layout_marginTop="35dp"
+            android:background="@color/btn_login"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Follow Me"/>
+            android:text="@string/buy_ticket_btn"/>
 
     </LinearLayout>
 </FrameLayout>

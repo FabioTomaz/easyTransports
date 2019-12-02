@@ -18,7 +18,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripChildViewHolder> {
 
     private LayoutInflater mInflator;
     List<TripChild> tripChildren = Collections.EMPTY_LIST;
-    private SchedulesViewerV2Fragment schedulesViewerFragment;
 
     public TripAdapter(Context context, List<TripChild> subActivityData) {
         mInflator = LayoutInflater.from(context);
@@ -28,7 +27,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripChildViewHolder> {
     @Override
     public TripChildViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = mInflator.inflate(R.layout.ticket_item_details, parent, false);
+        View view = mInflator.inflate(R.layout.trip_child, parent, false);
         TripChildViewHolder ticketViewHolder = new TripChildViewHolder(view);
         return ticketViewHolder;
     }
@@ -52,6 +51,6 @@ public class TripAdapter extends RecyclerView.Adapter<TripChildViewHolder> {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return tripChildren.size();
     }
 }
