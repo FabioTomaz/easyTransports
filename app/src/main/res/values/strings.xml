@@ -58,6 +58,8 @@
     <string name="stop_error_message">You must select a valid stop from the available list</string>
     <string name="stop_error_message2">Origin stop must be different from Destination stop</string>
     <string name="destination_error_message">Destination stop must be selected</string>
+    <string name="schedule_details_message">Schedule details</string>
+    <string name="schedule_details_message2">Trips to reach the destination</string>
     <!-- Tickets -->
     <string name="no_tickets">You have no tickets to use. Go to the "Schedules" screen to purchase tickets.</string>
     <string name="use_ticket">Use ticket</string>

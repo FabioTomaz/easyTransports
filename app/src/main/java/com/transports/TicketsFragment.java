@@ -140,6 +140,7 @@ public class TicketsFragment extends Fragment {
             }
         });
         PagerSnapHelper snapHelper = new PagerSnapHelper();
+        cardRecyclerView.setOnFlingListener(null);
         snapHelper.attachToRecyclerView(cardRecyclerView);
     }
 

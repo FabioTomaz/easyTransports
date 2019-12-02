@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,8 +104,10 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private String paymentID;
     private TextView originLabel;
     private TextView destinationLabel;
-    private TextView nTransportsLabel;
+    private TextView totalPriceLabel;
     private TextView transportsLabel;
+    private TextView schedulesLabel;
+    private Button buyTicketBtn;
 
     public SchedulesViewerV2Fragment() {
         // Required empty public constructor
@@ -128,8 +131,10 @@ public class SchedulesViewerV2Fragment extends Fragment {
 
         originLabel = (TextView) getView().findViewById(R.id.origin_label);
         destinationLabel = (TextView) getView().findViewById(R.id.destination_label);
-        nTransportsLabel = (TextView) getView().findViewById(R.id.transports_number_label);
+        totalPriceLabel = (TextView) getView().findViewById(R.id.transports_number_label);
         transportsLabel = (TextView) getView().findViewById(R.id.transports);
+        schedulesLabel = (TextView) getView().findViewById(R.id.schedule_total_trip_label);
+        buyTicketBtn = (Button) getView().findViewById(R.id.buy_ticket_btn);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
@@ -144,6 +149,12 @@ public class SchedulesViewerV2Fragment extends Fragment {
             tripChildren = new ArrayList<>();
             getActivity().setTitle(origin.getStop_name() + " - " + destination.getStop_name());
 
+            buyTicketBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    handlePurchase();
+                }
+            });
+
             //call service give info and receive
             getRoute(origin.getStopId(), destination.getStopId(), isDepartureDate, time, variance);
         }
@@ -154,10 +165,13 @@ public class SchedulesViewerV2Fragment extends Fragment {
 
     private void setSchedulesOnList(final TripParent trip) {
         this.tripParent = trip;
+        //add trip parent data to fields
+        this.transportsLabel.setText(trip.getTransports());
+        this.schedulesLabel.setText(trip.getschedules());
+        this.totalPriceLabel.setText(trip.getTotalPrice()+"€");
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         //instantiate your adapter with the list of genres
-        Log.d("trips", trip.getTripsChilds()+"");
         TripAdapter adapter = new TripAdapter(getContext(), trip.getTripsChilds());
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
@@ -305,12 +319,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     @Override
@@ -335,7 +343,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
     }
 
     //called by user click on "buy" button
-    public void handlePurchase(int tripParentPosition) {
+    public void handlePurchase() {
         Log.d("resTripParent", this.tripParent + "");
         showConfirmPurchaseDialog(this.tripParent);
     }
@@ -348,19 +356,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     //user confirmed ticket purchase
                     loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                    /*List<Ticket> tickets = new ArrayList<>();
-                    TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
-                    //parse list of purchased tickets
-
-                    List<Ticket> tickets1 = new ArrayList<>();
-                    tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
-                    tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
-
-                    ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
-                    SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                    //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-                    bd.addGlobalTicket(ticketGlobal);*/
 
                 })
                 .setNegativeButton(android.R.string.no, null).show();

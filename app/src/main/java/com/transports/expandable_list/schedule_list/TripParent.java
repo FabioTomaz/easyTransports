@@ -65,6 +65,10 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
         this.arrivalHour = arrivalHour;
     }
 
+    public String getschedules() {
+        return departureHour+" - "+arrivalHour;
+    }
+
     public String getDate() {
         return date;
     }
