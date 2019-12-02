@@ -484,11 +484,7 @@ public class SchedulesViewerFragment extends Fragment {
                     }
 
                     if (tickets.isEmpty()) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message3))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
-                        return;
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message3), KAlertDialog.ERROR_TYPE, false);
                     }
 
                     //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
@@ -594,6 +590,7 @@ public class SchedulesViewerFragment extends Fragment {
                 .setTitleText(title)
                 .setContentText(descr)
                 .setConfirmText("OK")
+                .confirmButtonColor(R.drawable.gree_confirm_btn_color)
                 .setConfirmClickListener(sDialog -> sDialog.dismissWithAnimation())
                 .show();
     }
