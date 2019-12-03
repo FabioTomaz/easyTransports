@@ -174,7 +174,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
             bundle.putSerializable(TIME, currentDate);
             bundle.putInt(VARIANCE, timeVariance);
 
-            SchedulesViewerFragment schedulesViewFragment = new SchedulesViewerFragment();
+            SchedulesViewerV2Fragment schedulesViewFragment = new SchedulesViewerV2Fragment();
             schedulesViewFragment.setArguments(bundle);
 
             getFragmentManager()

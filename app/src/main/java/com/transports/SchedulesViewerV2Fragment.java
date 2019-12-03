@@ -11,6 +11,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -33,7 +35,6 @@ import com.transports.data.Stop;
 import com.transports.expandable_list.schedule_list.TripAdapter;
 import com.transports.expandable_list.schedule_list.TripChild;
 import com.transports.expandable_list.schedule_list.TripParent;
-import com.transports.expandable_list.schedule_list.TripParentViewHolder;
 import com.transports.expandable_list.tickets_list.Ticket;
 import com.transports.expandable_list.tickets_list.TicketGlobal;
 import com.transports.utils.Constants;
@@ -83,15 +84,8 @@ import static com.transports.utils.URLs.PAYMENTS_LOGIN_ACCOUNT;
 import static com.transports.utils.URLs.TICKET_PAYMENT1;
 import static com.transports.utils.UtilityFunctions.generateString;
 
-
-/**
- * Fragment that shows list of schedules.
- * Receives the origin and destination stop from SchedulesFragment, calls schedule service and parses response and shows an expandable
- * list with a trip (TripParent) that may contain sub trips (TripChild).
- * Calls payment service and handles the payment logic communication when user presses 'buy' button
- */
-public class SchedulesViewerFragment extends Fragment {
-
+// -----> https://www.awsrh.com/2017/10/modern-profile-ui-design-in-android.html
+public class SchedulesViewerV2Fragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private String date;
     private Stop origin;
@@ -100,17 +94,22 @@ public class SchedulesViewerFragment extends Fragment {
     private Date time;
     private int variance;
     private List<TripChild> tripChildren = new ArrayList<>();
-    private List<TripParent> tripParentList = new ArrayList<>();
+    private TripParent tripParent;
     private RecyclerView recycler;
-    private TripParentViewHolder tripParentViewHolder;
     private boolean browserOpened = false;
     private TripParent selectedTripParent;
     private String paymentsResponse;
     private String ticketsToken;
     private String authToken;
     private String paymentID;
+    private TextView originLabel;
+    private TextView destinationLabel;
+    private TextView totalPriceLabel;
+    private TextView transportsLabel;
+    private TextView schedulesLabel;
+    private Button buyTicketBtn;
 
-    public SchedulesViewerFragment() {
+    public SchedulesViewerV2Fragment() {
         // Required empty public constructor
     }
 
@@ -123,13 +122,19 @@ public class SchedulesViewerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedules_viewer, container, false);
+        return inflater.inflate(R.layout.fragment_schedules_viewer_v2, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
 
+        originLabel = (TextView) getView().findViewById(R.id.origin_label);
+        destinationLabel = (TextView) getView().findViewById(R.id.destination_label);
+        totalPriceLabel = (TextView) getView().findViewById(R.id.transports_number_label);
+        transportsLabel = (TextView) getView().findViewById(R.id.transports);
+        schedulesLabel = (TextView) getView().findViewById(R.id.schedule_total_trip_label);
+        buyTicketBtn = (Button) getView().findViewById(R.id.buy_ticket_btn);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
@@ -138,33 +143,36 @@ public class SchedulesViewerFragment extends Fragment {
             time = (Date) bundle.getSerializable(Constants.TIME);
             variance = bundle.getInt(Constants.VARIANCE);
 
+            originLabel.setText(origin.getStop_name());
+            destinationLabel.setText(destination.getStop_name());
+
             tripChildren = new ArrayList<>();
-            tripParentList = new ArrayList<>();
             getActivity().setTitle(origin.getStop_name() + " - " + destination.getStop_name());
+
+            buyTicketBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    handlePurchase();
+                }
+            });
 
             //call service give info and receive
             getRoute(origin.getStopId(), destination.getStopId(), isDepartureDate, time, variance);
-/*
-            //place all transports in the adapter
-            tripChildren.add(new TripChild("CP ", "12/12/2019", "12:50", "13:25", "Aveiro", "Porto", 1.45));
-            tripChildren.add(new TripChild("Carris ", "12/12/2019", "12:59", "13:32", "Aveiro", "Porto", 2.45));
-            tripChildren.add(new TripChild("Move Aveiro ", "12/12/2019", "15:50", "16:15", "Aveiro", "Porto", 1.45));
-
-
-            TripParent t1 = new TripParent("13:25", "14:20", "12/12/2019", "Aveiro", "Porto", tripChildren);
-            TripParent t2 = new TripParent("14:25", "15:30", "12/12/2019", "Aveiro", "Porto", tripChildren);
-            TripParent t3 = new TripParent("14:30", "15:50", "12/12/2019", "Aveiro", "Porto", tripChildren);*/
-
+        }
+        else {
+            //TODO: finish activity
         }
     }
 
-    private void setSchedulesOnList(final List<TripParent> trips) {
-        this.tripParentList = trips;
+    private void setSchedulesOnList(final TripParent trip) {
+        this.tripParent = trip;
+        //add trip parent data to fields
+        this.transportsLabel.setText(trip.getTransports());
+        this.schedulesLabel.setText(trip.getschedules());
+        this.totalPriceLabel.setText(trip.getTotalPrice()+"€");
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
         //instantiate your adapter with the list of genres
-        TripAdapter adapter = new TripAdapter(trips, this);
+        TripAdapter adapter = new TripAdapter(getContext(), trip.getTripsChilds());
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
 
@@ -282,8 +290,8 @@ public class SchedulesViewerFragment extends Fragment {
                                     originStopChild, destinationStopChild, price));
                         }
                         TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
-                        tripParentList.add(tripParent);
-                        setSchedulesOnList(tripParentList);
+                        this.tripParent = tripParent;
+                        setSchedulesOnList(tripParent);
                     } catch (JSONException e) {
                         showErrorAndGoBack("Error getting schedules", "An error ocurred getting the shcedules", KAlertDialog.ERROR_TYPE, true);
                     }
@@ -311,12 +319,6 @@ public class SchedulesViewerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        /*if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
     }
 
     @Override
@@ -340,11 +342,10 @@ public class SchedulesViewerFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    //called by user click on "buy" button of a list of tickets
-    public void handlePurchase(int tripParentPosition) {
-        TripParent tripParent = tripParentList.get(tripParentPosition);
-        Log.d("resTripParent", tripParent + "");
-        showConfirmPurchaseDialog(tripParent);
+    //called by user click on "buy" button
+    public void handlePurchase() {
+        Log.d("resTripParent", this.tripParent + "");
+        showConfirmPurchaseDialog(this.tripParent);
     }
 
     private void showConfirmPurchaseDialog(final TripParent tripParent) {
@@ -355,19 +356,6 @@ public class SchedulesViewerFragment extends Fragment {
                 .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
                     //user confirmed ticket purchase
                     loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                    /*List<Ticket> tickets = new ArrayList<>();
-                    TicketGlobal ticketGlobal = tripParent.convertToGlobalTicket();
-                    //parse list of purchased tickets
-
-                    List<Ticket> tickets1 = new ArrayList<>();
-                    tickets1.add(new Ticket(1, Constants.TICKET_JSON_EXAMPLE, "active"));
-                    tickets1.add(new Ticket(2, Constants.TICKET_JSON_EXAMPLE, "active"));
-
-                    ticketGlobal = new TicketGlobal("Aveiro - Coimbra", "CP", "8:30-9:30", tickets1);
-                    SQLiteDatabaseHandler bd = new SQLiteDatabaseHandler(getContext());
-                    //Log.d("dbtickets", bd.getAllGlobalTickets()+"");
-                    bd.addGlobalTicket(ticketGlobal);*/
 
                 })
                 .setNegativeButton(android.R.string.no, null).show();
@@ -484,11 +472,7 @@ public class SchedulesViewerFragment extends Fragment {
                     }
 
                     if (tickets.isEmpty()) {
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(getString(R.string.ticket_purchase_error_title))
-                                .setMessage(getString(R.string.ticket_purchase_error_message3))
-                                .setIcon(android.R.drawable.ic_dialog_alert).setNeutralButton("OK", null).show();
-                        return;
+                        showErrorAndGoBack(getString(R.string.ticket_purchase_error_title), getString(R.string.ticket_purchase_error_message3), KAlertDialog.ERROR_TYPE, false);
                     }
 
                     //ticketGlobal = new TicketGlobal("Aveiro - Porto", "CP", "8:30-9:30", tickets);
@@ -594,6 +578,7 @@ public class SchedulesViewerFragment extends Fragment {
                 .setTitleText(title)
                 .setContentText(descr)
                 .setConfirmText("OK")
+                .confirmButtonColor(R.drawable.gree_confirm_btn_color)
                 .setConfirmClickListener(sDialog -> sDialog.dismissWithAnimation())
                 .show();
     }

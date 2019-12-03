@@ -51,14 +51,13 @@ public class Constants {
     public static final String ID_FIELD = "id";
     public static final String HASH_FIELD = "hash";
     public static final String TICKET_INFO_FIELD = "details";
-    public static final String TICKET_TOKEN_FIELD = "secret";
     public static final String TICKET_AUTH_TOKEN_HEADER_FIELD = "AuthToken";
 
     //payment confirmation link field
     public static final String PAYMENT_CONFIRM_LINK_FIELD = "url";
 
     //get ticket status
-    public static final String TICKET_STATE_FIELD = "ticketState";
+    public static final String TICKET_STATE_FIELD = "status";
 
     //shared prefs name
     public static final String SHARED_PREFS_NAME = "transport";
@@ -77,6 +76,12 @@ public class Constants {
     public static final String PAYMENT_MESSAGE = "message";
     public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
     public static final String PAYMENT_MESSAGE_FIELD = "message";
+
+
+    //ticket states strings
+    public static final String TICKET_EXPIRED = "expired";
+    public static final String TICKET_INACTIVE = "inactive";
+    public static final String TICKET_VALID = "valid";
 
     //for testing
     public static final String TICKET_JSON_EXAMPLE = "{\n" +

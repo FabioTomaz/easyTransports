@@ -54,12 +54,11 @@ public class UtilityFunctions {
     public static Ticket parseJsonToTicket(String json) {
         Ticket ticket = null;
         try {
-
+            Log.d("ticketParse", json+"");
             JSONObject obj = new JSONObject(json).getJSONObject(Constants.TICKET_FIELD);
             String date = obj.getString(DATE_FIELD);
             String hash = obj.getString(HASH_FIELD);
             String status = obj.getString(TICKET_STATUS_FIELD);
-
             int id = obj.getInt(TICKET_ID_FIELD);
             obj = obj.getJSONObject(TICKET_INFO_FIELD);
             String trip = obj.getString(TRIP);
@@ -69,7 +68,7 @@ public class UtilityFunctions {
             ticket = new Ticket(id, trip, transport, schedule, date, status, json, hash);
 
         } catch (Throwable t) {
-            Log.e("JSONERROR", "Could not parse JSON (either is malformed or field does not exist): \"" + json + "\"");
+            Log.e("JSONERROR", "Could not parse JSON (either is malformed or field does not exist): \"" + json + "\"" +t.getMessage());
         }
         return ticket;
     }
@@ -77,9 +76,12 @@ public class UtilityFunctions {
     public static String updateStatusJSON(Ticket t, String statusNew){
         String jsonUpdated = "";
         try {
-            JSONObject obj = new JSONObject(t.getDetails());
+            JSONObject obj = new JSONObject(t.getDetails()).getJSONObject(Constants.TICKET_FIELD);
             obj.put(TICKET_STATUS_FIELD, statusNew);
-            jsonUpdated = obj.toString();
+            JSONObject parentUpdate = new JSONObject(t.getDetails());
+            parentUpdate.put(Constants.TICKET_FIELD, obj);
+            jsonUpdated = parentUpdate.toString();
+            Log.d("updatedTicket", jsonUpdated+"");
 
         } catch (Throwable thr) {
             Log.e("JSONERROR", "Could not parse malformed JSON: \"" + t.getDetails() + "\"");

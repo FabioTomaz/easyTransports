@@ -19,7 +19,9 @@ import com.transports.utils.UtilityFunctions;
 import java.util.Collections;
 import java.util.List;
 
+import static com.transports.utils.Constants.TICKET_EXPIRED;
 import static com.transports.utils.Constants.TICKET_EXTRA_INTENT;
+import static com.transports.utils.Constants.TICKET_VALID;
 
 /**
  * Adapter used for list of individual tickets, that make a global ticket. This ticket is a single trip, from one stop to another in 1 transportaion
@@ -38,7 +40,6 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
 
     @Override
     public MyTicketViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = inflater.inflate(R.layout.ticket_item_details, parent, false);
         MyTicketViewHolder ticketViewHolder = new MyTicketViewHolder(view);
         return ticketViewHolder;
@@ -53,9 +54,9 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
         holder.schedule.setText(currentTicket.getSchedule());
         holder.status.setText(currentTicket.getState());
         //set status text color if ticket is ready to user (green) or already used (red)
-        if (currentTicket.getState().equalsIgnoreCase("inactive"))
+        if (currentTicket.getState().equalsIgnoreCase(TICKET_EXPIRED))
             holder.status.setTextColor(Color.parseColor(("#ff0000")));
-        else if (currentTicket.getState().equalsIgnoreCase("active"))
+        else if (currentTicket.getState().equalsIgnoreCase(TICKET_VALID))
             holder.status.setTextColor(Color.parseColor(("#00ff00")));
 
         holder.useTicketButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +89,7 @@ public class MyTicketsListAdapter extends RecyclerView.Adapter<MyTicketsListAdap
             super(itemView);
             originDestination = (TextView) itemView.findViewById(R.id.ticket_origin_destination);
             schedule = (TextView) itemView.findViewById(R.id.ticket_hours);
-            transports = (TextView) itemView.findViewById(R.id.transport_name);
+            transports = (TextView) itemView.findViewById(R.id.transport_name_ticket);
             status = (TextView) itemView.findViewById(R.id.ticket_state);
             useTicketButton = (Button) itemView.findViewById(R.id.use_ticket_btn);
             transportIcon = (ImageView) itemView.findViewById(R.id.transport_icon);

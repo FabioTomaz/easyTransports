@@ -18,7 +18,7 @@ public class TripChildViewHolder extends ChildViewHolder {
     public TripChildViewHolder(View itemView) {
         super(itemView);
 
-        transportName = itemView.findViewById(R.id.transport_name);
+        transportName = itemView.findViewById(R.id.transport_name_schedule);
         destination = itemView.findViewById(R.id.trip);
         departureHour = itemView.findViewById(R.id.hour_departure);
         price = itemView.findViewById(R.id.price);
@@ -28,7 +28,7 @@ public class TripChildViewHolder extends ChildViewHolder {
         transportName.setText(trip.getCompanyName());
         departureHour.setText(trip.getDepartureHour() +" - "+trip.getArrivingHour());
         destination.setText(trip.getOrigin().getStop_name()+" -> "+trip.getDestination().getStop_name());
-        Log.d("price", trip.getPrice()+"$");
+        Log.d("price", trip.getPrice()+"€");
         price.setText(trip.getPrice() + "€");
     }
 }
