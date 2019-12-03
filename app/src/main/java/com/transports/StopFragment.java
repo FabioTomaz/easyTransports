@@ -78,7 +78,7 @@ public class StopFragment extends Fragment {
 
         // Set the adapter
         if (listView instanceof RecyclerView) {
-            Context context = listView .getContext();
+            Context context = listView.getContext();
             RecyclerView recyclerView = (RecyclerView) listView;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));

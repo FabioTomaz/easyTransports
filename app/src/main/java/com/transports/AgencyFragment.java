@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,15 +74,22 @@ public class AgencyFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agency_list, container, false);
 
+        View listView = view.findViewById(R.id.agency_list);
+
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        if (listView instanceof RecyclerView) {
+            Context context = listView.getContext();
+            RecyclerView recyclerView = (RecyclerView) listView;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            recyclerView.addItemDecoration(
+                    new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL)
+            );
+
+
             RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
             // Initialize a new JsonArrayRequest instance
