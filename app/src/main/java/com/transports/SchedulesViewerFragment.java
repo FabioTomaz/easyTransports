@@ -241,7 +241,7 @@ public class SchedulesViewerFragment extends Fragment {
                 if (previousQueryParam) {
                     url += "&";
                 }
-                url += "variance=" + variance;
+                url += "timeVariance=" + variance;
             }
         }
 
