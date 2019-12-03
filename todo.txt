@@ -15,3 +15,8 @@ textview: https://github.com/vipulasri/TicketView
 
 registar conta no payments com o email e nao uuid
 Ver o pedido ao ticket states
+adicionar um indicador de espera no schedules enquanto se espera pelos scedules
+melhorar UI do globalTicket (retangulo que se move na horizontal no my tickers menu)
+melhorar UI do schedules
+Adicionar botao que leva para atividade de maps (no schedules result) e coloca maker nas stops na qual a route passa.
+cada marker indica nome da stop e horário
