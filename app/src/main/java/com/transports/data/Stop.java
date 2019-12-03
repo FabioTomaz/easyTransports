@@ -14,7 +14,7 @@ public class Stop implements Serializable, Parcelable {
     private String stop_transport;
     private String agency_key;
     private double stop_lat;
-    private double stop_long;
+    private double stop_lon;
 
     public Stop(String stop_id, String stop_name) {
         this.stop_id = stop_id;
@@ -26,7 +26,7 @@ public class Stop implements Serializable, Parcelable {
         this.stop_name = stop_name;
         this.stop_transport = stop_transport;
         this.stop_lat = stop_lat;
-        this.stop_long = stop_long;
+        this.stop_lon = stop_long;
         this.agency_key = agency_key;
     }
 
@@ -35,7 +35,7 @@ public class Stop implements Serializable, Parcelable {
         stop_name = in.readString();
         stop_transport = in.readString();
         stop_lat = in.readDouble();
-        stop_long = in.readDouble();
+        stop_lon = in.readDouble();
     }
 
     public static final Creator<Stop> CREATOR = new Creator<Stop>() {
@@ -82,12 +82,12 @@ public class Stop implements Serializable, Parcelable {
         this.stop_lat = stop_lat;
     }
 
-    public double getStop_long() {
-        return stop_long;
+    public double getStop_lon() {
+        return stop_lon;
     }
 
-    public void setStop_long(double stop_long) {
-        this.stop_long = stop_long;
+    public void setStop_lon(double stop_lon) {
+        this.stop_lon = stop_lon;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Stop implements Serializable, Parcelable {
                 "stop_id='" + stop_id + '\'' +
                 ", stop_name='" + stop_name + '\'' +
                 ", stop_lat=" + stop_lat +
-                ", stop_long=" + stop_long +
+                ", stop_lon=" + stop_lon +
                 '}';
     }
 
@@ -112,7 +112,7 @@ public class Stop implements Serializable, Parcelable {
         dest.writeString(this.stop_name);
         dest.writeString(this.stop_transport);
         dest.writeDouble(this.stop_lat);
-        dest.writeDouble(this.stop_long);
+        dest.writeDouble(this.stop_lon);
     }
 
     public String getAgency_key() {

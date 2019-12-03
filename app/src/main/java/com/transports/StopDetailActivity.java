@@ -3,6 +3,7 @@ package com.transports;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +44,7 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
         fab.setOnClickListener(view -> {
             // Creates an Intent that will load a map of San Francisco
             Uri gmmIntentUri = Uri.parse("geo:" + stop.getStop_lat()
-                    + "," + stop.getStop_long());
+                    + "," + stop.getStop_lon());
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
@@ -78,10 +79,21 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         // Add a marker in Sydney and move the camera
-        LatLng location = new LatLng(stop.getStop_lat(), stop.getStop_long());
+        LatLng location = new LatLng(stop.getStop_lat(), stop.getStop_lon());
         mMap.addMarker(new MarkerOptions().position(location).title(stop.getStop_name()));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.transports;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,6 +84,17 @@ public class AgencyDetailActivity extends AppCompatActivity implements OnMapRead
         mMap.addMarker(new MarkerOptions().position(location).title(agency.getAgency_name()));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }
