@@ -160,6 +160,7 @@
                 android:layout_alignStart="@+id/btn_date"
                 android:layout_alignLeft="@+id/btn_date"
                 android:layout_weight="1"
+                android:text="SELECT TIME VARIANCE"
                 android:background="@android:color/transparent" />
 
         </LinearLayout>
