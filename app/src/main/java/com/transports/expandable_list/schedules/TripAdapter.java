@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedule_list;
+package com.transports.expandable_list.schedules;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.transports.R;
-import com.transports.SchedulesViewerV2Fragment;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.transports;
+package com.transports.expandable_list.schedules;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -26,6 +26,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.transports.R;
 import com.transports.data.AppDataInfo;
 import com.transports.data.Stop;
 
@@ -270,8 +271,8 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
                             String stopName = stop.getString(STOP_INFO_NAME_FIELD);
                             String stopTransport = stop.getString(STOP_INFO_TRANSPORT_FIELD);
                             String agencyKey = stop.getString(STOP_INFO_AGENCY_KEY);
-                            double stopLat = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(0));
-                            double stopLong = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(1));
+                            double stopLat = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(1));//they appear to be switched..
+                            double stopLong = Double.parseDouble(stop.getJSONArray(STOP_INFO_COORDS_FIELD).getString(0));//they appear to be switched..
                             Stop stopObject = new Stop(stopId, stopName, stopTransport, stopLat, stopLong, agencyKey);
                             AppDataInfo.stops.add(stopObject);
                         }

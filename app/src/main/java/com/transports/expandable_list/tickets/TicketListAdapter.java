@@ -1,4 +1,4 @@
-package com.transports.expandable_list.tickets_list;
+package com.transports.expandable_list.tickets;
 
 import android.content.Context;
 import android.view.LayoutInflater;

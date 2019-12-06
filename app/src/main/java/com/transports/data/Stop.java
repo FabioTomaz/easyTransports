@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A stop in which a transport (train, bus, metro) stops to pick up passengers.
@@ -121,5 +122,23 @@ public class Stop implements Serializable, Parcelable {
 
     public void setAgency_key(String agency_key) {
         this.agency_key = agency_key;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Stop stop = (Stop) o;
+        return Double.compare(stop.stop_lat, stop_lat) == 0 &&
+                Double.compare(stop.stop_lon, stop_lon) == 0 &&
+                Objects.equals(stop_id, stop.stop_id) &&
+                Objects.equals(stop_name, stop.stop_name) &&
+                Objects.equals(stop_transport, stop.stop_transport) &&
+                Objects.equals(agency_key, stop.agency_key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(stop_id, stop_name, stop_transport, agency_key, stop_lat, stop_lon);
     }
 }

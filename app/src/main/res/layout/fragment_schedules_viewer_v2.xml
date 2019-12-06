@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/bottom_navigation_height"
-    tools:context=".SchedulesViewerV2Fragment">
+    tools:context=".expandable_list.schedules.SchedulesViewerV2Fragment">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -61,7 +61,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="#fff"
-                            android:textStyle="bold"
                             android:textSize="18sp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -91,12 +90,18 @@
                                 android:id="@+id/schedule_total_trip_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:gravity="center"
                                 android:textStyle="bold"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:paddingTop="10dp"
                                 android:textColor="@color/startblue"/>
 
+
                         </LinearLayout>
+                        <View
+                            android:layout_height="match_parent"
+                            android:layout_width="1dp"
+                            android:background="@color/graylight" />
                         <LinearLayout
                             android:gravity="center"
                             android:orientation="vertical"
@@ -113,12 +118,17 @@
                                 android:id="@+id/transports"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:gravity="center"
                                 android:textStyle="bold"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:paddingTop="10dp"
                                 android:textColor="@color/startblue"/>
 
                         </LinearLayout>
+                        <View
+                            android:layout_height="match_parent"
+                            android:layout_width="1dp"
+                            android:background="@color/graylight" />
                         <LinearLayout
                             android:gravity="center"
                             android:orientation="vertical"
@@ -135,9 +145,9 @@
                                 android:id="@+id/transports_number_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3"
                                 android:textStyle="bold"
-                                android:textSize="18sp"
+                                android:gravity="center"
+                                android:textSize="15sp"
                                 android:paddingTop="10dp"
                                 android:textColor="@color/startblue"/>
 
@@ -146,6 +156,36 @@
 
                 </androidx.cardview.widget.CardView>
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent" >
+                <Button
+                    android:id="@+id/buy_ticket_btn"
+                    android:textColor="#fff"
+                    android:background="@color/btn_login"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/buy_ticket_btn"/>
+                <Button
+                    android:id="@+id/open_map_route_btn"
+                    android:textColor="#fff"
+                    android:background="@color/red_btn_bg_color"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/route_map_str"/>
+                </RelativeLayout>
+            </LinearLayout>
             <TextView
                 android:gravity="center"
                 android:layout_width="match_parent"
@@ -162,15 +202,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
 
-            <Button
-                android:id="@+id/buy_ticket_btn"
-                android:textColor="#fff"
-                android:background="@color/btn_login"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/buy_ticket_btn"/>
+
 
         </LinearLayout>
     </FrameLayout>

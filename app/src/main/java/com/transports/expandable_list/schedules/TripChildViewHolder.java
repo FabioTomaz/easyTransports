@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedule_list;
+package com.transports.expandable_list.schedules;
 
 import android.util.Log;
 import android.view.View;

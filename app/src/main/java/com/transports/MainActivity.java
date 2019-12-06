@@ -13,6 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.transports.account_management.AccountSettingsFragment;
 import com.transports.data.Agency;
 import com.transports.data.Stop;
+import com.transports.expandable_list.schedules.SchedulesFragment;
+import com.transports.expandable_list.tickets.TicketsFragment;
 import com.transports.utils.Constants;
 
 import java.io.Serializable;

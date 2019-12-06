@@ -1,13 +1,14 @@
-package com.transports.expandable_list.schedule_list;
+package com.transports.expandable_list.schedules;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.transports.data.Stop;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TripChild implements Parcelable {
+public class TripChild implements Parcelable, Serializable {
 
     private String companyName;
     private String departureDate;
@@ -58,6 +59,21 @@ public class TripChild implements Parcelable {
         destination = in.readParcelable(Stop.class.getClassLoader());
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(companyName);
+        dest.writeString(departureDate);
+        dest.writeString(departureHour);
+        dest.writeString(arrivingHour);
+        dest.writeDouble(price);
+        dest.writeParcelable(origin, flags);
+        dest.writeParcelable(destination, flags);
+    }
     public String getCompanyName() {
         return companyName;
     }
@@ -122,21 +138,7 @@ public class TripChild implements Parcelable {
         return this.origin.getStop_name()+"->"+this.destination.getStop_name();
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(companyName);
-        dest.writeString(departureDate);
-        dest.writeString(departureHour);
-        dest.writeParcelable(origin, flags);
-        dest.writeParcelable(destination, flags);
-        dest.writeString(arrivingHour);
-        dest.writeDouble(price);
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -3,7 +3,7 @@ package com.transports.utils;
 import android.util.Log;
 
 import com.transports.R;
-import com.transports.expandable_list.tickets_list.Ticket;
+import com.transports.expandable_list.tickets.Ticket;
 
 import org.json.JSONObject;
 
@@ -54,7 +54,6 @@ public class UtilityFunctions {
     public static Ticket parseJsonToTicket(String json) {
         Ticket ticket = null;
         try {
-            Log.d("ticketParse", json+"");
             JSONObject obj = new JSONObject(json).getJSONObject(Constants.TICKET_FIELD);
             String date = obj.getString(DATE_FIELD);
             String hash = obj.getString(HASH_FIELD);
@@ -81,7 +80,6 @@ public class UtilityFunctions {
             JSONObject parentUpdate = new JSONObject(t.getDetails());
             parentUpdate.put(Constants.TICKET_FIELD, obj);
             jsonUpdated = parentUpdate.toString();
-            Log.d("updatedTicket", jsonUpdated+"");
 
         } catch (Throwable thr) {
             Log.e("JSONERROR", "Could not parse malformed JSON: \"" + t.getDetails() + "\"");

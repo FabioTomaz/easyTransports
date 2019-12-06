@@ -1,4 +1,4 @@
-package com.transports;
+package com.transports.expandable_list.tickets;
 
 import android.content.Context;
 import android.net.Uri;
@@ -23,11 +23,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.R;
 import com.transports.data.SQLiteDatabaseHandler;
-import com.transports.expandable_list.tickets_list.MyTicketsListAdapter;
-import com.transports.expandable_list.tickets_list.Ticket;
-import com.transports.expandable_list.tickets_list.TicketGlobal;
-import com.transports.expandable_list.tickets_list.TicketListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;

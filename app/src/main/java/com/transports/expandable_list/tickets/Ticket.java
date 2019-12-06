@@ -1,6 +1,4 @@
-package com.transports.expandable_list.tickets_list;
-
-import android.util.Log;
+package com.transports.expandable_list.tickets;
 
 import com.transports.utils.Constants;
 import com.transports.utils.UtilityFunctions;
@@ -116,7 +114,6 @@ public class Ticket implements Serializable {
             try {
 
                 JSONObject j = new JSONObject(details).getJSONObject(Constants.TICKET_FIELD);
-                Log.d("detailsTicketParse", j+"");
                 //this.datePurchased = j.getString(Constants.DATE_FIELD);
                 this.hash = j.getString(Constants.HASH_FIELD);
                 j = j.getJSONObject(Constants.TICKET_INFO_FIELD);

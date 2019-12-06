@@ -1,4 +1,4 @@
-package com.transports.expandable_list.tickets_list;
+package com.transports.expandable_list.tickets;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.transports.R;
-import com.transports.TicketUseActivity;
 import com.transports.utils.UtilityFunctions;
 
 import java.util.Collections;

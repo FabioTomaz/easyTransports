@@ -1,4 +1,4 @@
-package com.transports.expandable_list.tickets_list;
+package com.transports.expandable_list.tickets;
 
 import java.util.ArrayList;
 import java.util.List;

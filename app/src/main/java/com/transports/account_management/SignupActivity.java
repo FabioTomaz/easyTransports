@@ -118,7 +118,7 @@ public class SignupActivity extends AppCompatActivity {
                                             Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Register user in payments service
-                                    registerUserInPayments(auth.getUid());
+                                    registerUserInPayments(auth.getCurrentUser().getEmail());
                                     //sign in user
                                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                                     intent.putExtra(Constants.MENU_INTENT, R.id.bottom_menu_tickets);//start in the "my tickets menu"
@@ -137,14 +137,14 @@ public class SignupActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void registerUserInPayments(String firebaseID){
+    private void registerUserInPayments(String email){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         String uuid = UtilityFunctions.generateString();
         try{
-            jsonBody.put(PAYMENT_USER_ID, uuid);
-            jsonBody.put(PAYMENT_PASSWORD, "pass1234");
+            jsonBody.put(PAYMENT_USER_ID, email);
+            jsonBody.put(PAYMENT_PASSWORD, Constants.PAYMENT_DEFAULT_PASS);
             jsonBody.put(PAYMENT_CURRENCY, PAYMENT_CURRENCY_EUR);
         } catch (JSONException e){ }
         Log.d("paymentRequest", jsonBody+"");
@@ -162,12 +162,6 @@ public class SignupActivity extends AppCompatActivity {
                         if (!status.equalsIgnoreCase(PAYMENT_STATUS_SUCCESSFULL)){
                             Toast.makeText(getApplication(), "Could not register user in payment service", Toast.LENGTH_SHORT).show();
                         }
-                        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("transport", 0);
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        editor.putString(firebaseID, uuid);
-                        editor.putString(firebaseID+PAYMENT_SHAREDPREFERENCES_PASS, "pass1234");
-                        editor.apply();
-                        Log.d("userSave", firebaseID);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

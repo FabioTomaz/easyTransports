@@ -1,4 +1,4 @@
-package com.transports;
+package com.transports.expandable_list.tickets;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
@@ -17,7 +17,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.transports.expandable_list.tickets_list.Ticket;
+import com.transports.R;
+import com.transports.expandable_list.tickets.Ticket;
 import com.transports.utils.UtilityFunctions;
 
 import java.io.IOException;

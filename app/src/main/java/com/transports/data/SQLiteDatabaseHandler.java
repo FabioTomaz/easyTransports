@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.transports.expandable_list.tickets_list.Ticket;
-import com.transports.expandable_list.tickets_list.TicketGlobal;
+import com.transports.expandable_list.tickets.Ticket;
+import com.transports.expandable_list.tickets.TicketGlobal;
 import com.transports.utils.Constants;
 import com.transports.utils.UtilityFunctions;
 

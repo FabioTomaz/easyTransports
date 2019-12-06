@@ -1,11 +1,11 @@
-package com.transports;
+package com.transports.expandable_list.schedules;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,19 +30,22 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.developer.kalert.KAlertDialog;
 import com.google.firebase.auth.FirebaseAuth;
+import com.transports.R;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
-import com.transports.expandable_list.schedule_list.TripAdapter;
-import com.transports.expandable_list.schedule_list.TripChild;
-import com.transports.expandable_list.schedule_list.TripParent;
-import com.transports.expandable_list.tickets_list.Ticket;
-import com.transports.expandable_list.tickets_list.TicketGlobal;
+import com.transports.expandable_list.schedules.SchedulesFragment;
+import com.transports.expandable_list.schedules.TripAdapter;
+import com.transports.expandable_list.schedules.TripChild;
+import com.transports.expandable_list.schedules.TripParent;
+import com.transports.expandable_list.tickets.Ticket;
+import com.transports.expandable_list.tickets.TicketGlobal;
 import com.transports.utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +81,7 @@ import static com.transports.utils.Constants.SHARED_PREFS_NAME;
 import static com.transports.utils.Constants.TICKET_AUTH_TOKEN_HEADER_FIELD;
 import static com.transports.utils.Constants.TRANSPORT_COMPANY;
 import static com.transports.utils.Constants.TRIP;
+import static com.transports.utils.Constants.TRIPS_EXTRA;
 import static com.transports.utils.URLs.CREATE_TICKET;
 import static com.transports.utils.URLs.GET_ROUTE;
 import static com.transports.utils.URLs.PAYMENTS_LOGIN_ACCOUNT;
@@ -108,6 +112,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private TextView transportsLabel;
     private TextView schedulesLabel;
     private Button buyTicketBtn;
+    private Button openMapBtn;
 
     public SchedulesViewerV2Fragment() {
         // Required empty public constructor
@@ -135,6 +140,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
         transportsLabel = (TextView) getView().findViewById(R.id.transports);
         schedulesLabel = (TextView) getView().findViewById(R.id.schedule_total_trip_label);
         buyTicketBtn = (Button) getView().findViewById(R.id.buy_ticket_btn);
+        openMapBtn = (Button) getView().findViewById(R.id.open_map_route_btn);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
@@ -152,6 +158,18 @@ public class SchedulesViewerV2Fragment extends Fragment {
             buyTicketBtn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     handlePurchase();
+                }
+            });
+
+            openMapBtn.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (tripParent != null) {
+                        Intent intent = new Intent(getContext(), RouteMap.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList(TRIPS_EXTRA, (ArrayList<? extends Parcelable>) tripParent.getTripsChilds());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }
                 }
             });
 
@@ -349,16 +367,19 @@ public class SchedulesViewerV2Fragment extends Fragment {
     }
 
     private void showConfirmPurchaseDialog(final TripParent tripParent) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Ticket purchase confirmation")
-                .setMessage("Are you sure you want to purchase this(these) ticket(s)? \n All purchases are final.\n The total value is " + tripParent.getTotalPrice())
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, (dialog, whichButton) -> {
-                    //user confirmed ticket purchase
-                    loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getUid());
-
+        new KAlertDialog(getContext(), KAlertDialog.WARNING_TYPE)
+                .setTitleText("Ticket purchase confirmation")
+                .setContentText("Are you sure you want to purchase this(these) ticket(s)? \n All purchases are final.\n The total value is " + tripParent.getTotalPrice())
+                .setConfirmText("Yes")
+                .setConfirmClickListener(sDialog -> {
+                    sDialog.dismissWithAnimation();
+                    loginUserInPayments(tripParent, FirebaseAuth.getInstance().getCurrentUser().getEmail());
                 })
-                .setNegativeButton(android.R.string.no, null).show();
+                .setCancelText("Cancel")
+                .setCancelClickListener(sDialog -> {
+                    sDialog.dismissWithAnimation();
+                })
+                .show();
     }
 
     private void purchaseTicket(final TripParent tripParent) {
@@ -502,17 +523,13 @@ public class SchedulesViewerV2Fragment extends Fragment {
     }
 
 
-    private void loginUserInPayments(final TripParent tripParent, String firebaseID) {
+    private void loginUserInPayments(final TripParent tripParent, String email) {
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
         //create list of request ticket creation json objects
         JSONObject jsonBody = new JSONObject();
         try {
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            String retrieved = sharedPref.getString(firebaseID, "");
-            Log.d("userSave", firebaseID +", retr: "+retrieved);
-            //jsonBody.put(PAYMENT_USER_ID, firebaseID);
-            jsonBody.put(PAYMENT_USER_ID, getPaymentID());
-            jsonBody.put(PAYMENT_PASSWORD, "pass1234");
+            jsonBody.put(PAYMENT_USER_ID, email);
+            jsonBody.put(PAYMENT_PASSWORD, Constants.PAYMENT_DEFAULT_PASS);
             Log.d("payment", getPaymentPass());
             /*jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
             jsonBody.put(PAYMENT_PASSWORD, "transdev");*/

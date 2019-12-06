@@ -13,6 +13,8 @@ public class Constants {
     public static final String TIME= "time";
     public static final String VARIANCE= "variance";
     public static final String DEPARTURE_DATE = "departure_date";
+    //pass data between route and route map
+    public static final String TRIPS_EXTRA = "tripChilds";
 
     // --------------------Json fields ------------------------
 
@@ -76,26 +78,11 @@ public class Constants {
     public static final String PAYMENT_MESSAGE = "message";
     public static final String PAYMENT_STATUS_SUCCESSFULL = "success";
     public static final String PAYMENT_MESSAGE_FIELD = "message";
+    public static final String PAYMENT_DEFAULT_PASS = "pass1234";
 
 
     //ticket states strings
     public static final String TICKET_EXPIRED = "expired";
     public static final String TICKET_INACTIVE = "inactive";
     public static final String TICKET_VALID = "valid";
-
-    //for testing
-    public static final String TICKET_JSON_EXAMPLE = "{\n" +
-            "    \"ticket_id\": 1,\n" +
-            "    \"timestamp\": \"2019-11-11T15:11:47.782Z\",\n" +
-            "    \"details\": {\n" +
-            "        \"company\": \"CP\",\n" +
-            "        \"schedule\": \"9:30 - 10:30\",\n" +
-            "        \"price\": \"1.20€\",\n" +
-            "        \"trip\": \"Aveiro - Porto\"\n" +
-
-            "    },\n" +
-            "    \"hash\": \"9c20c58501c881e8ae3f87ab0afcaadf828add2ca45079feeabf84a2e6dedb2a\",\n" +
-            "    \"previousHash\": \"9d9054f50ce492d04609e5e19155f0556529a4c1ec721c26fc2becb6b860d094\",\n" +
-            "    \"status\": \"valid\"\n" +
-            "}";
 }
