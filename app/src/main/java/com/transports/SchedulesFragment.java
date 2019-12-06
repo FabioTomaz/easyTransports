@@ -68,7 +68,7 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
 
     private int mHour, mMinute;
     private Date currentDate = new Date();
-    private int timeVariance = 1;
+    private int timeVariance = -1;
     private boolean isDepartureDate = true;
 
     public SchedulesFragment() {
@@ -95,7 +95,6 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
         btnTimeVariance = getView().findViewById(R.id.btn_time_variance);
 
         btnTimePicker.setOnClickListener(this);
-        btnTimeVariance.setText("1 hour");
         btnTimeVariance.setOnClickListener(v -> {
             NumberPickerDialog newFragment = new NumberPickerDialog();
             newFragment.setValueChangeListener(this);
