@@ -94,4 +94,8 @@
     <string name="stoptimes">Stop Times</string>
     <string name="stop_name">Stop Name</string>
     <string name="title_activity_route_map">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="geojson_opener_unable_to_read">Unable to read</string>
+    <string name="geojson_opener_unable_to_parse">Unable to parse</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

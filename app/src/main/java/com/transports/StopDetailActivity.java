@@ -20,6 +20,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.transports.data.Stop;
 import com.transports.data.Stoptime;
+import com.transports.map.MapsActivity;
 
 public class StopDetailActivity extends AppCompatActivity implements OnMapReadyCallback, StoptimeFragment.OnListFragmentInteractionListener {
 
@@ -98,40 +99,8 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onListFragmentInteraction(Stoptime item) {
-        // Initialize a new RequestQueue instance
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        // Initialize a new jsonRequest instance
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                GET_AGENCIES,
-                null,
-                response -> {
-                    // make request for geojson
-                    if (fileUris != null) {
-                        Intent mapsIntent = new Intent(this, GoogleMapsActivity.class);
-                        mapsIntent.putStringArrayListExtra(GeoJsonViewerConstants.INTENT_EXTRA_JSON_URI, fileUris);
-                        mapsIntent.putIntegerArrayListExtra(GeoJsonViewerConstants.INTENT_EXTRA_JSON_COLORS, layerColors);
-                        startActivity(mapsIntent);
-                    } else {
-                        Toast.makeText(
-                            getApplicationContext(), 
-                            R.string.geojson_opener_unable_to_read, 
-                            Toast.LENGTH_LONG
-                        ).show();
-                    }
-                },
-                error -> {
-                    // Do something when error occurred
-                    Snackbar.make(
-                            getView(),
-                            "Error...",
-                            Snackbar.LENGTH_LONG
-                    ).show();
-                }
-        );
-
-        // Add JsonObjectRequest to the RequestQueue
-        requestQueue.add(jsonRequest);
+        Intent mapsIntent = new Intent(this, MapsActivity.class);
+        mapsIntent.putExtra(MapsActivity.INTENT_EXTRA_TRIP_ID, item.getTrip_id());
+        startActivity(mapsIntent);
     }
 }
