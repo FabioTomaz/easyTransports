@@ -308,12 +308,15 @@ public class SchedulesViewerV2Fragment extends Fragment {
                             Stop originStopChild = getStopFromID(originStopChildID);
                             Stop destinationStopChild = getStopFromID(destinationStopChildID);
                             String companyName = originStopChild.getStop_transport();
-                            double price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
+                            double price = 0;
+                            if (!originStopChild.equals(destinationStopChild))
+                                price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
                             String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
                             String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);
                             tripChildren.add(new TripChild(companyName, "", departureTime, arrivalTime,
                                     originStopChild, destinationStopChild, price));
                         }
+                        this.tripChildren = fixTripChild(tripChildren);
                         TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
                         this.tripParent = tripParent;
                         setSchedulesOnList(tripParent);
@@ -330,6 +333,26 @@ public class SchedulesViewerV2Fragment extends Fragment {
 
         // Add JsonObjectRequest to the RequestQueue
         requestQueue.add(jsonArrayRequest);
+    }
+
+    //if a stop has same stop origin and destination, that means user must wlak to next step. Add trips for walking to that next station
+    private List<TripChild> fixTripChild(List<TripChild> tripChildren){
+        List<TripChild> tripChildFixed = new ArrayList<>();
+        boolean fix = false;
+        Stop lastStop = null;
+        for (int i = 0; i < tripChildren.size(); i++){
+            if (fix){
+                fix = false;
+                tripChildFixed.add(new TripChild("walk", "", "", "", lastStop, tripChildren.get(i).getOrigin(), 0.0));
+            }
+            tripChildFixed.add(tripChildren.get(i));
+            if ( i < (tripChildren.size() - 1) && !tripChildren.get(i).getCompanyName().equals(tripChildren.get(i+1).getCompanyName())){
+                //transport transition occurs, user must walk, sinalyze this to add in next iteration a walk trip
+                fix = true;
+                lastStop = tripChildFixed.get(i).getDestination();
+            }
+        }
+        return tripChildFixed;
     }
 
     private Stop getStopFromID(String stopID) {
@@ -370,7 +393,19 @@ public class SchedulesViewerV2Fragment extends Fragment {
     //called by user click on "buy" button
     public void handlePurchase() {
         Log.d("resTripParent", this.tripParent + "");
+        this.tripParent.setTrips(removeNoPriceTrips(this.tripParent.getTripsChilds()));
         showConfirmPurchaseDialog(this.tripParent);
+    }
+
+    private List<TripChild> removeNoPriceTrips(List<TripChild> tripChildren){
+        List<TripChild> tripChildFixed = new ArrayList<>();
+        boolean fix = false;
+        Stop lastStop = null;
+        for (int i = 0; i < tripChildren.size(); i++){
+            if(tripChildren.get(i).getPrice() > 0.0)
+                tripChildFixed.add(tripChildren.get(i));
+        }
+        return tripChildFixed;
     }
 
     private void showConfirmPurchaseDialog(final TripParent tripParent) {

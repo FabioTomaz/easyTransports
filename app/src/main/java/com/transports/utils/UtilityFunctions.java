@@ -97,6 +97,9 @@ public class UtilityFunctions {
         if (transport.equalsIgnoreCase("transtejo")){
             return R.drawable.ic_transtejo;
         }
+        if (transport.equalsIgnoreCase("walk")){
+            return R.drawable.ic_walk_icon;
+        }
         return R.drawable.ic_trip;
     }
 

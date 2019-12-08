@@ -129,7 +129,7 @@ public class TripParent extends ExpandableGroup<TripChild> implements Serializab
         return trips;
     }
 
-    public void setTrips(ArrayList<TripChild> trips) {
+    public void setTrips(List<TripChild> trips) {
         this.trips = trips;
     }
 
