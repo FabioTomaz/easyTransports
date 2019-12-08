@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,14 +30,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.developer.kalert.KAlertDialog;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.google.firebase.auth.FirebaseAuth;
 import com.transports.R;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
-import com.transports.expandable_list.schedules.SchedulesFragment;
-import com.transports.expandable_list.schedules.TripAdapter;
-import com.transports.expandable_list.schedules.TripChild;
-import com.transports.expandable_list.schedules.TripParent;
 import com.transports.expandable_list.tickets.Ticket;
 import com.transports.expandable_list.tickets.TicketGlobal;
 import com.transports.utils.Constants;
@@ -45,7 +44,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -111,8 +109,10 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private TextView totalPriceLabel;
     private TextView transportsLabel;
     private TextView schedulesLabel;
+    private TextView totalTripsLabel;
     private Button buyTicketBtn;
     private Button openMapBtn;
+    private ProgressBar progressBar;
 
     public SchedulesViewerV2Fragment() {
         // Required empty public constructor
@@ -139,8 +139,10 @@ public class SchedulesViewerV2Fragment extends Fragment {
         totalPriceLabel = (TextView) getView().findViewById(R.id.transports_number_label);
         transportsLabel = (TextView) getView().findViewById(R.id.transports);
         schedulesLabel = (TextView) getView().findViewById(R.id.schedule_total_trip_label);
+        totalTripsLabel = (TextView) getView().findViewById(R.id.total_trips);
         buyTicketBtn = (Button) getView().findViewById(R.id.buy_ticket_btn);
         openMapBtn = (Button) getView().findViewById(R.id.open_map_route_btn);
+        progressBar = (ProgressBar) getView().findViewById(R.id.spin_kit);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
@@ -175,6 +177,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
 
             //call service give info and receive
             getRoute(origin.getStopId(), destination.getStopId(), isDepartureDate, time, variance);
+            startLoadingAnimation();
         }
         else {
             //TODO: finish activity
@@ -186,6 +189,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
         //add trip parent data to fields
         this.transportsLabel.setText(trip.getTransports());
         this.schedulesLabel.setText(trip.getschedules());
+        this.totalTripsLabel.setText(getString(R.string.schedule_details_message2)+" ("+trip.getTripsChilds().size() +" total):" );
         this.totalPriceLabel.setText(trip.getTotalPrice()+"€");
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -237,7 +241,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().setTitle(getString(R.string.app_name_full));
+        getActivity().setTitle(getString(R.string.name_app_full));
     }
 
     private void getRoute(
@@ -278,7 +282,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
                 null,
                 response -> {
                     Log.d("schedulesRes", response + "");
-
+                    stopLoadingAnimation();
                     // Process the JSON
                     try {
                         JSONArray routeAlternativesList = response.getJSONArray(ROUTE_LIST_FIELD);
@@ -608,5 +612,15 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private String getPaymentPass(){
         SharedPreferences sharedPref = getContext().getSharedPreferences(SHARED_PREFS_NAME, 0);
         return sharedPref.getString(FirebaseAuth.getInstance().getUid()+PAYMENT_SHAREDPREFERENCES_PASS, "");
+    }
+
+    private void startLoadingAnimation(){
+        progressBar = (ProgressBar) getView().findViewById(R.id.spin_kit);
+        Sprite doubleBounce = new DoubleBounce();
+        progressBar.invalidateDrawable(doubleBounce);
+    }
+    private void stopLoadingAnimation(){
+        Sprite doubleBounce = new DoubleBounce();
+        progressBar.invalidateDrawable(doubleBounce);
     }
 }

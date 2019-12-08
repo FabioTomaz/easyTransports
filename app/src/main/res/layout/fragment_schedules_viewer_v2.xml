@@ -10,8 +10,16 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/bottom_navigation_height"
     tools:context=".expandable_list.schedules.SchedulesViewerV2Fragment">
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorAccent" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -187,6 +195,7 @@
                 </RelativeLayout>
             </LinearLayout>
             <TextView
+                android:id="@+id/total_trips"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
