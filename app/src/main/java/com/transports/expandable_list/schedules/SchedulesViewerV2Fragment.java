@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -110,6 +111,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
     private TextView transportsLabel;
     private TextView schedulesLabel;
     private TextView totalTripsLabel;
+    private LinearLayout content;
     private Button buyTicketBtn;
     private Button openMapBtn;
     private ProgressBar progressBar;
@@ -143,6 +145,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
         buyTicketBtn = (Button) getView().findViewById(R.id.buy_ticket_btn);
         openMapBtn = (Button) getView().findViewById(R.id.open_map_route_btn);
         progressBar = (ProgressBar) getView().findViewById(R.id.spin_kit);
+        content = (LinearLayout) getView().findViewById(R.id.schedules_content);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
             origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
@@ -534,7 +537,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
         try {
             jsonBody.put(PAYMENT_USER_ID, email);
             jsonBody.put(PAYMENT_PASSWORD, Constants.PAYMENT_DEFAULT_PASS);
-            Log.d("payment", getPaymentPass());
             /*jsonBody.put(PAYMENT_USER_ID, "529116cc-33cc-4185-a915-77192a9658c2");
             jsonBody.put(PAYMENT_PASSWORD, "transdev");*/
         } catch (JSONException e){ }
@@ -615,11 +617,13 @@ public class SchedulesViewerV2Fragment extends Fragment {
     }
 
     private void startLoadingAnimation(){
+        content.setVisibility(View.INVISIBLE);
         progressBar = (ProgressBar) getView().findViewById(R.id.spin_kit);
         Sprite doubleBounce = new DoubleBounce();
-        progressBar.invalidateDrawable(doubleBounce);
+        progressBar.setIndeterminateDrawable(doubleBounce);
     }
     private void stopLoadingAnimation(){
+        content.setVisibility(View.VISIBLE);
         Sprite doubleBounce = new DoubleBounce();
         progressBar.invalidateDrawable(doubleBounce);
     }

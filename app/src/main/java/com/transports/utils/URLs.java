@@ -13,6 +13,7 @@ public class URLs {
     public static final String GET_STOPTIMES = SCHEDULES+"/stoptimes/";
     public static final String GET_STOP_INFO = SCHEDULES+"/stop/"; //+stopid
     public static final String GET_ROUTE = SCHEDULES+"/route/"; //+stopid / stopid
+    public static final String GET_TRIP_GEOJSON = SCHEDULES+"/trip/:tripId/geojson"; //+stopid / stopid
 
     //get list of agencies
     public static final String GET_AGENCIES = SCHEDULES+"/agency";

@@ -13,12 +13,12 @@
 
     <item
         android:id="@+id/bottom_menu_stops"
-        android:icon="@drawable/ic_arrow_down"
+        android:icon="@drawable/ic_stop_icon"
         android:title="@string/bottom_menu_item_stops"/>
 
     <item
         android:id="@+id/bottom_menu_agencies"
-        android:icon="@drawable/ic_transport_agency"
+        android:icon="@drawable/ic_agency_icon"
         android:title="@string/bottom_menu_item_agencies"/>
 
     <item

@@ -4,9 +4,14 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.transports.R;
 import com.transports.data.Stop;
@@ -53,6 +59,7 @@ public class RouteMap extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         ArrayList<TripChild> tripChildren;
 
         Intent intent = getIntent();
@@ -66,10 +73,12 @@ public class RouteMap extends FragmentActivity implements OnMapReadyCallback {
         Stop previousStop = null;
         for (int i = 0; i < tripChildren.size(); i++){
             Stop stop = tripChildren.get(i).getOrigin();
-            addMarker(stop);
+            addMarker(stop, tripChildren.get(i).getOrigin().getStop_name()+"->"+tripChildren.get(i).getDestination().getStop_name(),
+                    tripChildren.get(i).getCompanyName(), tripChildren.get(i).getSchedule());
             if (previousStop != null && !stop.equals(previousStop)) {
                 Stop stopDest = tripChildren.get(i).getDestination();
-                addMarker(stopDest);
+                addMarker(stopDest, tripChildren.get(i).getOrigin().getStop_name()+"->"+tripChildren.get(i).getDestination().getStop_name(),
+                        tripChildren.get(i).getCompanyName(), tripChildren.get(i).getSchedule());
             }
             previousStop = stop;
         }
@@ -88,24 +97,27 @@ public class RouteMap extends FragmentActivity implements OnMapReadyCallback {
 
     }
 
-    private void addMarker(Stop stop){
+    private void addMarker(Stop stop, String trip, String transport, String schedule){
         LatLng coords = new LatLng(stop.getStop_lat(), stop.getStop_lon());
-        mMap.addMarker(new MarkerOptions().position(coords).title(stop.getStop_name()));
+        mMap.addMarker(new MarkerOptions().position(coords).title(stop.getStop_name()).snippet(stop.getStop_name()+"\n"+trip+"\n"+transport+"\n"+schedule));
     }
 
-    public float distance (float lat_a, float lng_a, float lat_b, float lng_b )
-    {
-        double earthRadius = 3958.75;
-        double latDiff = Math.toRadians(lat_b-lat_a);
-        double lngDiff = Math.toRadians(lng_b-lng_a);
-        double a = Math.sin(latDiff /2) * Math.sin(latDiff /2) +
-                Math.cos(Math.toRadians(lat_a)) * Math.cos(Math.toRadians(lat_b)) *
-                        Math.sin(lngDiff /2) * Math.sin(lngDiff /2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        double distance = earthRadius * c;
+    private class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+        @Override
+        public View getInfoWindow(Marker marker) {
+            View view = getLayoutInflater().inflate(R.layout.marker_layout, null);
+            TextView tripTxt = (TextView) view.findViewById(R.id.trip_marker_text);
+            TextView transportTxt = (TextView) view.findViewById(R.id.transport_marker_text);
 
-        int meterConversion = 1609;
+            tripTxt.setText(marker.getTitle());
+            transportTxt.setText(marker.getSnippet());
+            return view;
+        }
 
-        return new Float(distance * meterConversion).floatValue();
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
     }
+
 }

@@ -12,6 +12,8 @@ public class Stoptime {
 
     private String agency_key;
 
+    private String trip_id;
+
     public String getArrival_time() {
         return arrival_time;
     }
@@ -34,6 +36,14 @@ public class Stoptime {
 
     public void setDeparture_time(String departure_time) {
         this.departure_time = departure_time;
+    }
+
+    public String getTrip_id() {
+        return trip_id;
+    }
+
+    public void setTrip_id(String trip_id) {
+        this.trip_id = trip_id;
     }
 
     public int getDeparture_timestamp() {
