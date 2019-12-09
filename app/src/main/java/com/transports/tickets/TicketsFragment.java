@@ -1,4 +1,4 @@
-package com.transports.expandable_list.tickets;
+package com.transports.tickets;
 
 import android.content.Context;
 import android.net.Uri;

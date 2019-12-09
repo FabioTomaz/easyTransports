@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".expandable_list.tickets.TicketUseActivity">
+    tools:context=".tickets.TicketUseActivity">
 
     <com.vipulasri.ticketview.TicketView
         android:layout_width="match_parent"

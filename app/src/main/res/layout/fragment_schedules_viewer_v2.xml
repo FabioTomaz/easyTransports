@@ -9,7 +9,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="@dimen/bottom_navigation_height"
-    tools:context=".expandable_list.schedules.SchedulesViewerV2Fragment">
+    tools:context=".schedules.SchedulesViewerV2Fragment">
     <com.github.ybq.android.spinkit.SpinKitView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/spin_kit"

@@ -1,14 +1,9 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import androidx.fragment.app.FragmentActivity;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -26,7 +21,6 @@ import com.transports.R;
 import com.transports.data.Stop;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.transports.utils.Constants.TRIPS_EXTRA;
 

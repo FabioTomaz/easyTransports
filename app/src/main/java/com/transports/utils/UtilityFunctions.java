@@ -3,7 +3,7 @@ package com.transports.utils;
 import android.util.Log;
 
 import com.transports.R;
-import com.transports.expandable_list.tickets.Ticket;
+import com.transports.tickets.Ticket;
 
 import org.json.JSONObject;
 

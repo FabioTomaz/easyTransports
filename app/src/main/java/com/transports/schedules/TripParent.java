@@ -1,11 +1,10 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.transports.data.Stop;
-import com.transports.expandable_list.tickets.TicketGlobal;
+import com.transports.tickets.TicketGlobal;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;

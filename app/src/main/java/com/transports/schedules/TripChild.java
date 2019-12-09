@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,17 +11,17 @@ import java.util.Objects;
 public class TripChild implements Parcelable, Serializable {
 
     private String companyName;
-    private String departureDate;
+    private String tripID;
     private String departureHour;
     private Stop origin;
     private Stop destination;
     private String arrivingHour;
     private double price;
 
-    public TripChild(String companyName, String departureDate, String departureHour, String arrivingHour,
+    public TripChild(String companyName, String tripID, String departureHour, String arrivingHour,
                      Stop origin, Stop arrivingLocation, double price) {
         this.companyName = companyName;
-        this.departureDate = departureDate;
+        this.tripID = tripID;
         this.departureHour = departureHour;
         this.origin = origin;
         this.destination = arrivingLocation;
@@ -51,7 +51,7 @@ public class TripChild implements Parcelable, Serializable {
 
     protected TripChild(Parcel in) {
         companyName = in.readString();
-        departureDate = in.readString();
+        tripID = in.readString();
         departureHour = in.readString();
         arrivingHour = in.readString();
         price = in.readDouble();
@@ -67,7 +67,7 @@ public class TripChild implements Parcelable, Serializable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(companyName);
-        dest.writeString(departureDate);
+        dest.writeString(tripID);
         dest.writeString(departureHour);
         dest.writeString(arrivingHour);
         dest.writeDouble(price);
@@ -82,12 +82,12 @@ public class TripChild implements Parcelable, Serializable {
         this.companyName = companyName;
     }
 
-    public String getDepartureDate() {
-        return departureDate;
+    public String getTripID() {
+        return tripID;
     }
 
-    public void setDepartureDate(String departureDate) {
-        this.departureDate = departureDate;
+    public void setTripID(String tripID) {
+        this.tripID = tripID;
     }
 
     public String getDepartureHour() {
@@ -147,7 +147,7 @@ public class TripChild implements Parcelable, Serializable {
         TripChild tripChild = (TripChild) o;
         return Double.compare(tripChild.price, price) == 0 &&
                 Objects.equals(companyName, tripChild.companyName) &&
-                Objects.equals(departureDate, tripChild.departureDate) &&
+                Objects.equals(tripID, tripChild.tripID) &&
                 Objects.equals(departureHour, tripChild.departureHour) &&
                 Objects.equals(origin, tripChild.origin) &&
                 Objects.equals(destination, tripChild.destination) &&
@@ -156,14 +156,14 @@ public class TripChild implements Parcelable, Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyName, departureDate, departureHour, origin, destination, arrivingHour, price);
+        return Objects.hash(companyName, tripID, departureHour, origin, destination, arrivingHour, price);
     }
 
     @Override
     public String toString() {
         return "TripChild{" +
                 "companyName='" + companyName + '\'' +
-                ", departureDate='" + departureDate + '\'' +
+                ", tripID='" + tripID + '\'' +
                 ", departureHour='" + departureHour + '\'' +
                 ", origin='" + origin + '\'' +
                 ", destination='" + destination + '\'' +

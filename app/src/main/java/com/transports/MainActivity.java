@@ -2,6 +2,7 @@ package com.transports;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -13,16 +14,22 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.transports.account_management.AccountSettingsFragment;
 import com.transports.data.Agency;
 import com.transports.data.Stop;
-import com.transports.expandable_list.schedules.SchedulesFragment;
-import com.transports.expandable_list.tickets.TicketsFragment;
+import com.transports.schedules.SchedulesFragment;
+import com.transports.schedules.SchedulesViewerV2Fragment;
+import com.transports.schedules.TripChild;
+import com.transports.tickets.TicketsFragment;
+import com.transports.map.MapsActivity;
 import com.transports.utils.Constants;
 
 import java.io.Serializable;
 
+import static com.transports.map.MapsActivity.INTENT_EXTRA_TRIP_ID;
+
 public class MainActivity extends AppCompatActivity implements
         BottomNavigationView.OnNavigationItemSelectedListener,
         StopFragment.OnListFragmentInteractionListener,
-        AgencyFragment.OnListFragmentInteractionListener{
+        AgencyFragment.OnListFragmentInteractionListener,
+        SchedulesViewerV2Fragment.OnFragmentInteractionListener{
 
     private com.google.android.material.bottomnavigation.BottomNavigationView navigationView;
 
@@ -91,6 +98,14 @@ public class MainActivity extends AppCompatActivity implements
     public void onListAgencyFragmentInteraction(Agency item) {
         Intent intent = new Intent(this, AgencyDetailActivity.class);
         intent.putExtra("Agency", item);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFragmentInteraction(TripChild child) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra(INTENT_EXTRA_TRIP_ID, child.getTripID());
+        Log.d("maps", child.getTripID());
         startActivity(intent);
     }
 }

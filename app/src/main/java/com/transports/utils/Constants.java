@@ -38,6 +38,7 @@ public class Constants {
     public static final String ROUTE_ARRIVAL_FIELD = "arrivalTime";
     public static final String ROUTE_CHILD_DEPARTURE_FIELD = "departure_time";
     public static final String ROUTE_CHILD_ARRIVAL_FIELD = "arrival_time";
+    public static final String ROUTE_TRIP_ID_FIELD = "trip_id";
 
     // create ticket / receive tickets
     public static final String TRIP = "trip";

@@ -127,7 +127,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Demonstrate receiving features via GeoJsonLayer clicks.
         layer.setOnFeatureClickListener(feature -> Toast.makeText(
                 MapsActivity.this,
-                "Feature clicked: " + feature.getProperty("route_id"),
+                "Trip ID: " + feature.getProperty("route_id"),
                 Toast.LENGTH_SHORT
         ).show());
     }

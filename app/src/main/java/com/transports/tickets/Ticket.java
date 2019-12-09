@@ -1,4 +1,4 @@
-package com.transports.expandable_list.tickets;
+package com.transports.tickets;
 
 import com.transports.utils.Constants;
 import com.transports.utils.UtilityFunctions;

@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

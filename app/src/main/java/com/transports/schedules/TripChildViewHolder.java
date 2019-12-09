@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import android.util.Log;
 import android.view.View;
@@ -29,18 +29,20 @@ public class TripChildViewHolder extends ChildViewHolder {
 
     public void setTripChild(TripChild trip) {
         transportName.setText(trip.getCompanyName());
-        departureHour.setText(trip.getDepartureHour() +" - "+trip.getArrivingHour());
         price.setText(trip.getPrice() + "€");
-        if (trip.getOrigin().equals(trip.getDestination()))
+        if (trip.getOrigin().equals(trip.getDestination())) {
             destination.setText(trip.getOrigin().getStop_name());
+            departureHour.setText(trip.getDepartureHour());
+        }
         else if(trip.getCompanyName().equalsIgnoreCase("walk")) {
             destination.setText(trip.getOrigin().getStop_name() + " (" + trip.getOrigin().getAgency_key() + ") -> "
                     + trip.getDestination().getStop_name() + " (" + trip.getDestination().getAgency_key() + ")");
             departureHour.setText("");
             price.setText("");
         }
-        else
-            destination.setText(trip.getOrigin().getStop_name()+" -> "+trip.getDestination().getStop_name());
+        else {
+            destination.setText(trip.getOrigin().getStop_name() + " -> " + trip.getDestination().getStop_name());
+        }
         transportIcon.setImageResource(UtilityFunctions.getIconOfTransport(trip.getCompanyName()));
         Log.d("price", trip.getPrice()+"€");
 

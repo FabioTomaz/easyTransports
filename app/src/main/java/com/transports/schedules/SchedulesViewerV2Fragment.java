@@ -1,4 +1,4 @@
-package com.transports.expandable_list.schedules;
+package com.transports.schedules;
 
 import android.content.Context;
 import android.content.Intent;
@@ -37,8 +37,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.transports.R;
 import com.transports.data.SQLiteDatabaseHandler;
 import com.transports.data.Stop;
-import com.transports.expandable_list.tickets.Ticket;
-import com.transports.expandable_list.tickets.TicketGlobal;
+import com.transports.tickets.Ticket;
+import com.transports.tickets.TicketGlobal;
 import com.transports.utils.Constants;
 
 import org.json.JSONArray;
@@ -74,6 +74,7 @@ import static com.transports.utils.Constants.ROUTE_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_STOP_ID_FIELD;
 import static com.transports.utils.Constants.ROUTE_TOTAL_PRICE_FIELD;
 import static com.transports.utils.Constants.ROUTE_TRIP_CHILD_FIELD;
+import static com.transports.utils.Constants.ROUTE_TRIP_ID_FIELD;
 import static com.transports.utils.Constants.SCHEDULE;
 import static com.transports.utils.Constants.SECRET_FIELD;
 import static com.transports.utils.Constants.SHARED_PREFS_NAME;
@@ -177,7 +178,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
                     }
                 }
             });
-
             //call service give info and receive
             getRoute(origin.getStopId(), destination.getStopId(), isDepartureDate, time, variance);
             startLoadingAnimation();
@@ -197,7 +197,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         //instantiate your adapter with the list of genres
-        TripAdapter adapter = new TripAdapter(getContext(), trip.getTripsChilds());
+        TripAdapter adapter = new TripAdapter(getContext(), trip.getTripsChilds(), mListener);
         recycler.setLayoutManager(layoutManager);
         recycler.setAdapter(adapter);
 
@@ -239,6 +239,23 @@ public class SchedulesViewerV2Fragment extends Fragment {
         // Do not add fragment three in back stack.
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -313,9 +330,13 @@ public class SchedulesViewerV2Fragment extends Fragment {
                                 price = routeAlternative.getDouble(ROUTE_PRICE_FIELD);
                             String departureTime = routeAlternative.getString(ROUTE_CHILD_DEPARTURE_FIELD);
                             String arrivalTime = routeAlternative.getString(ROUTE_CHILD_ARRIVAL_FIELD);
-                            tripChildren.add(new TripChild(companyName, "", departureTime, arrivalTime,
+                            String tripID = routeAlternative.getString(ROUTE_TRIP_ID_FIELD);
+                            tripChildren.add(new TripChild(companyName, tripID, departureTime, arrivalTime,
                                     originStopChild, destinationStopChild, price));
                         }
+                        if (arrivalTimeTotal.equals("0"))
+                            arrivalTimeTotal = tripChildren.get(tripChildren.size()-1).getDepartureHour();
+
                         this.tripChildren = fixTripChild(tripChildren);
                         TripParent tripParent = new TripParent(departureTimeTotal, arrivalTimeTotal, date, origin, destination, tripChildren);
                         this.tripParent = tripParent;
@@ -364,17 +385,6 @@ public class SchedulesViewerV2Fragment extends Fragment {
         return null;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -387,7 +397,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(TripChild child);
     }
 
     //called by user click on "buy" button
