@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/bottom_menu_agencies"
-        android:icon="@drawable/ic_agency_icon"
+        android:icon="@drawable/ic_transport_agency"
         android:title="@string/bottom_menu_item_agencies"/>
 
     <item
