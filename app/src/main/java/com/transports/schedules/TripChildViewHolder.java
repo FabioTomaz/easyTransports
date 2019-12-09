@@ -42,6 +42,11 @@ public class TripChildViewHolder extends ChildViewHolder {
         }
         else {
             destination.setText(trip.getOrigin().getStop_name() + " -> " + trip.getDestination().getStop_name());
+            String scheduleStr = trip.getDepartureHour();
+            if (trip.getArrivingHour().equals("0") || trip.getArrivingHour().equals(""))
+                departureHour.setText(trip.getDepartureHour());
+            else
+                departureHour.setText(trip.getDepartureHour()+"-"+trip.getArrivingHour());
         }
         transportIcon.setImageResource(UtilityFunctions.getIconOfTransport(trip.getCompanyName()));
         Log.d("price", trip.getPrice()+"€");

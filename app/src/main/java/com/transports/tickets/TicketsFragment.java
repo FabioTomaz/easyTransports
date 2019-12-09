@@ -100,6 +100,11 @@ public class TicketsFragment extends Fragment {
         cardRecyclerView = (RecyclerView) getView().findViewById(R.id.tickets_list_viewpager);
         cardRecyclerView.setHasFixedSize(true);
         detailsRecylerView = (RecyclerView) getView().findViewById(R.id.tickets_list_details_viewpager);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
         getData(); //load tickets from user, update its state from server and
     }
 

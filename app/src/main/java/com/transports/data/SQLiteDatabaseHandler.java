@@ -107,10 +107,11 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
                 String transports = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[3]));
                 //String date = cursor.getString(cursor.getColumnIndex(GLOBAL_TICKET_COLUMNS[4]));
                 List<Ticket> tickets = getTicketsFromGlobalTicket(id);
+                TicketGlobal tg = new TicketGlobal(originDestination, transports, schedule, tickets);
                 if (allTicketsExpired(tickets)){
                     //delete tickets and global ticket from DB
+                    deleteOneGlobalTicket(tg);
                 }else {
-                    TicketGlobal tg = new TicketGlobal(originDestination, transports, schedule, tickets);
                     ticketGlobals.add(tg);
                 }
                 cursor.moveToNext();
@@ -232,7 +233,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         //delete all single tickets
         db.delete(TICKET_TABLE_NAME,TICKET_COLUMNS[3]+"=?",new String[]{globalTicket.getId()+""});
-        db.delete(GLOBAL_TICKET_TABLE_NAME, "transports = ?", new String[] { String.valueOf(globalTicket.getTransports()) });//ver tmb schedule, date e origin dest
+        db.delete(GLOBAL_TICKET_TABLE_NAME, GLOBAL_TICKET_COLUMNS[0]+"= ?", new String[] { String.valueOf(globalTicket.getId()) });
         //delete on table tickets as well (delete cascade??)
         db.close();
     }
