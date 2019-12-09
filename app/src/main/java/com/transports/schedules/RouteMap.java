@@ -17,6 +17,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.transports.R;
 import com.transports.data.Stop;
 
@@ -65,17 +67,27 @@ public class RouteMap extends FragmentActivity implements OnMapReadyCallback {
         Log.d("tripParent", tripChildren+", ");
         // Add a marker in Sydney and move the camera
         Stop previousStop = null;
+        // Instantiates a new Polyline object and adds points to define a rectangle
+        PolylineOptions rectOptions = new PolylineOptions();
         for (int i = 0; i < tripChildren.size(); i++){
             Stop stop = tripChildren.get(i).getOrigin();
             addMarker(stop, tripChildren.get(i).getOrigin().getStop_name()+"->"+tripChildren.get(i).getDestination().getStop_name(),
                     tripChildren.get(i).getCompanyName(), tripChildren.get(i).getSchedule());
+
+            Stop stopDest = tripChildren.get(i).getDestination();
             if (previousStop != null && !stop.equals(previousStop)) {
-                Stop stopDest = tripChildren.get(i).getDestination();
                 addMarker(stopDest, tripChildren.get(i).getOrigin().getStop_name()+"->"+tripChildren.get(i).getDestination().getStop_name(),
                         tripChildren.get(i).getCompanyName(), tripChildren.get(i).getSchedule());
             }
+            if (!stop.equals(previousStop)) {
+                rectOptions.add(new LatLng(stop.getStop_lat(), stop.getStop_lon()));
+                rectOptions.add(new LatLng(stopDest.getStop_lat(), stopDest.getStop_lon()));
+            }
             previousStop = stop;
         }
+
+        // Get back the mutable Polyline
+        Polyline polyline = mMap.addPolyline(rectOptions);
         //zoom to middle marker
         /*int middle = tripChildren.size()/2;
         Stop stopMiddle = tripChildren.get(middle).getOrigin();
