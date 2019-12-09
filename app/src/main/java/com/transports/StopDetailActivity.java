@@ -44,7 +44,7 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
             // Creates an Intent that will load a map of San Francisco
-            Uri gmmIntentUri = Uri.parse("geo:" + stop.getStop_lat()
+            Uri gmmIntentUri = Uri.parse("google.streetview:cbll=" + stop.getStop_lat()
                     + "," + stop.getStop_lon());
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
