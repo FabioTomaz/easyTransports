@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * A stop in which a transport (train, bus, metro) stops to pick up passengers.
  */
-public class Stop implements Serializable, Parcelable {
+public class Stop implements Parcelable {
     private String stop_id;
     private String stop_name;
     private String stop_transport;
@@ -37,6 +37,7 @@ public class Stop implements Serializable, Parcelable {
         stop_transport = in.readString();
         stop_lat = in.readDouble();
         stop_lon = in.readDouble();
+        agency_key = in.readString();
     }
 
     public static final Creator<Stop> CREATOR = new Creator<Stop>() {
@@ -114,6 +115,7 @@ public class Stop implements Serializable, Parcelable {
         dest.writeString(this.stop_transport);
         dest.writeDouble(this.stop_lat);
         dest.writeDouble(this.stop_lon);
+        dest.writeString(this.agency_key);
     }
 
     public String getAgency_key() {

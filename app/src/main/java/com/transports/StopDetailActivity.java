@@ -36,7 +36,7 @@ public class StopDetailActivity extends AppCompatActivity implements OnMapReadyC
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-        stop = (Stop) getIntent().getSerializableExtra("Stop");
+        stop = (Stop) getIntent().getParcelableExtra("Stop");
         collapsingToolbarLayout.setTitleEnabled(true);
         collapsingToolbarLayout.setTitle(stop.getStop_name());
         ((TextView) findViewById(R.id.stop_id)).setText(stop.getStopId());

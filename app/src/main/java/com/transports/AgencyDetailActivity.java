@@ -43,11 +43,13 @@ public class AgencyDetailActivity extends AppCompatActivity implements OnMapRead
         ((TextView)findViewById(R.id.agency_timezone)).setText(agency.getAgency_timezone());
         ((TextView)findViewById(R.id.agency_phone)).setText(agency.getAgency_phone());
         FloatingActionButton fab = findViewById(R.id.fab);
+        Double lat = agency.getAgency_center().get(1);
+        Double lon = agency.getAgency_center().get(0);
         fab.setOnClickListener(view -> {
             // Creates an Intent that will load a map of San Francisco
             Uri gmmIntentUri = Uri.parse(
-                    "geo:" + agency.getAgency_center().get(1)
-                            + "," + agency.getAgency_center().get(0));
+                    "geo:" + lat + "," + lon + "?q="+lat+","+lon+"("+ agency.getAgency_name() +")"
+            );
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);

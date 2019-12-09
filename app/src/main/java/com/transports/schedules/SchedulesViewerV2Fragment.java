@@ -149,8 +149,8 @@ public class SchedulesViewerV2Fragment extends Fragment {
         content = (LinearLayout) getView().findViewById(R.id.schedules_content);
         if (bundle != null) {
             date = bundle.getString(Constants.DEPARTURE_DATE);
-            origin = (Stop) bundle.getSerializable(Constants.ORIGIN);
-            destination = (Stop) bundle.getSerializable(Constants.DESTINATION);
+            origin = bundle.getParcelable(Constants.ORIGIN);
+            destination = bundle.getParcelable(Constants.DESTINATION);
             isDepartureDate = bundle.getBoolean(Constants.IS_DEPARTURE_DATE);
             time = (Date) bundle.getSerializable(Constants.TIME);
             variance = bundle.getInt(Constants.VARIANCE);

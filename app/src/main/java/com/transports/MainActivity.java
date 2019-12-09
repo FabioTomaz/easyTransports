@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onListFragmentInteraction(Stop stop) {
         Intent intent = new Intent(this, StopDetailActivity.class);
-        intent.putExtra("Stop", (Serializable)  stop);
+        intent.putExtra("Stop",  stop);
         startActivity(intent);
     }
 

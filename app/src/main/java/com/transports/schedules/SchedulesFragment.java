@@ -168,8 +168,8 @@ public class SchedulesFragment extends Fragment implements View.OnClickListener,
             }
 
             Bundle bundle = new Bundle();
-            bundle.putSerializable(ORIGIN, AppDataInfo.stops.get(originSelectedIndex));
-            bundle.putSerializable(DESTINATION, AppDataInfo.stops.get(destinationSelectedIndex));
+            bundle.putParcelable(ORIGIN, AppDataInfo.stops.get(originSelectedIndex));
+            bundle.putParcelable(DESTINATION, AppDataInfo.stops.get(destinationSelectedIndex));
             bundle.putBoolean(IS_DEPARTURE_DATE, isDepartureDate);
             bundle.putSerializable(TIME, currentDate);
             bundle.putInt(VARIANCE, timeVariance);

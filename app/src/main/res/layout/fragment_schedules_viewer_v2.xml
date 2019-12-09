@@ -181,6 +181,7 @@
                     android:background="@color/btn_login"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="25dp"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/buy_ticket_btn"/>
@@ -190,6 +191,7 @@
                     android:background="@color/red_btn_bg_color"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="25dp"
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/route_map_str"/>
