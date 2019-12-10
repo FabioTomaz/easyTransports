@@ -192,7 +192,7 @@ public class SchedulesViewerV2Fragment extends Fragment {
         //add trip parent data to fields
         this.transportsLabel.setText(trip.getTransports());
         this.schedulesLabel.setText(trip.getschedules());
-        this.totalTripsLabel.setText(getString(R.string.schedule_details_message2)+" ("+trip.getTripsChilds().size() +" total):" );
+        this.totalTripsLabel.setText(getString(R.string.schedule_details_message2)+" ("+(trip.getTripsChilds().size()+1)/2 +" total):" );
         this.totalPriceLabel.setText(trip.getTotalPrice()+"€");
         recycler = getView().findViewById(R.id.schedules_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
